@@ -103,6 +103,12 @@ bool UROSTopic::Unadvertise()
 
 void UROSTopic::Publish(const UROSMessageBase* Message)
 {
+	if(!Message)
+	{
+		UE_LOG(LogROSBridge, Warning, TEXT("Tried to publish null message! Ignoring."));
+		return;
+	}
+	
 	Advertise(); //Ensure that this topic was advertised
 	
 	UROSTopicPublishMessage* PublishMessage = NewObject<UROSTopicPublishMessage>();

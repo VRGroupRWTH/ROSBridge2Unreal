@@ -20,7 +20,6 @@ public:
 	/* Data */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString Data;
 
-private:
 	/* Transformation Functions */
 	void ToData(ROSData& Message) const override;
 	bool FromData(const ROSData& Message) override;

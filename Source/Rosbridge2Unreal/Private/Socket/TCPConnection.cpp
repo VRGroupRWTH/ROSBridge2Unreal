@@ -15,6 +15,9 @@ bool UTCPConnection::Initialize(FString IPAddress, int Port, TransportMode Mode)
 	InternetAddress->SetIp(*IPAddress, bIPValid);
 	InternetAddress->SetPort(Port);
 
+	int32 NewSize = 0;
+	Socket->SetReceiveBufferSize(65536, NewSize); //16bit address, used by ROSBridge as a default
+	
 	if (!bIPValid)
 	{
 		UE_LOG(LogROSBridge, Error, TEXT("Given IP address is invalid: %s"), *IPAddress);
@@ -106,7 +109,7 @@ uint32 UTCPConnection::Run()
 			return EXIT_FAILURE;
 		}
 
-		if (!Socket->Wait(ESocketWaitConditions::WaitForRead, FTimespan::FromSeconds(1)))
+		if (!Socket->Wait(ESocketWaitConditions::WaitForRead, FTimespan::FromMilliseconds(100)))
 		{
 			continue; // check if any errors occured
 		}
@@ -148,9 +151,9 @@ uint32 UTCPConnection::Run()
 			ROSData Data;
 			try{
 				Data = jsoncons::bson::decode_bson<ROSData>(BinaryBuffer.GetData(), BinaryBuffer.GetData() + BSONMessageLength);
-			}catch(jsoncons::ser_error e)
+			}catch(...)
 			{
-				UE_LOG(LogROSBridge, Error, TEXT("Error while parsing BSON message (Ignoring message): %hs"), e.what());
+				UE_LOG(LogROSBridge, Error, TEXT("Error while parsing BSON message (Ignoring message)"));
 				continue;
 			}
 			
