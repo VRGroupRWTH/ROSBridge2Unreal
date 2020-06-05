@@ -19,4 +19,7 @@ public:
 
 	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Transportation Mode"))
 	TransportMode TransportationMode = TransportMode::JSON;
+
+	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Simulate Connection"))
+	bool SimulateConnection = false;
 };

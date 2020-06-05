@@ -19,7 +19,7 @@ class ROSBRIDGE2UNREAL_API UROSBridge : public UObject, public FRunnable
 	GENERATED_BODY()
 public:
 
-	bool Initialize(FString IPAddress, int Port, TransportMode Mode);
+	bool Initialize(FString IPAddress, int Port, TransportMode Mode, bool SimulateConnectionToBridge);
 	void Uninitialize();
 	
 	bool SendMessage(const FString& Data) const;
@@ -45,7 +45,8 @@ private:
 	bool KeepSenderThreadRunning = true;
 
 	/* The connection to the ROSBridge */
-	UPROPERTY() UTCPConnection* Connection;
+	UPROPERTY() UTCPConnection* Connection = nullptr;
+	bool SimulateConnection = false;
 
 	/* All registered Topics and Services */
 	UPROPERTY() TArray<UROSTopic*> Topics;

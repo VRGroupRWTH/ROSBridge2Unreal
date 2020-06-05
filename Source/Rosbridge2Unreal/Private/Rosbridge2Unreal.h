@@ -26,7 +26,7 @@ public:
 	void InitializeConnection() override;
 
 	/* Initializes with IP:Port */
-	void InitializeConnection(FString IPAddress, int Port, bool bBSONMode = false) override;
+	void InitializeConnection(FString IPAddress, int Port, bool bBSONMode = false, bool SimulateConnection = false) override;
 
 	/* Ensure connection is made */
 	void EnsureConnection() override;
@@ -57,6 +57,7 @@ private:
 	FString IPAddress = "";
 	int Port = 0;
 	TransportMode TransportMode = TransportMode::JSON;
+	bool SimulateConnection = false;
 
  /* ROSTopics and Services */
 public:

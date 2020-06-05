@@ -38,13 +38,14 @@ void FRosbridge2UnrealModule::InitializeConnection()
 	EnsureConnection();
 }
 
-void FRosbridge2UnrealModule::InitializeConnection(FString InIPAddress, int InPort, bool InBSONMode)
+void FRosbridge2UnrealModule::InitializeConnection(FString InIPAddress, int InPort, bool bBSONMode, bool SimulateConnectionToBridge)
 {
 	if(bRosBridgeInitialized) return;
 	
-	IPAddress = InIPAddress;
-	Port = InPort;
-	TransportMode = (InBSONMode) ? TransportMode::BSON : TransportMode::JSON;
+	this->IPAddress = InIPAddress;
+	this->Port = InPort;
+	this->SimulateConnection = SimulateConnectionToBridge;
+	TransportMode = (bBSONMode) ? TransportMode::BSON : TransportMode::JSON;
 
 	bSettingsInitialized = true;
 	EnsureConnection();
@@ -57,7 +58,7 @@ void FRosbridge2UnrealModule::EnsureConnection()
 	if(!bSettingsInitialized) ReadSettingsFromConfig();
 	
 	RosBridge = NewObject<UROSBridge>();
-	bRosBridgeInitialized = RosBridge->Initialize(IPAddress, this->Port, TransportMode);
+	bRosBridgeInitialized = RosBridge->Initialize(IPAddress, this->Port, TransportMode, SimulateConnection);
 }
 
 UROSBridge* FRosbridge2UnrealModule::GetBridge()
@@ -88,6 +89,7 @@ void FRosbridge2UnrealModule::ReadSettingsFromConfig()
 	this->IPAddress = Settings->IP;
 	this->Port = Settings->Port;
 	this->TransportMode = Settings->TransportationMode;
+	this->SimulateConnection = Settings->SimulateConnection;
 	bSettingsInitialized = true;
 }
 

@@ -10,8 +10,11 @@
 
 DEFINE_LOG_CATEGORY(LogROSBridge);
 
-bool UROSBridge::Initialize(FString IPAddress, int Port, TransportMode Mode)
+bool UROSBridge::Initialize(FString IPAddress, int Port, TransportMode Mode, bool SimulateConnectionToBridge)
 {
+	SimulateConnection = SimulateConnectionToBridge;
+	if(SimulateConnection) return true; //Don't attempt connection
+	
 	Connection = NewObject<UTCPConnection>(this);
 	Connection->RegisterIncomingMessageCallback([this](const ROSData& Message){
 		AsyncTask(ENamedThreads::GameThread, [this, Message]() {
@@ -46,12 +49,15 @@ void UROSBridge::Uninitialize()
 	if (SenderThread) {
 		SenderThread->WaitForCompletion();
 	}
-
-	Connection->Uninitialize();
+	if(Connection)
+	{
+		Connection->Uninitialize();
+	}
 }
 
 bool UROSBridge::SendMessage(const FString& Data) const
 {
+	if(SimulateConnection) return true;
 	return Connection->SendMessage(TCHAR_TO_UTF8(*Data));
 }
 
@@ -69,6 +75,7 @@ bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const
 {
 	ROSData Data;
 	Message.ToData(Data);
+	if(SimulateConnection) return true;
 	return Connection->SendMessage(Data);
 }
 

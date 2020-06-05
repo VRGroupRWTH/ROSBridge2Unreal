@@ -39,7 +39,7 @@ public:
 	virtual void InitializeConnection() = 0;
 
 	/* Initializes with IP:Port */
-	virtual void InitializeConnection(FString IPAddress, int Port, bool bBSONMode = false) = 0;
+	virtual void InitializeConnection(FString IPAddress, int Port, bool bBSONMode = false, bool SimulateConnection = false) = 0;
 
 	/* Ensure connection is made */
 	virtual void EnsureConnection() = 0;
