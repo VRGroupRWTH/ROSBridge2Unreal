@@ -21,5 +21,17 @@ public:
 	TransportMode TransportationMode = TransportMode::JSON;
 
 	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Simulate Connection"))
-	bool SimulateConnection = false;
+	bool bSimulateConnection = false;
+
+	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Emit Clock Events from Unreal"))
+	bool bEmitClockEvents = false;
+
+	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Use Wall Clock Time, else uses the Gameplay Time"))
+	bool bUseWallClockTime = true;
+
+	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Use Fixed Update Interval"))
+	bool bUseFixedUpdateInterval = false;
+
+	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "The Used Update Interval", ClampMin="0"))
+	double FixedUpdateInterval = true;
 };

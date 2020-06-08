@@ -3,6 +3,8 @@
 
 #include "ROSBridge.h"
 
+
+#include "App.h"
 #include "Async.h"
 #include "ROSBridgeMessage.h"
 #include "DataHelpers.h"
@@ -10,10 +12,12 @@
 
 DEFINE_LOG_CATEGORY(LogROSBridge);
 
-bool UROSBridge::Initialize(FString IPAddress, int Port, TransportMode Mode, bool SimulateConnectionToBridge)
+bool UROSBridge::Initialize()
 {
-	SimulateConnection = SimulateConnectionToBridge;
-	if(SimulateConnection) return true; //Don't attempt connection
+	Settings = GetDefault<URosbridgeSettings>();
+	bSettingsRead = true;
+	
+	if(Settings->bSimulateConnection) return true; //Don't attempt connection
 	
 	Connection = NewObject<UTCPConnection>(this);
 	Connection->RegisterIncomingMessageCallback([this](const ROSData& Message){
@@ -22,7 +26,7 @@ bool UROSBridge::Initialize(FString IPAddress, int Port, TransportMode Mode, boo
 		});
 	});
 	
-	const bool ConnectionInitialized = Connection->Initialize(TCHAR_TO_UTF8(*IPAddress), Port, Mode);
+	const bool ConnectionInitialized = Connection->Initialize(TCHAR_TO_UTF8(*Settings->IP), Settings->Port, Settings->TransportationMode);
 	
 	SenderThread = FRunnableThread::Create(this, TEXT("ROSBridgeSenderThread"), 0, TPri_Normal);
 	
@@ -57,7 +61,7 @@ void UROSBridge::Uninitialize()
 
 bool UROSBridge::SendMessage(const FString& Data) const
 {
-	if(SimulateConnection) return true;
+	if(bSettingsRead && Settings->bSimulateConnection) return true;
 	return Connection->SendMessage(TCHAR_TO_UTF8(*Data));
 }
 
@@ -75,7 +79,7 @@ bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const
 {
 	ROSData Data;
 	Message.ToData(Data);
-	if(SimulateConnection) return true;
+	if(bSettingsRead && Settings->bSimulateConnection) return true;
 	return Connection->SendMessage(Data);
 }
 
@@ -109,6 +113,47 @@ UROSService* UROSBridge::GetService(FString ServiceName, TSubclassOf<UROSService
 
 	Services.Add(NewService);
 	return NewService;
+}
+
+void UROSBridge::TickEvent(float DeltaTime)
+{
+	if(!bSettingsRead || !Settings->bEmitClockEvents) return; //Nothing to do here
+	
+	if(!ClockTopic)
+	{
+		ClockTopic = GetTopic("/clock", UROSMsgClock::StaticClass());
+		ClockTopic->Advertise();
+	}
+
+	if(!ClockMessage){
+		ClockMessage = NewObject<UROSMsgClock>(this);
+	}
+
+	if(!bSetUpdateIntervalSettings)
+	{
+		FApp::SetFixedDeltaTime(Settings->FixedUpdateInterval);
+		FApp::SetUseFixedTimeStep(Settings->bUseFixedUpdateInterval);
+		bSetUpdateIntervalSettings = true;
+	}
+	
+	if(Settings->bUseWallClockTime)
+	{
+		const FTimespan WallClockTime = FDateTime::UtcNow() - FDateTime::FromUnixTimestamp(0);
+		ClockMessage->Seconds = static_cast<int32>(WallClockTime.GetTotalSeconds()); //Implicit floor
+		ClockMessage->NanoSeconds = WallClockTime.GetFractionNano();
+		ClockTopic->Publish(ClockMessage);
+	}
+	else
+	{
+		const float Fraction = DeltaTime - FMath::FloorToInt(DeltaTime);
+		ClockMessage->Seconds += FMath::FloorToInt(DeltaTime);
+		ClockMessage->NanoSeconds += Fraction * 1000000000ul;
+		if(ClockMessage->NanoSeconds > 1000000000ul){
+			ClockMessage->Seconds += 1;
+			ClockMessage->NanoSeconds -= 1000000000ul;
+		}
+		ClockTopic->Publish(ClockMessage);
+	}
 }
 
 void UROSBridge::QueueMessage(UROSBridgeMessage* Message)

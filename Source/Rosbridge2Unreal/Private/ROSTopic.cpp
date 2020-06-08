@@ -50,6 +50,7 @@ void UROSTopic::Unsubscribe(const uint32 UniqueId)
 void UROSTopic::ForceUnsubscribeInternal()
 {
 	UROSTopicUnsubscribeMessage* UnsubscribeMessage = NewObject<UROSTopicUnsubscribeMessage>();
+	
 	UnsubscribeMessage->ID = FString::Printf(TEXT("subscribe:%s"), *StoredTopicName); // same ID as subscribe
 	UnsubscribeMessage->TopicName = StoredTopicName;
 	
@@ -113,8 +114,8 @@ void UROSTopic::Publish(const UROSMessageBase* Message)
 	
 	UROSTopicPublishMessage* PublishMessage = NewObject<UROSTopicPublishMessage>();
 	
-	Message->ToData(PublishMessage->Data);		
-
+	Message->ToData(PublishMessage->Data);
+	
 	PublishMessage->TopicName = StoredTopicName;
 	PublishMessage->ID = FString::Printf(TEXT("publish:%s:%ld"), *StoredTopicName, IRosbridge2Unreal::Get().GetNextID());
 	

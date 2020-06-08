@@ -22,14 +22,18 @@ public:
 	
 	void OnSessionEnd(UWorld* World, bool bSessionEnded, bool);
 
+	/* This Declaration changed over time */
+	#if ENGINE_MINOR_VERSION > 23
+		void OnWorldTickStart(UWorld * World, ELevelTick TickType, float DeltaTime);
+	#else 
+		void OnWorldTickStart(ELevelTick TickType, float DeltaTime);
+	#endif
+	
 	/* Initializes with Settings in Project */
 	void InitializeConnection() override;
 
-	/* Initializes with IP:Port */
-	void InitializeConnection(FString IPAddress, int Port, bool bBSONMode = false, bool SimulateConnection = false) override;
-
 	/* Ensure connection is made */
-	void EnsureConnection() override;
+	void EnsureConnectionIsInitialized() override;
 
 	/* Getter for the rosbridge2cpp::ROSBridge */
 	UROSBridge* GetBridge() override;
@@ -44,21 +48,11 @@ public:
 	long GetNextID() override;
 	
 private:
-	/* Reads settings form project settings */
-	void ReadSettingsFromConfig();
-
-	/* Delegates for Start/Stop Play */
-	UPROPERTY() TBaseDelegate<void, UWorld*, bool, bool> OnWorldCleanupDelegate;
 
 	/* Internal Bridge Network */
-	UPROPERTY() UROSBridge* RosBridge = nullptr;
+	UROSBridge* RosBridge = nullptr;
 	bool bRosBridgeInitialized = false;
-	bool bSettingsInitialized = false;
-	FString IPAddress = "";
-	int Port = 0;
-	TransportMode TransportMode = TransportMode::JSON;
-	bool SimulateConnection = false;
-
+	
  /* ROSTopics and Services */
 public:
 	/* Get or create an internal TopicHandle and return it */

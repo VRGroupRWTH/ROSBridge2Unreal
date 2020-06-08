@@ -3,13 +3,15 @@
 #include "Rosbridge2Unreal.h"
 #include "Core.h"
 #include "Engine/World.h"
+#include "ROSMsgClock.h"
 
 #define LOCTEXT_NAMESPACE "FRosbridge2UnrealModule"
 
 void FRosbridge2UnrealModule::StartupModule()
 {	
-	OnWorldCleanupDelegate.BindRaw(this, &FRosbridge2UnrealModule::OnSessionEnd);
-	FWorldDelegates::OnWorldCleanup.Add(OnWorldCleanupDelegate);
+	FWorldDelegates::OnWorldCleanup.AddRaw(this, &FRosbridge2UnrealModule::OnSessionEnd);
+
+	FWorldDelegates::OnWorldTickStart.AddRaw(this, &FRosbridge2UnrealModule::OnWorldTickStart);
 }
 
 void FRosbridge2UnrealModule::ShutdownModule()
@@ -22,43 +24,38 @@ void FRosbridge2UnrealModule::ShutdownModule()
 void FRosbridge2UnrealModule::OnSessionEnd(UWorld* World, bool bSessionEnded, bool)
 {
 	if (!World->IsGameWorld() || !bSessionEnded) return;
-
+	
 	if(RosBridge){
 		RosBridge->Uninitialize();
+		RosBridge->RemoveFromRoot(); /* remove the object from the root set to allow garbage collection */
 		RosBridge = nullptr;
 	}
 	bRosBridgeInitialized = false;
-	bSettingsInitialized = false;
+}
+
+#if ENGINE_MINOR_VERSION > 23
+void FRosbridge2UnrealModule::OnWorldTickStart(UWorld * World, ELevelTick TickType, float DeltaTime)
+#else 
+void FRosbridge2UnrealModule::OnWorldTickStart(ELevelTick TickType, float DeltaTime)
+#endif
+{
+	if(TickType != ELevelTick::LEVELTICK_TimeOnly) return; // Nothing to do here
+
+	if(RosBridge) RosBridge->TickEvent(DeltaTime);
 }
 
 void FRosbridge2UnrealModule::InitializeConnection()
 {
 	if(bRosBridgeInitialized) return;
-	
-	EnsureConnection();
-}
-
-void FRosbridge2UnrealModule::InitializeConnection(FString InIPAddress, int InPort, bool bBSONMode, bool SimulateConnectionToBridge)
-{
-	if(bRosBridgeInitialized) return;
-	
-	this->IPAddress = InIPAddress;
-	this->Port = InPort;
-	this->SimulateConnection = SimulateConnectionToBridge;
-	TransportMode = (bBSONMode) ? TransportMode::BSON : TransportMode::JSON;
-
-	bSettingsInitialized = true;
-	EnsureConnection();
-}
-
-void FRosbridge2UnrealModule::EnsureConnection()
-{
-	if(bRosBridgeInitialized) return;
-
-	if(!bSettingsInitialized) ReadSettingsFromConfig();
-	
+		
 	RosBridge = NewObject<UROSBridge>();
-	bRosBridgeInitialized = RosBridge->Initialize(IPAddress, this->Port, TransportMode, SimulateConnection);
+	RosBridge->AddToRoot(); /* Disallow Garbage Collection for this UObject */
+	bRosBridgeInitialized = RosBridge->Initialize();
+}
+
+void FRosbridge2UnrealModule::EnsureConnectionIsInitialized()
+{
+	if(!bRosBridgeInitialized) InitializeConnection();	
 }
 
 UROSBridge* FRosbridge2UnrealModule::GetBridge()
@@ -68,7 +65,8 @@ UROSBridge* FRosbridge2UnrealModule::GetBridge()
 
 bool FRosbridge2UnrealModule::IsBSONMode()
 {
-	return TransportMode == TransportMode::BSON;
+	if(!RosBridge) return false;
+	return RosBridge->IsBSONMode();
 }
 
 bool FRosbridge2UnrealModule::SendMessage(UROSBridgeMessage& Message)
@@ -83,25 +81,15 @@ long FRosbridge2UnrealModule::GetNextID()
 	return RosBridge->GetNextID();
 }
 
-void FRosbridge2UnrealModule::ReadSettingsFromConfig()
-{
-	const URosbridgeSettings* Settings = GetDefault<URosbridgeSettings>();
-	this->IPAddress = Settings->IP;
-	this->Port = Settings->Port;
-	this->TransportMode = Settings->TransportationMode;
-	this->SimulateConnection = Settings->SimulateConnection;
-	bSettingsInitialized = true;
-}
-
 UROSTopic* FRosbridge2UnrealModule::GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
-	EnsureConnection();
+	EnsureConnectionIsInitialized();
 	return RosBridge->GetTopic(TopicName, MessageClass);
 }
 
 UROSService* FRosbridge2UnrealModule::GetService(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
-	EnsureConnection();
+	EnsureConnectionIsInitialized();
 	return RosBridge->GetService(ServiceName, ServiceClass);
 }
 

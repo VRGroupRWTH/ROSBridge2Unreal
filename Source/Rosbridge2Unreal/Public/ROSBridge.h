@@ -8,6 +8,8 @@
 #include "Socket/TCPConnection.h"
 #include "HAL/Runnable.h"
 #include "ROSService.h"
+#include "ROSMsgClock.h"
+#include "RosbridgeSettings.h"
 #include "ROSBridge.generated.h"
 
 /**
@@ -19,7 +21,9 @@ class ROSBRIDGE2UNREAL_API UROSBridge : public UObject, public FRunnable
 	GENERATED_BODY()
 public:
 
-	bool Initialize(FString IPAddress, int Port, TransportMode Mode, bool SimulateConnectionToBridge);
+	/* Reads settings from project settings and initializes the connection */
+	bool Initialize();
+	
 	void Uninitialize();
 	
 	bool SendMessage(const FString& Data) const;
@@ -35,6 +39,9 @@ public:
 
 	/* Get or create an internal ServiceHandle and return it */
 	UROSService* GetService(FString ServiceName,  TSubclassOf<UROSServiceBase> ServiceClass);
+
+	/* Used to send clock events */
+	void TickEvent(float DeltaTime);
 	
 private:
 	/* Message Queueing */
@@ -46,7 +53,6 @@ private:
 
 	/* The connection to the ROSBridge */
 	UPROPERTY() UTCPConnection* Connection = nullptr;
-	bool SimulateConnection = false;
 
 	/* All registered Topics and Services */
 	UPROPERTY() TArray<UROSTopic*> Topics;
@@ -60,4 +66,12 @@ private:
 
 	/* Critical Sections */
 	FCriticalSection MutexMessageQueue;
+
+	/* Timing Stuff */
+	UPROPERTY() UROSTopic* ClockTopic = nullptr;
+	UPROPERTY() UROSMsgClock* ClockMessage;
+	bool bSetUpdateIntervalSettings = false;
+
+	UPROPERTY() const URosbridgeSettings* Settings;
+	bool bSettingsRead = false;
 };

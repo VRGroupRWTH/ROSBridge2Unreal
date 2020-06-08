@@ -16,7 +16,7 @@ void UROSServiceHandle::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void UROSServiceHandle::Initialize(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
-	IRosbridge2Unreal::Get().EnsureConnection();
+	IRosbridge2Unreal::Get().EnsureConnectionIsInitialized();
 	
 	InternalService = IRosbridge2Unreal::Get().GetService(ServiceName, ServiceClass);
 }
