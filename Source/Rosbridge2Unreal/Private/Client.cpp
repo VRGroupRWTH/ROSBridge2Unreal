@@ -2,6 +2,8 @@
 
 
 #include "Client.h"
+
+#include "Engine/Engine.h"
 #include "ROSMsgString.h"
 #include "ROSSrvAddTwoInts.h"
 
@@ -11,10 +13,10 @@ AClient::AClient()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Topic = CreateDefaultSubobject<UROSTopicHandle>("FirstTopic");
-	Topic2 = CreateDefaultSubobject<UROSTopicHandle>("SecondTopic");
-	Service = CreateDefaultSubobject<UROSServiceHandle>("FirstService");
-	Service2 = CreateDefaultSubobject<UROSServiceHandle>("SecondService");
+	ReceiveTopic = CreateDefaultSubobject<UROSTopicHandle>("ReceiveTopic");
+	SendTopic = CreateDefaultSubobject<UROSTopicHandle>("SendTopic");
+	ExternalService = CreateDefaultSubobject<UROSServiceHandle>("ExternalService");
+	OfferedService = CreateDefaultSubobject<UROSServiceHandle>("OfferedService");
 }
 
 // Called when the game starts or when spawned
@@ -22,22 +24,22 @@ void AClient::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Topic->Initialize("/chatter", UROSMsgString::StaticClass());
-	Topic2->Initialize("/test_rosbridge2cpp", UROSMsgString::StaticClass());
-
-	Topic->Subscribe(CallbackHelper::Subscribe<UROSMsgString>([](const UROSMsgString* Msg)
+	ReceiveTopic->Initialize("/chatter", UROSMsgString::StaticClass());
+	SendTopic->Initialize("/chatter_unreal", UROSMsgString::StaticClass());
+	
+	ReceiveTopic->Subscribe(CallbackHelper::Subscribe<UROSMsgString>([](const UROSMsgString* Msg)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Received: %s"), *Msg->Data);
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Cyan, "Received: " + Msg->Data);
 	}));
 
-	Service->Initialize("/add_two_ints", UROSSrvAddTwoInts::StaticClass());
-	Service->RegisterResponseCallback(CallbackHelper::Response<UROSSrvAddTwoInts>([](const UROSSrvAddTwoInts* Rsp)
+	ExternalService->Initialize("/add_two_ints", UROSSrvAddTwoInts::StaticClass());
+	ExternalService->RegisterResponseCallback(CallbackHelper::Response<UROSSrvAddTwoInts>([](const UROSSrvAddTwoInts* Rsp)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Sum of two Ints: %lld"), Rsp->Sum);
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Cyan, "Sum of two Ints: " + FString::FromInt(Rsp->Sum));
 	}));
 
-	Service2->Initialize("/add_two_ints_unreal", UROSSrvAddTwoInts::StaticClass());
-	Service2->Advertise(CallbackHelper::Advertise<UROSSrvAddTwoInts>([](UROSSrvAddTwoInts* Request)
+	OfferedService->Initialize("/add_two_ints_unreal", UROSSrvAddTwoInts::StaticClass());
+	OfferedService->Advertise(CallbackHelper::Advertise<UROSSrvAddTwoInts>([](UROSSrvAddTwoInts* Request)
 	{
 		Request->Sum = Request->A + Request->B;
 	}));
@@ -48,9 +50,9 @@ void AClient::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	Topic2->Publish(UROSMsgString::Create("Test" + FString::FromInt(Count)));
+	SendTopic->Publish(UROSMsgString::Create("Test" + FString::FromInt(Count)));
 
-	Service->CallRecurrent(UROSSrvAddTwoInts::CreateRequest(Count, 2*Count));
+	ExternalService->CallRecurrent(UROSSrvAddTwoInts::CreateRequest(Count, 2*Count));
 	
 	Count++;	
 }

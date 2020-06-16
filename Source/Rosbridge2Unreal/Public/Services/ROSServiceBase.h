@@ -8,7 +8,7 @@
 #include "ROSServiceBase.generated.h"
 
 
-UCLASS(abstract)
+UCLASS(abstract, hidedropdown, blueprintable, classgroup=ROSServices)
 class ROSBRIDGE2UNREAL_API UROSServiceBase : public UObject
 {
 	GENERATED_BODY()

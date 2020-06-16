@@ -6,7 +6,7 @@
 #include "ROSMessageBase.h"
 #include "ROSMsgString.generated.h"
 
-UCLASS(Blueprintable)
+UCLASS(BlueprintType)
 class ROSBRIDGE2UNREAL_API UROSMsgString : public UROSMessageBase
 {
 	GENERATED_BODY()

@@ -9,7 +9,7 @@
 #include "ROSSrvAddTwoInts.generated.h"
 
 
-UCLASS(Blueprintable)
+UCLASS(BlueprintType)
 class ROSBRIDGE2UNREAL_API UROSSrvAddTwoInts : public UROSServiceBase
 {
 	GENERATED_BODY()

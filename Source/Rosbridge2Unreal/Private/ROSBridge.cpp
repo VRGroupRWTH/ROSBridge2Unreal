@@ -67,7 +67,7 @@ bool UROSBridge::SendMessage(const FString& Data) const
 
 long UROSBridge::GetNextID()
 {
-	return IDCounter++;
+	return ++IDCounter;
 }
 
 bool UROSBridge::IsBSONMode() const

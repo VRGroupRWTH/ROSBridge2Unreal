@@ -27,9 +27,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UROSTopicHandle* Topic;
-	UROSTopicHandle* Topic2;
-	UROSServiceHandle* Service;
-	UROSServiceHandle* Service2;
+	UPROPERTY() UROSTopicHandle* ReceiveTopic;
+	UPROPERTY() UROSTopicHandle* SendTopic;
+	UPROPERTY() UROSServiceHandle* ExternalService;
+	UPROPERTY() UROSServiceHandle* OfferedService;
 	uint64 Count = 0;
 };
