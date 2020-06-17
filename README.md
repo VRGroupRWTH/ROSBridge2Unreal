@@ -32,6 +32,12 @@ roslaunch rosbridge_server rosbridge_tcp.launch #bson_only_mode:=True
 
 4. Create an Actor as described in the usage of this plugin
 
+5. If you use this Plugin in C++ code, make sure to add "Rosbridge2Unreal" and "jsoncons" to the *PublicDependencyModuleNames* of your projects `*.Build.cs` file like this:
+   
+   ```csharp
+   PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Rosbridge2Unreal", "jsoncons" });
+   ```
+
 ## Usage Blueprints:
 
 ### Topics:
