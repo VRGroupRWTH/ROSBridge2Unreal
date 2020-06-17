@@ -93,7 +93,9 @@ uint32 UTCPConnection::Run()
 	bReceiverThreadRunning = true;
 	
 	TArray<uint8> BinaryBuffer;
+	BinaryBuffer.Reserve(65536); //16bit address, used by ROSBridge as a default
 	uint32 PendingData = 0;
+	uint32 RemainingData = 0;
 
 	while (!bTerminateReceiverThread) {
 
@@ -131,7 +133,7 @@ uint32 UTCPConnection::Run()
 			}
 
 			//Initialize Buffer
-			BinaryBuffer.SetNumZeroed(BSONMessageLength, false);
+			if(BinaryBuffer.Num() < BSONMessageLength) BinaryBuffer.SetNumZeroed(BSONMessageLength, false);
 			FMemory::Memcpy(BinaryBuffer.GetData(),&BSONMessageLength,sizeof(BSONMessageLength));
 				
 			//Receive BSONMessageLength bytes in binary_buffer
@@ -151,7 +153,7 @@ uint32 UTCPConnection::Run()
 			ROSData Data;
 			try{
 				Data = jsoncons::bson::decode_bson<ROSData>(BinaryBuffer.GetData(), BinaryBuffer.GetData() + BSONMessageLength);
-			}catch(...)
+			}catch(jsoncons::ser_error e)
 			{
 				UE_LOG(LogROSBridge, Error, TEXT("Error while parsing BSON message (Ignoring message)"));
 				continue;
@@ -161,34 +163,34 @@ uint32 UTCPConnection::Run()
 			
 		} else if(CurrentTransportMode == TransportMode::JSON) {
 
-			int32 TotalBytesRead = 0;
-			while (Socket->HasPendingData(PendingData)) {
-				//Ensure space in buffer
-				BinaryBuffer.SetNumZeroed(TotalBytesRead + PendingData, false);
-				
-				int32 BytesRead = 0;
-				if(!Socket->Recv(BinaryBuffer.GetData() + TotalBytesRead, PendingData, BytesRead))
-				{
-					UE_LOG(LogROSBridge, Error, TEXT("Failed to receive from socket. Closing receiver thread."));
-					ReportError(TransportError::SocketError);
-					bReceiverThreadRunning = false;
-					return EXIT_FAILURE;
-				}
-				TotalBytesRead += BytesRead;
+			if(!Socket->HasPendingData(PendingData)) continue;
+			
+			//Ensure space in buffer
+			if(static_cast<uint32>(BinaryBuffer.Num()) < PendingData + RemainingData) BinaryBuffer.SetNumZeroed(PendingData + RemainingData, false);
+			
+			int32 BytesRead = 0;
+			if(!Socket->Recv(BinaryBuffer.GetData() + RemainingData, PendingData, BytesRead, ESocketReceiveFlags::WaitAll))
+			{
+				UE_LOG(LogROSBridge, Error, TEXT("Failed to receive from socket. Closing receiver thread."));
+				ReportError(TransportError::SocketError);
+				bReceiverThreadRunning = false;
+				return EXIT_FAILURE;
 			}
 
-			if(TotalBytesRead == 0) continue;
-			
-			//NULL termination done automatically
-			BinaryBuffer.SetNumZeroed(TotalBytesRead + 1, false);
+			if(BytesRead <= 0) continue;
 
 			//Split multiple jsons into single ones
 			uint64 StartChar = 0;
-			uint64 OpenScopes = 0;
-			for(uint64 i = 0; i < BinaryBuffer.Num(); i++)
+			int64 OpenScopes = 0;
+			for(uint64 i = 0; i < BytesRead + RemainingData; ++i)
 			{
+				if(BinaryBuffer[i] == '{' && OpenScopes == 0) StartChar = i;
 				if(BinaryBuffer[i] == '{') OpenScopes++;
 				if(BinaryBuffer[i] == '}') OpenScopes--;
+				if(OpenScopes < 0){
+					StartChar = i;
+					OpenScopes = 0;
+				}
 				if(OpenScopes == 0 && i - StartChar > 0)
 				{
 					ROSData Data;
@@ -202,6 +204,12 @@ uint32 UTCPConnection::Run()
 					}
 					StartChar = i + 1;
 				}
+			}
+
+			RemainingData = BytesRead + RemainingData - StartChar;
+			if(RemainingData >= 0) //Remaining Data (incomplete JSON)
+			{
+				FMemory::Memmove(BinaryBuffer.GetData(),BinaryBuffer.GetData() + StartChar, RemainingData);
 			}
 		}
 	}
