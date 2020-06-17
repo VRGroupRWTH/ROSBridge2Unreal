@@ -291,34 +291,37 @@ This implementation is very similar to the *Implement own Message-Types* chapter
 
 The following message types are pre-implemented. The tables show if the message types were implemented and tested already. If they were not tested, this does not mean, that they do not work, just that we did not have any use case to test them. If you tested one of them, report your testing result in [this Issue](https://github.com/VRGroupRWTH/ROSBridge2Unreal/issues/1), such that we can update this table.
 
-| Topic Message Type                | Implemented | Tested |
-| --------------------------------- | ----------- | ------ |
-| std_msgs/Header                   | ✓           | ✘      |
-| std_msgs/String                   | ✓           | ✓      |
-| std_msgs/Float32                  | ✓           | ✘      |
-| std_msgs/Float32MultiArray        | ✓           | ✘      |
-| std_msgs/MultiArrayDimension      | ✓           | ✘      |
-| std_msgs/MultiArrayLayout         | ✓           | ✘      |
-| std_msgs/UInt8MultiArray          | ✓           | ✘      |
-| geometry_msgs/Point               | ✓           | ✘      |
-| geometry_msgs/Pose                | ✓           | ✘      |
-| geometry_msgs/PoseStamped         | ✓           | ✘      |
-| geometry_msgs/PoseWithCovariance  | ✓           | ✘      |
-| geometry_msgs/Quaternion          | ✓           | ✘      |
-| geometry_msgs/Transform           | ✓           | ✘      |
-| geometry_msgs/TransformStamped    | ✓           | ✘      |
-| geometry_msgs/Twist               | ✓           | ✘      |
-| geometry_msgs/TwistWithCovariance | ✓           | ✘      |
-| geometry_msgs/Vector3             | ✓           | ✘      |
-| rosgraph_msgs/Clock               | ✓           | ✓      |
+
+| Topic Message Type                | Implemented | Tested | \*BP Tested <sup>1</sup> |
+| :-------------------------------- | ----------- | ------ | -----------------      |
+| std_msgs/Header                   | ✓           | ✘      | -                      |
+| std_msgs/String                   | ✓           | ✓      | -                      |
+| std_msgs/Float32                  | ✓           | ✘      | -                      |
+| std_msgs/Float32MultiArray        | ✓           | ✘      | -                      |
+| std_msgs/MultiArrayDimension      | ✓           | ✘      | -                      |
+| std_msgs/MultiArrayLayout         | ✓           | ✘      | -                      |
+| std_msgs/UInt8MultiArray          | ✓           | ✘      | -                      |
+| geometry_msgs/Point               | ✓           | ✘      | ✘                     |
+| geometry_msgs/Pose                | ✓           | ✘      | ✓                      |
+| geometry_msgs/PoseStamped         | ✓           | ✘      | ✘                     |
+| geometry_msgs/PoseWithCovariance  | ✓           | ✘      | ✘                     |
+| geometry_msgs/Quaternion          | ✓           | ✘      | ✘                     |
+| geometry_msgs/Transform           | ✓           | ✘      | ✘                     |
+| geometry_msgs/TransformStamped    | ✓           | ✘      | ✘                     |
+| geometry_msgs/Twist               | ✓           | ✘      | ✘                     |
+| geometry_msgs/TwistWithCovariance | ✓           | ✘      | ✘                     |
+| geometry_msgs/Vector3             | ✓           | ✘      | ✘                     |
+| rosgraph_msgs/Clock               | ✓           | ✓      | -                      |
 
 | Service Message Type       | Implemented | Tested |
-| -------------------------- | ----------- | ------ |
+| :------------------------- | ----------- | ------ |
 | rospy_tutorials/AddTwoInts | ✓           | ✓      |
 
 | Unreal Version    | Tested  |
-| ----------------- | ------- |
+| :---------------- | ------- |
 | 4.22              | ✓       |
+
+> <sup>1</sup> Since some messages originally use doubles/float64 and these are not compatible with blueprints, a special BP version of the message was implemented, that works in blueprints, but offers less precision
 
 ## Contribute:
 
