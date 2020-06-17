@@ -232,6 +232,48 @@ roslaunch rosbridge_server rosbridge_tcp.launch #bson_only_mode:=True
 4. The usage of the DataHelpers can be really handy here
 
 5. The resulting code could look something like this:
+```cpp
+#include "CoreMinimal.h"
+#include "ROSMessageBase.h"
+#include "DataHelpers.h"
+#include "ROSMsgString.generated.h"
+
+UCLASS(BlueprintType)
+class ROSBRIDGE2UNREAL_API UROSMsgString : public UROSMessageBase
+{
+    GENERATED_BODY()
+
+public:
+    /* Construction */
+    UROSMsgString(){};
+    UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/String";};
+    UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgString* Create(FString Data);
+    
+    /* Data */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) FString Data;
+
+    /* Transformation Functions */
+    void ToData(ROSData& Message) const override;
+    bool FromData(const ROSData& Message) override;
+};
+
+UROSMsgString* UROSMsgString::Create(FString Data)
+{
+    UROSMsgString* Message = NewObject<UROSMsgString>();
+    Message->Data = Data;
+    return Message;
+}
+
+void UROSMsgString::ToData(ROSData& Message) const
+{
+    DataHelpers::AppendString(Message, "data", Data);
+}
+
+bool UROSMsgString::FromData(const ROSData& Message)
+{
+    return DataHelpers::ExtractString(Message, "data", Data);
+}
+```
 
 6. For more examples examine the `Rosbridge2Unreal/Source/Rosbridge2Unreal/<Private/Public>/Messages`
 
@@ -267,6 +309,10 @@ The following message types are pre-implemented. The tables show if the message 
 | Service Message Type       | Implemented | Tested |
 | -------------------------- | ----------- | ------ |
 | rospy_tutorials/AddTwoInts | ✓           | ✓      |
+
+| Unreal Version    | Tested  |
+| ----------------- | ------- |
+| 4.22              | ✓       |
 
 ## Contribute:
 
