@@ -24,8 +24,9 @@ roslaunch rosbridge_server rosbridge_tcp.launch #bson_only_mode:=True
 
 ### Unreal Plugin
 
-1. [Download the master branch of this repository](https://github.com/VRGroupRWTH/ROSBridge2Unreal/archive/master.zip) and extract it into `/Plugins/Rosbridge2Unreal` of your project.
-
+1. Either:
+  - [Download the master branch of this repository](https://github.com/VRGroupRWTH/ROSBridge2Unreal/archive/master.zip) as a Zip and extract it into `/Plugins/Rosbridge2Unreal` of your project
+  - Use a Git repository with submodules and execute: `git submodule add https://github.com/VRGroupRWTH/ROSBridge2Unreal.git Plugins/Rosbridge2Unreal/`
 2. Startup your project and let unreal build this plugin. After startup, activate the plugin in `Edit → Plugins → Project (At the bottom) → Other` if it isn't already.
 
 3. Open the plugins settings in `Edit → Project Settings → Game → ROS Bridge` and enter the IP, Port and Transportation mode of your ROSBridge instance
