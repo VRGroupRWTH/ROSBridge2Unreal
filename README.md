@@ -103,7 +103,7 @@ roslaunch rosbridge_server rosbridge_tcp.launch #bson_only_mode:=True
   #include "Client.h"
 
   #include "Engine/Engine.h"
-  #include "ROSMsgString.h"
+  #include "Messages/std_msgs/ROSMsgString.h"
   #include "ROSTopicHandle.h"
 
   AClient::AClient()
@@ -131,7 +131,7 @@ roslaunch rosbridge_server rosbridge_tcp.launch #bson_only_mode:=True
   #include "Client.h"
 
   #include "Engine/Engine.h"
-  #include "ROSMsgString.h"
+  #include "Messages/std_msgs/ROSMsgString.h"
   #include "ROSTopicHandle.h"
 
   AClient::AClient()
@@ -167,7 +167,7 @@ roslaunch rosbridge_server rosbridge_tcp.launch #bson_only_mode:=True
 
   #include "Engine/Engine.h"
   #include "ROSServiceHandle.h"
-  #include "ROSSrvAddTwoInts.h"
+  #include "Services/rospy_tutorials/ROSSrvAddTwoInts.h"
 
   AClient::AClient()
   {
@@ -204,7 +204,7 @@ roslaunch rosbridge_server rosbridge_tcp.launch #bson_only_mode:=True
 
   #include "Engine/Engine.h"
   #include "ROSServiceHandle.h"
-  #include "ROSSrvAddTwoInts.h"
+  #include "Services/rospy_tutorials/ROSSrvAddTwoInts.h"
 
   AClient::AClient()
   {
@@ -241,7 +241,7 @@ roslaunch rosbridge_server rosbridge_tcp.launch #bson_only_mode:=True
 5. The resulting code could look something like this:
 ```cpp
 #include "CoreMinimal.h"
-#include "ROSMessageBase.h"
+#include "Messages/ROSMessageBase.h"
 #include "DataHelpers.h"
 #include "ROSMsgString.generated.h"
 
@@ -321,6 +321,7 @@ The following message types are pre-implemented. The tables show if the message 
 | Unreal Version    | Tested  |
 | :---------------- | ------- |
 | 4.22              | ✓       |
+| 4.25              | ✓       |
 
 > <sup>1</sup> Since some messages originally use doubles/float64 and these are not compatible with blueprints, a special BP version of the message was implemented, that works in blueprints, but offers less precision
 
