@@ -3,7 +3,6 @@
 #include "Rosbridge2Unreal.h"
 #include "Core.h"
 #include "Engine/World.h"
-#include "ROSMsgClock.h"
 
 #define LOCTEXT_NAMESPACE "FRosbridge2UnrealModule"
 

@@ -4,15 +4,14 @@
 #include "ROSTopic.h"
 
 #include "LogCategory.h"
-#include "ROSMessageBase.h"
-#include "DataHelpers.h"
+#include "Messages/ROSMessageBase.h"
 
 #include "IRosbridge2Unreal.h"
-#include "ROSTopicAdvertiseMessage.h"
-#include "ROSTopicPublishMessage.h"
-#include "ROSTopicSubscribeMessage.h"
-#include "ROSTopicUnadvertiseMessage.h"
-#include "ROSTopicUnsubscribeMessage.h"
+#include "Messages/internal/ROSTopicAdvertiseMessage.h"
+#include "Messages/internal/ROSTopicPublishMessage.h"
+#include "Messages/internal/ROSTopicSubscribeMessage.h"
+#include "Messages/internal/ROSTopicUnadvertiseMessage.h"
+#include "Messages/internal/ROSTopicUnsubscribeMessage.h"
 
 UROSTopic::UROSTopic(){}
 

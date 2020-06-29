@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSMsgTwistBP.h"
+#include "Messages/geometry_msgs/ROSMsgTwistBP.h"
 #include "DataHelpers.h"
 
 UROSMsgTwistBP* UROSMsgTwistBP::Create(const float& Lx, const float& Ly, const float& Lz, const float& Ax, const float& Ay, const float& Az)

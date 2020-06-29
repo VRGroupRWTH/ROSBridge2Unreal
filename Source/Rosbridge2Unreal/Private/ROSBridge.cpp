@@ -4,9 +4,9 @@
 #include "ROSBridge.h"
 
 
-#include "App.h"
-#include "Async.h"
-#include "ROSBridgeMessage.h"
+#include "Misc/App.h"
+#include "Async/Async.h"
+#include "Messages/internal/ROSBridgeMessage.h"
 #include "DataHelpers.h"
 #include "LogCategory.h"
 

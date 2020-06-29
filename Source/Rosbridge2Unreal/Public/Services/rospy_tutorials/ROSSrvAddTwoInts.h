@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TypeDefinitions.h"
-#include "ROSServiceBase.h"
+#include "Services/ROSServiceBase.h"
 
 #include "ROSSrvAddTwoInts.generated.h"
 

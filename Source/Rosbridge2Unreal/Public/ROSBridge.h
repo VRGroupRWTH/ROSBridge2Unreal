@@ -8,7 +8,7 @@
 #include "Socket/TCPConnection.h"
 #include "HAL/Runnable.h"
 #include "ROSService.h"
-#include "ROSMsgClock.h"
+#include "Messages/graph_msgs/ROSMsgClock.h"
 #include "RosbridgeSettings.h"
 #include "ROSBridge.generated.h"
 

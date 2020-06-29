@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSMsgQuaternion.h"
+#include "Messages/geometry_msgs/ROSMsgQuaternion.h"
 #include "DataHelpers.h"
 
 UROSMsgQuaternion* UROSMsgQuaternion::Create(const FQuat& Data)

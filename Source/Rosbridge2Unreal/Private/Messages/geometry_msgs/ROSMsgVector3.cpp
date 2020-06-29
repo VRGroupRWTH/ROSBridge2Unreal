@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSMsgVector3.h"
+#include "Messages/geometry_msgs/ROSMsgVector3.h"
 #include "DataHelpers.h"
 
 UROSMsgVector3* UROSMsgVector3::CreateFromVector(const FVector& Data)

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ROSMessageBase.h"
-#include "ROSMsgMultiArrayLayout.h"
+#include "Messages/ROSMessageBase.h"
+#include "Messages/std_msgs/ROSMsgMultiArrayLayout.h"
 #include "ROSMsgFloat32MultiArray.generated.h"
 
 UCLASS(BlueprintType)

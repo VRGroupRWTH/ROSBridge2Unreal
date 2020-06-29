@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSTopicSubscribeMessage.h"
+#include "Messages/internal/ROSTopicSubscribeMessage.h"
 #include "DataHelpers.h"
 
 void UROSTopicSubscribeMessage::ToData(ROSData& Message) const

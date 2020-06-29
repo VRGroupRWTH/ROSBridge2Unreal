@@ -1,8 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "Engine/EngineTypes.h"
+#include "TypeDefinitions.h"
 #include "Engine/DeveloperSettings.h"
-#include "Socket/TCPConnection.h"
 #include "RosbridgeSettings.generated.h"
 
 UCLASS(config=Game, defaultconfig, meta=(DisplayName="ROS Bridge"))

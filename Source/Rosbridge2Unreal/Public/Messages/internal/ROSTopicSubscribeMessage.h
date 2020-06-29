@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ROSBridgeMessage.h"
+#include "Messages/internal/ROSBridgeMessage.h"
 #include "ROSTopicSubscribeMessage.generated.h"
 
 UCLASS(Blueprintable)

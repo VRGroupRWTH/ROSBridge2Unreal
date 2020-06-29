@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Base64.h"
 #include "CoreMinimal.h"
 #include "TypeDefinitions.h"
 

@@ -3,8 +3,8 @@
 
 #include "ROSService.h"
 #include "IRosbridge2Unreal.h"
-#include "ROSServiceAdvertiseMessage.h"
-#include "ROSServiceUnadvertiseMessage.h"
+#include "Messages/internal/ROSServiceAdvertiseMessage.h"
+#include "Messages/internal/ROSServiceUnadvertiseMessage.h"
 
 void UROSService::Initialize(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {

@@ -5,7 +5,7 @@
 #include "Components/ActorComponent.h"
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "ROSServiceBase.h"
+#include "Services/ROSServiceBase.h"
 
 #include "ROSService.h"
 

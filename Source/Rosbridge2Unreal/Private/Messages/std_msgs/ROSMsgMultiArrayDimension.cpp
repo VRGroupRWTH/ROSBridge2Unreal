@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSMsgMultiArrayDimension.h"
+#include "Messages/std_msgs/ROSMsgMultiArrayDimension.h"
 #include "DataHelpers.h"
 
 UROSMsgMultiArrayDimension* UROSMsgMultiArrayDimension::Create(const FString Label, const int64 Size, const int64 Stride)

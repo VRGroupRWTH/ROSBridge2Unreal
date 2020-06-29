@@ -4,11 +4,9 @@
 
 #include "Engine/World.h"
 #include "IRosbridge2Unreal.h"
-#include "Modules/ModuleManager.h"
-#include "RosbridgeSettings.h"
 #include "Socket/TCPConnection.h"
 #include "ROSTopic.h"
-#include "ROSMessageBase.h"
+#include "Messages/ROSMessageBase.h"
 
 
 class FRosbridge2UnrealModule : public IRosbridge2Unreal

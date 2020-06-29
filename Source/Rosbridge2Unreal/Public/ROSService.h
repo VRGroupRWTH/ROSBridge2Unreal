@@ -3,12 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TypeDefinitions.h"
 #include "Templates/SubclassOf.h"
 
-#include "ROSServiceBase.h"
-#include "ROSServiceCallMessage.h"
-#include "ROSServiceResponseMessage.h"
+#include "Services/ROSServiceBase.h"
+#include "Messages/internal/ROSServiceCallMessage.h"
+#include "Messages/internal/ROSServiceResponseMessage.h"
 #include "ROSService.generated.h"
 
 UCLASS()

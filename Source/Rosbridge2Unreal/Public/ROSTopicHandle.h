@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "TypeDefinitions.h"
-#include "ROSMessageBase.h"
+#include "Messages/ROSMessageBase.h"
 #include "ROSTopic.h"
 #include "ROSTopicHandle.generated.h"
 

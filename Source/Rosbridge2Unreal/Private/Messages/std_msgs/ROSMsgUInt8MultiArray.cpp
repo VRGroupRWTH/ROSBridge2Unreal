@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSMsgUInt8MultiArray.h"
+#include "Messages/std_msgs/ROSMsgUInt8MultiArray.h"
 #include "DataHelpers.h"
 
 UROSMsgUInt8MultiArray* UROSMsgUInt8MultiArray::Create(TArray<uint8> Data, UROSMsgMultiArrayLayout* Layout)

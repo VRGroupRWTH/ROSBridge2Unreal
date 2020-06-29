@@ -3,8 +3,8 @@
 #include "CoreMinimal.h"
 #include "Sockets.h"
 #include "TypeDefinitions.h"
-#include "Runnable.h"
-#include "RunnableThread.h"
+#include "HAL/Runnable.h"
+#include "HAL/RunnableThread.h"
 
 #include "TCPConnection.generated.h"
 

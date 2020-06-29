@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSMsgPoint.h"
+#include "Messages/geometry_msgs/ROSMsgPoint.h"
 #include "DataHelpers.h"
 
 UROSMsgPoint* UROSMsgPoint::CreateFromVector(const FVector& Data)

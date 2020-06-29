@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSMsgPose.h"
+#include "Messages/geometry_msgs/ROSMsgPose.h"
 #include "DataHelpers.h"
 
 UROSMsgPose* UROSMsgPose::CreateFromPositionOrientation(const FVector& Position, const FQuat& Orientation)

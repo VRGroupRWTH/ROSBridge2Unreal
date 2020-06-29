@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Messages/ROSMessageBase.h"
-#include "ROSMsgPose.h"
+#include "Messages/geometry_msgs/ROSMsgPose.h"
 #include "ROSMsgPoseWithCovariance.generated.h"
 
 /**

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Messages/ROSMessageBase.h"
-#include "ROSMsgTwist.h"
+#include "Messages/geometry_msgs/ROSMsgTwist.h"
 #include "ROSMsgTwistWithCovariance.generated.h"
 
 /**

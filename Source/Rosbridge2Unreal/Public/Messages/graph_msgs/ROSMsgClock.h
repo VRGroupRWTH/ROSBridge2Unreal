@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ROSMessageBase.h"
+#include "Messages/ROSMessageBase.h"
 #include "ROSMsgClock.generated.h"
 
 UCLASS(BlueprintType)

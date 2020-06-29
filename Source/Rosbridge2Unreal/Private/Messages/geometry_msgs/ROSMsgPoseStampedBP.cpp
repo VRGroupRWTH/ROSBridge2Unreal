@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSMsgPoseStampedBP.h"
+#include "Messages/geometry_msgs/ROSMsgPoseStampedBP.h"
 #include "DataHelpers.h"
 
 UROSMsgPoseStampedBP* UROSMsgPoseStampedBP::Create(UROSMsgHeader* Header, UROSMsgPoseBP* Pose)

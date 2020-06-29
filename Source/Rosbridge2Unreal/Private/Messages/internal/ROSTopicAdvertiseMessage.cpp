@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ROSTopicAdvertiseMessage.h"
+#include "Messages/internal/ROSTopicAdvertiseMessage.h"
 #include "DataHelpers.h"
 
 void UROSTopicAdvertiseMessage::ToData(ROSData& Message) const

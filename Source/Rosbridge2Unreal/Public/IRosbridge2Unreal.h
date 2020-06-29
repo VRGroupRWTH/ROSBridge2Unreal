@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ModuleManager.h"
+#include "Modules/ModuleManager.h"
 #include "ROSBridge.h"
-#include "ROSMessageBase.h"
+#include "Messages/ROSMessageBase.h"
 #include "ROSTopic.h"
 
 class IRosbridge2Unreal : public IModuleInterface

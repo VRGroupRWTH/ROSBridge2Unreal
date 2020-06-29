@@ -4,10 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Templates/SubclassOf.h"
-#include "TypeDefinitions.h"
-#include "ROSMessageBase.h"
+#include "Messages/ROSMessageBase.h"
 
-#include "ROSTopicPublishMessage.h"
+#include "Messages/internal/ROSTopicPublishMessage.h"
 #include "ROSTopic.generated.h"
 
 

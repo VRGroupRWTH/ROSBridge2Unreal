@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Messages/ROSMessageBase.h"
-#include "ROSMsgHeader.h"
-#include "ROSMsgTransformBP.h"
+#include "Messages/std_msgs/ROSMsgHeader.h"
+#include "Messages/geometry_msgs/ROSMsgTransformBP.h"
 #include "ROSMsgTransformStampedBP.generated.h"
 
 /**

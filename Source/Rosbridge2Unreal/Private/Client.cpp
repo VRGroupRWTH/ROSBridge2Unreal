@@ -4,8 +4,8 @@
 #include "Client.h"
 
 #include "Engine/Engine.h"
-#include "ROSMsgString.h"
-#include "ROSSrvAddTwoInts.h"
+#include "Messages/std_msgs/ROSMsgString.h"
+#include "Services/rospy_tutorials/ROSSrvAddTwoInts.h"
 
 // Sets default values
 AClient::AClient()
