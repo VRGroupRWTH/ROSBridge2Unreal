@@ -10,27 +10,27 @@ class URosbridgeSettings : public UDeveloperSettings
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Bridge IP Address"))
+	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Simulate Connection"))
+	bool bSimulateConnection = false;
+	
+	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Bridge IP Address", EditCondition = "!bSimulateConnection"))
 	FString IP = "127.0.0.1";
 
-	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Bridge Port"))
+	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Bridge Port", EditCondition = "!bSimulateConnection"))
 	int Port = 9090;
 
 	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Transportation Mode"))
 	TransportMode TransportationMode = TransportMode::JSON;
 
-	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Simulate Connection"))
-	bool bSimulateConnection = false;
-
 	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Emit Clock Events from Unreal"))
 	bool bEmitClockEvents = false;
 
-	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Use Wall Clock Time, else uses the Gameplay Time"))
+	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Use Wall Clock Time, else uses the Gameplay Time", EditCondition = "bEmitClockEvents"))
 	bool bUseWallClockTime = true;
 
-	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Use Fixed Update Interval"))
+	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Use Fixed Update Interval", EditCondition = "bEmitClockEvents"))
 	bool bUseFixedUpdateInterval = false;
 
-	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "The Used Update Interval", ClampMin="0"))
-	double FixedUpdateInterval = true;
+	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "The Used Update Interval", ClampMin="0", EditCondition = "bEmitClockEvents && bUseFixedUpdateInterval"))
+	double FixedUpdateInterval = 0.1;
 };
