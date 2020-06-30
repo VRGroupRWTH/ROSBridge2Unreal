@@ -8,7 +8,7 @@
 #include "Services/ROSServiceBase.h"
 
 
-void UROSServiceHandle::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void UROSServiceHandle::EndPlay(const EEndPlayReason::Type)
 {
 	Unadvertise(); //Does nothing if not advertised before
 }

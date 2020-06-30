@@ -16,8 +16,8 @@ UROSMsgTransformStamped* UROSMsgTransformStamped::Create(UROSMsgHeader* Header, 
 UROSMsgTransformStamped* UROSMsgTransformStamped::CreateEmpty()
 {
 	UROSMsgTransformStamped* Message = NewObject<UROSMsgTransformStamped>();
-	Message->Header = NewObject<UROSMsgHeader>();
-	Message->Transform = NewObject<UROSMsgTransform>();
+	Message->Header = NewObject<UROSMsgHeader>(Message);
+	Message->Transform = NewObject<UROSMsgTransform>(Message);
 	Message->ChildFrameID = "";
 	return Message;
 }

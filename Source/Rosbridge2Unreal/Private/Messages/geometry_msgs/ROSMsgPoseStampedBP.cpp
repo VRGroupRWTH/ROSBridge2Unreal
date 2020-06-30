@@ -15,8 +15,8 @@ UROSMsgPoseStampedBP* UROSMsgPoseStampedBP::Create(UROSMsgHeader* Header, UROSMs
 UROSMsgPoseStampedBP* UROSMsgPoseStampedBP::CreateEmpty()
 {
 	UROSMsgPoseStampedBP* Message = NewObject<UROSMsgPoseStampedBP>();
-	Message->Header = NewObject<UROSMsgHeader>();
-	Message->Pose = NewObject<UROSMsgPoseBP>();
+	Message->Header = NewObject<UROSMsgHeader>(Message);
+	Message->Pose = NewObject<UROSMsgPoseBP>(Message);
 	return Message;
 }
 

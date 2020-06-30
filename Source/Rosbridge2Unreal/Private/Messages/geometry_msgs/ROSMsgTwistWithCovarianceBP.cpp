@@ -8,7 +8,7 @@
 UROSMsgTwistWithCovarianceBP* UROSMsgTwistWithCovarianceBP::Create(UROSMsgTwistBP* Twist, const TArray<float>& Covariance)
 {
 	UROSMsgTwistWithCovarianceBP* Message = NewObject<UROSMsgTwistWithCovarianceBP>();
-	Message->Twist = NewObject<UROSMsgTwistBP>();
+	Message->Twist = Twist;
 	Message->Covariance = Covariance;
 	if(Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Given Covariance Matrix in UROSMsgTwistWithCovarianceBP does not have 36 values, it has %d"), Covariance.Num());
 	return Message;
@@ -17,7 +17,7 @@ UROSMsgTwistWithCovarianceBP* UROSMsgTwistWithCovarianceBP::Create(UROSMsgTwistB
 UROSMsgTwistWithCovarianceBP* UROSMsgTwistWithCovarianceBP::CreateEmpty()
 {
 	UROSMsgTwistWithCovarianceBP* Message = NewObject<UROSMsgTwistWithCovarianceBP>();
-	Message->Twist = NewObject<UROSMsgTwistBP>();
+	Message->Twist = NewObject<UROSMsgTwistBP>(Message);
 	Message->Covariance = TArray<float>();
 	Message->Covariance.SetNumZeroed(36);
 	return Message;

@@ -33,7 +33,7 @@ void FRosbridge2UnrealModule::OnSessionEnd(UWorld* World, bool bSessionEnded, bo
 }
 
 #if ENGINE_MINOR_VERSION > 23
-void FRosbridge2UnrealModule::OnWorldTickStart(UWorld * World, ELevelTick TickType, float DeltaTime)
+void FRosbridge2UnrealModule::OnWorldTickStart(UWorld*, ELevelTick TickType, float DeltaTime)
 #else 
 void FRosbridge2UnrealModule::OnWorldTickStart(ELevelTick TickType, float DeltaTime)
 #endif

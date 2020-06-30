@@ -17,7 +17,7 @@ UROSMsgPoseWithCovarianceBP* UROSMsgPoseWithCovarianceBP::Create(UROSMsgPoseBP* 
 UROSMsgPoseWithCovarianceBP* UROSMsgPoseWithCovarianceBP::CreateEmpty()
 {
 	UROSMsgPoseWithCovarianceBP* Message = NewObject<UROSMsgPoseWithCovarianceBP>();
-	Message->Pose = NewObject<UROSMsgPoseBP>();
+	Message->Pose = NewObject<UROSMsgPoseBP>(Message);
 	Message->Covariance = TArray<float>();
 	Message->Covariance.SetNumZeroed(36);
 	return Message;
