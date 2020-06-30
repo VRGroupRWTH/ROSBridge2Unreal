@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "ROSService.h"
 #include "IRosbridge2Unreal.h"
 #include "Messages/internal/ROSServiceAdvertiseMessage.h"

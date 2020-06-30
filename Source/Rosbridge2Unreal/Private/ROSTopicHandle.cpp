@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "ROSTopicHandle.h"
 #include "IRosbridge2Unreal.h"
 #include "LogCategory.h"
