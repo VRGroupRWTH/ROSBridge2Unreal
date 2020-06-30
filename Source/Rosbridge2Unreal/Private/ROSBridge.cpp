@@ -77,7 +77,18 @@ bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const
 	ROSData Data;
 	Message.ToData(Data);
 	if(bSettingsRead && Settings->bSimulateConnection) return true;
-	return Connection->SendMessage(Data);
+
+	const bool Result = Connection->SendMessage(Data);
+	if(Result)
+	{
+		UE_LOG(LogROSBridge, VeryVerbose, TEXT("Sent ROSBridge message: %s"), *DataHelpers::InternalToString(Data));	
+	}
+	else
+	{
+		UE_LOG(LogROSBridge, Warning, TEXT("Error sending ROSBridge message: %s"), *DataHelpers::InternalToString(Data));	
+	}
+	
+	return Result;
 }
 
 UROSTopic* UROSBridge::GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
@@ -175,14 +186,7 @@ uint32 UROSBridge::Run()
 		UROSBridgeMessage* Message = QueuedMessages.Pop(false);
 		MutexMessageQueue.Unlock();
 		
-		if(SendMessage(*Message))
-		{
-			UE_LOG(LogROSBridge, VeryVerbose, TEXT("Sent ROSBridge message"));	
-		}
-		else
-		{
-			UE_LOG(LogROSBridge, Warning, TEXT("Error sending ROSBridge message"));	
-		}
+		SendMessage(*Message);
 	}
 
 	return EXIT_SUCCESS;

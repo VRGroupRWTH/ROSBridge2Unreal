@@ -29,10 +29,10 @@ UROSMsgHeader* UROSMsgHeader::Create(FString FrameID, int64 SequenceID, int32 Se
 void UROSMsgHeader::ToData(ROSData& Message) const
 {
 	DataHelpers::AppendUInt32(Message, "seq", SequenceID);
-	DataHelpers::AppendString(Message, "frame_id", FrameID);
 	DataHelpers::AppendSubDocument(Message, "stamp", ROSData());
 	DataHelpers::AppendInt32(Message, "/stamp/secs", Seconds);
 	DataHelpers::AppendInt32(Message, "/stamp/nsecs", NanoSeconds);
+	DataHelpers::AppendString(Message, "frame_id", FrameID);
 }
 
 bool UROSMsgHeader::FromData(const ROSData& Message)

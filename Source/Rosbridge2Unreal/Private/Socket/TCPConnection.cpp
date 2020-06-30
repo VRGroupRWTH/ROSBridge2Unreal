@@ -72,19 +72,8 @@ bool UTCPConnection::SendMessage(FString Data) const
 
 bool UTCPConnection::SendMessage(const uint8_t *Data, const unsigned int Length) const
 {
-	uint8_t BytesSendTotal = 0;
-
-	for(uint8_t SendTries = 0; SendTries < 3; SendTries++)
-	{
-		int32 LastBytesSend = 0;
-
-		if(Socket->Send(Data + BytesSendTotal, Length - BytesSendTotal, LastBytesSend))
-		{
-			BytesSendTotal += LastBytesSend;
-			if(BytesSendTotal == Length) return true;
-		}
-	}
-	return false;
+	int32 BytesSend = 0;
+	return Socket->Send(Data, Length, BytesSend) && BytesSend == Length;
 }
 
 //ReceiverThread function
