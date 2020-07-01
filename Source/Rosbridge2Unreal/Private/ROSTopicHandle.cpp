@@ -10,18 +10,23 @@ void UROSTopicHandle::Initialize(FString TopicName, TSubclassOf<UROSMessageBase>
 	TopicHandle = IRosbridge2Unreal::Get().GetTopic(TopicName, MessageClass);
 }
 
-void UROSTopicHandle::Subscribe(TFunction<void(const UROSMessageBase* )> Callback) const
+void UROSTopicHandle::Subscribe(TFunction<void(const UROSMessageBase*)> Callback, UROSMessageBase* ReusableMessage) const
 {
 	if(!TopicHandle){
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSTopicHandle before you Subscribe to it."));
 		return;
 	}
-	TopicHandle->Subscribe(Callback, GetUniqueID());
+	TopicHandle->Subscribe(Callback, GetUniqueID(), ReusableMessage);
 }
 
 void UROSTopicHandle::Subscribe() const
 {
 	Subscribe([this](const UROSMessageBase* Message){OnNewMessage.Broadcast(Message);});
+}
+
+void UROSTopicHandle::SubscribeWithReusableMessage(UROSMessageBase* ReusableMessage) const
+{
+	Subscribe([this](const UROSMessageBase* Message){OnNewMessage.Broadcast(Message);}, ReusableMessage);
 }
 
 void UROSTopicHandle::Publish(const UROSMessageBase* Message) const

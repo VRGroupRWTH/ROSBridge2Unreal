@@ -18,10 +18,11 @@ void UROSTopic::Initialize(FString TopicName, TSubclassOf<UROSMessageBase> Messa
 	StoredMessageClass = MessageClass;
 }
 
-bool UROSTopic::Subscribe(TFunction<void(const UROSMessageBase* )>& Callback, const uint32 UniqueId)
+bool UROSTopic::Subscribe(TFunction<void(const UROSMessageBase* )>& Callback, const uint32 UniqueId, UROSMessageBase* InReusableMessage)
 {
 	StoredCallbacks.Add(UniqueId, Callback);
-
+	ReusableMessage = InReusableMessage;
+	
 	if(!IsSubscribed){
 		UROSTopicSubscribeMessage* SubscribeMessage = NewObject<UROSTopicSubscribeMessage>();
 		SubscribeMessage->ID = FString::Printf(TEXT("subscribe:%s"), *StoredTopicName);
@@ -55,7 +56,12 @@ void UROSTopic::ForceUnsubscribeInternal()
 
 void UROSTopic::IncomingMessage(const UROSTopicPublishMessage& Message)
 {
-	UROSMessageBase* ParsedMessage = NewObject<UROSMessageBase>(this, *StoredMessageClass);
+	UROSMessageBase* ParsedMessage = ReusableMessage;
+
+	if(!ParsedMessage) //Only generate new, if we don't have a reusable message
+	{
+		ParsedMessage = NewObject<UROSMessageBase>(this, *StoredMessageClass);
+	}
 	
 	if(!ParsedMessage->FromData(Message.Data))
 	{

@@ -19,7 +19,7 @@ public:
 
 	void Initialize(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass);
 
-	bool Subscribe(TFunction<void(const UROSMessageBase*)>& Callback, uint32 UniqueId);
+	bool Subscribe(TFunction<void(const UROSMessageBase*)>& Callback, uint32 UniqueId, UROSMessageBase* InReusableMessage = nullptr);
 	void Unsubscribe(uint32 UniqueId);
 	void ForceUnsubscribeInternal();
 
@@ -33,6 +33,8 @@ public:
 	
 private:
 
+	UPROPERTY() UROSMessageBase* ReusableMessage = nullptr;
+	
 	bool IsSubscribed = false;
 	bool IsAdvertised = false;
 	TMap<uint32,TFunction<void(const UROSMessageBase*)>> StoredCallbacks;
