@@ -70,6 +70,10 @@ private:
 	UPROPERTY() UROSMsgClock* ClockMessage;
 	bool bSetUpdateIntervalSettings = false;
 
+	/* Settings */
 	UPROPERTY() const URosbridgeSettings* Settings;
 	bool bSettingsRead = false;
+
+	/* Status */
+	bool bInitialized = false;
 };

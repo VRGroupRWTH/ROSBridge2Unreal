@@ -26,12 +26,16 @@ bool UROSBridge::Initialize()
 	const bool ConnectionInitialized = Connection->Initialize(TCHAR_TO_UTF8(*Settings->IP), Settings->Port, Settings->TransportationMode);
 	
 	SenderThread = FRunnableThread::Create(this, TEXT("ROSBridgeSenderThread"), 0, TPri_Normal);
+
+	bInitialized = true;
 	
 	return ConnectionInitialized;
 }
 
 void UROSBridge::Uninitialize()
 {
+	bInitialized = false;
+	
 	//Unsubscribe/Unadvertise from everything
 	
 	for(UROSTopic*& Topic : Topics)
@@ -59,6 +63,7 @@ void UROSBridge::Uninitialize()
 bool UROSBridge::SendMessage(const FString& Data) const
 {
 	if(bSettingsRead && Settings->bSimulateConnection) return true;
+	if(!bInitialized) return true; /* return true, since this is no error */
 	return Connection->SendMessage(TCHAR_TO_UTF8(*Data));
 }
 
@@ -74,21 +79,22 @@ bool UROSBridge::IsBSONMode() const
 
 bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const
 {
+	if(bSettingsRead && Settings->bSimulateConnection) return true;
+	if(!bInitialized) return true; /* return true, since this is no error */
+	
 	ROSData Data;
 	Message.ToData(Data);
-	if(bSettingsRead && Settings->bSimulateConnection) return true;
-
-	const bool Result = Connection->SendMessage(Data);
-	if(Result)
+	if(Connection->SendMessage(Data))
 	{
-		UE_LOG(LogROSBridge, VeryVerbose, TEXT("Sent ROSBridge message: %s"), *DataHelpers::InternalToString(Data));	
+		UE_LOG(LogROSBridge, VeryVerbose, TEXT("Sent ROSBridge message: %s"), *DataHelpers::InternalToString(Data));
+		return true;
 	}
 	else
 	{
-		UE_LOG(LogROSBridge, Warning, TEXT("Error sending ROSBridge message: %s"), *DataHelpers::InternalToString(Data));	
+		UE_LOG(LogROSBridge, Warning, TEXT("Error sending ROSBridge message: %s"), *DataHelpers::InternalToString(Data));
 	}
 	
-	return Result;
+	return false;
 }
 
 UROSTopic* UROSBridge::GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
@@ -125,7 +131,7 @@ UROSService* UROSBridge::GetService(FString ServiceName, TSubclassOf<UROSService
 
 void UROSBridge::TickEvent(float DeltaTime)
 {
-	if(!bSettingsRead || !Settings->bEmitClockEvents) return; //Nothing to do here
+	if(!bSettingsRead || !Settings->bEmitClockEvents || !bInitialized) return; //Nothing to do here
 	
 	if(!ClockTopic)
 	{
@@ -166,6 +172,8 @@ void UROSBridge::TickEvent(float DeltaTime)
 
 void UROSBridge::QueueMessage(UROSBridgeMessage* Message)
 {
+	if(!bInitialized) return; //Ignore message that came after closing
+	
 	MutexMessageQueue.Lock();
 	
 	QueuedMessages.Push(Message);
@@ -194,6 +202,8 @@ uint32 UROSBridge::Run()
 
 void UROSBridge::IncomingMessage(const ROSData& Message)
 {
+	if(!bInitialized) return; //Ignore message that came after closing
+	
 	FString OPCode;
 
 	if(!DataHelpers::ExtractString(Message, "op", OPCode)){
@@ -216,6 +226,7 @@ void UROSBridge::IncomingMessage(const ROSData& Message)
 		}
 
 		UE_LOG(LogROSBridge, Verbose, TEXT("Received message for a topic we dont know."));
+		return;
 	}
 
 	if(OPCode == "service_response") //Response from service
@@ -244,6 +255,7 @@ void UROSBridge::IncomingMessage(const ROSData& Message)
 		}
 
 		UE_LOG(LogROSBridge, Verbose, TEXT("Received response from a service we dont know."));
+		return;
 	}
 
 	if(OPCode == "call_service") //call to a service from us
@@ -259,5 +271,8 @@ void UROSBridge::IncomingMessage(const ROSData& Message)
 				return;
 			}
 		}
+		return;
 	}
+
+	UE_LOG(LogROSBridge, Warning, TEXT("Received message with OP-Code '%s', which is not supported (yet)"), *OPCode);
 }
