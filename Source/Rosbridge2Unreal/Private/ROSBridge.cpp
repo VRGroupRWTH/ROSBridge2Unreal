@@ -86,12 +86,12 @@ bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const
 	Message.ToData(Data);
 	if(Connection->SendMessage(Data))
 	{
-		UE_LOG(LogROSBridge, VeryVerbose, TEXT("Sent ROSBridge message: %s"), *DataHelpers::InternalToString(Data));
+		UE_LOG(LogROSBridge, VeryVerbose, TEXT("Sent ROSBridge message: %s"), *DataHelpers::Internal::DataToString(Data));
 		return true;
 	}
 	else
 	{
-		UE_LOG(LogROSBridge, Warning, TEXT("Error sending ROSBridge message: %s"), *DataHelpers::InternalToString(Data));
+		UE_LOG(LogROSBridge, Warning, TEXT("Error sending ROSBridge message: %s"), *DataHelpers::Internal::DataToString(Data));
 	}
 	
 	return false;
