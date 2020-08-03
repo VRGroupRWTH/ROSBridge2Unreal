@@ -17,6 +17,7 @@ public:
 	UROSSrvAddTwoInts(){};
 	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetServiceType() override {return "beginner_tutorials/AddTwoInts";};
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSSrvAddTwoInts* CreateRequest(int64 A, int64 B);
+	UFUNCTION(BlueprintCallable) static UROSSrvAddTwoInts* CreateEmpty();
 	
 	/* Data */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int64 A;

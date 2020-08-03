@@ -9,11 +9,12 @@ void UROSService::Initialize(FString ServiceName, TSubclassOf<UROSServiceBase> S
 	StoredServiceClass = ServiceClass;
 }
 
-bool UROSService::Advertise(TFunction<void (UROSServiceBase*)> RequestResponseCallback)
+bool UROSService::Advertise(TFunction<void (UROSServiceBase*)> RequestResponseCallback, UROSServiceBase* InReusableRequest)
 {
 	if(bAdvertised) return true; //Already done
 
 	RequestCallback = RequestResponseCallback;
+	ReusableRequest = InReusableRequest;
 
 	UROSServiceAdvertiseMessage* ServiceAdvertisement = NewObject<UROSServiceAdvertiseMessage>();
 	ServiceAdvertisement->ServiceName = StoredServiceName;
@@ -36,7 +37,7 @@ bool UROSService::Unadvertise()
 	return !bAdvertised;
 }
 
-bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (const UROSServiceBase*)> Callback)
+bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (const UROSServiceBase*)> Callback, UROSServiceBase* ReusableResponse)
 {
 	if(bAdvertised) return false; //Can't call ourselfes
 
@@ -45,9 +46,10 @@ bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (co
 	ServiceRequest->ID = FString::Printf(TEXT("call_service:%s:%ld"), *StoredServiceName, IRosbridge2Unreal::Get().GetNextID());
 	Request->RequestToData(ServiceRequest->Data);
 	
-	ResponseCallbacks.Add(ServiceRequest->ID, [this, Callback](const UROSServiceResponseMessage& Message)
+	ResponseCallbacks.Add(ServiceRequest->ID, [this, Callback, ReusableResponse](const UROSServiceResponseMessage& Message)
 	{
-		UROSServiceBase* ParsedResponse = NewObject<UROSServiceBase>(this, *StoredServiceClass);
+		UROSServiceBase* ParsedResponse = ReusableResponse; //either reusable or null
+		if(!ParsedResponse) ParsedResponse = NewObject<UROSServiceBase>(this, *StoredServiceClass);
 		ParsedResponse->ResponseFromData(Message.Data);
 
 		Callback(ParsedResponse);
@@ -67,12 +69,12 @@ void UROSService::IncomingResponse(const UROSServiceResponseMessage& Message)
 
 void UROSService::IncomingRequest(UROSServiceCallMessage& Message)
 {
-	//Create Response, populate later on
 	UROSServiceResponseMessage* Response = NewObject<UROSServiceResponseMessage>();
 	Response->ID = Message.ID;
 	Response->ServiceName = Message.ServiceName;
 	
-	UROSServiceBase* ParsedRequest = NewObject<UROSServiceBase>(this, *StoredServiceClass);
+	UROSServiceBase* ParsedRequest = ReusableRequest; //either reusable or null
+	if(!ParsedRequest) ParsedRequest = NewObject<UROSServiceBase>(this, *StoredServiceClass);
 	ParsedRequest->RequestFromData(Message.Data);
 
 	RequestCallback(ParsedRequest);

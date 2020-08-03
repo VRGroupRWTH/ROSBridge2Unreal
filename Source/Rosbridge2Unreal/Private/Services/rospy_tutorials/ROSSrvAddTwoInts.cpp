@@ -9,6 +9,11 @@ UROSSrvAddTwoInts * UROSSrvAddTwoInts::CreateRequest(int64 A, int64 B)
 	return Request;
 }
 
+UROSSrvAddTwoInts* UROSSrvAddTwoInts::CreateEmpty()
+{
+	return NewObject<UROSSrvAddTwoInts>();
+}
+
 int UROSSrvAddTwoInts::SumAsInt() const
 {
 	return Sum;

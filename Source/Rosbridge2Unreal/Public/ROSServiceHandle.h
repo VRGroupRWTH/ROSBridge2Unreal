@@ -23,9 +23,9 @@ public:
 	UFUNCTION(BlueprintCallable) void Initialize(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass);
 	UFUNCTION(BlueprintCallable) void Unadvertise();
 
-	void Advertise(TFunction<void (UROSServiceBase*)> Callback);
-	void Call(const UROSServiceBase* Request, TFunction<void (const UROSServiceBase*)> Callback);
-	void CallRecurrent(const UROSServiceBase* Request);
+	void Advertise(TFunction<void(UROSServiceBase*)> Callback, UROSServiceBase* InReusableRequest = nullptr);
+	void Call(const UROSServiceBase* Request, TFunction<void (const UROSServiceBase*)> Callback, UROSServiceBase* ReusableResponse = nullptr);
+	void CallRecurrent(const UROSServiceBase* Request, UROSServiceBase* ReusableResponse = nullptr);
 	void RegisterResponseCallback(TFunction<void (const UROSServiceBase*)> Callback);
 
 private:
@@ -39,5 +39,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable) FResponseSignature OnResponse;
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable) FRequestSignature OnRequest;
 	UFUNCTION(BlueprintCallable) void Call(const UROSServiceBase* Request);
+	UFUNCTION(BlueprintCallable) void CallWithReusableResponse(const UROSServiceBase* Request, UROSServiceBase* ReusableResponse);
 	UFUNCTION(BlueprintCallable) void Advertise(); 
+	UFUNCTION(BlueprintCallable) void AdvertiseWithReusableRequest(UROSServiceBase* ReusableRequest); 
 };
