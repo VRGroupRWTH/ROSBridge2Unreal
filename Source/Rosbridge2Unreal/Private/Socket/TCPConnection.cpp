@@ -6,7 +6,7 @@
 #include "jsoncons_unreal_wrapper.h"
 
 
-bool UTCPConnection::Initialize(FString IPAddress, int Port, TransportMode Mode)
+bool UTCPConnection::Initialize(FString IPAddress, int Port, ETransportMode Mode)
 {
 	Socket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("Rosbridge TCP client"), false);
 	
@@ -51,12 +51,12 @@ void UTCPConnection::Uninitialize()
 }
 bool UTCPConnection::SendMessage(ROSData& Data) const
 {
-	if(CurrentTransportMode == TransportMode::BSON)
+	if(CurrentTransportMode == ETransportMode::BSON)
 	{
 		std::vector<uint8> EncodedData;
 		jsoncons::bson::encode_bson(Data,EncodedData);
 		return SendMessage(EncodedData.data(), EncodedData.size());
-	}else if(CurrentTransportMode == TransportMode::JSON)
+	}else if(CurrentTransportMode == ETransportMode::JSON)
 	{
 		std::string EncodedData;
 		Data.dump(EncodedData, jsoncons::indenting::no_indent);
@@ -95,7 +95,7 @@ uint32 UTCPConnection::Run()
 			continue;
 		} else if (ConnectionState == SCS_ConnectionError){
 			UE_LOG(LogROSBridge, Error, TEXT("Error on connection"));
-			ReportError(TransportError::SocketError);
+			ReportError(ETransportError::SocketError);
 			bReceiverThreadRunning = false;
 			return EXIT_FAILURE;
 		}
@@ -105,7 +105,7 @@ uint32 UTCPConnection::Run()
 			continue; // check if any errors occured
 		}
 
-		if(CurrentTransportMode == TransportMode::BSON){
+		if(CurrentTransportMode == ETransportMode::BSON){
 			if(!Socket->HasPendingData(PendingData) || PendingData < 4)
 			{
 				continue; //wait further
@@ -116,7 +116,7 @@ uint32 UTCPConnection::Run()
 			if(!Socket->Recv(reinterpret_cast<uint8*>(&BSONMessageLength), sizeof(BSONMessageLength), BytesRead) || BytesRead < sizeof(BSONMessageLength))
 			{
 				UE_LOG(LogROSBridge, Error, TEXT("Failed to receive BSON message length. Closing receiver thread."));
-				ReportError(TransportError::SocketError);
+				ReportError(ETransportError::SocketError);
 				bReceiverThreadRunning = false;
 				return EXIT_FAILURE;
 			}
@@ -132,7 +132,7 @@ uint32 UTCPConnection::Run()
 				if(!Socket->Recv(BinaryBuffer.GetData() + TotalBytesRead, BSONMessageLength - TotalBytesRead, BytesRead))
 				{
 					UE_LOG(LogROSBridge, Error, TEXT("Failed to receive from socket. Closing receiver thread."));
-					ReportError(TransportError::SocketError);
+					ReportError(ETransportError::SocketError);
 					bReceiverThreadRunning = false;
 					return EXIT_FAILURE;
 				}
@@ -150,7 +150,7 @@ uint32 UTCPConnection::Run()
 			
 			if (IncomingMessageCallback && !bTerminateReceiverThread) IncomingMessageCallback(Data);
 			
-		} else if(CurrentTransportMode == TransportMode::JSON) {
+		} else if(CurrentTransportMode == ETransportMode::JSON) {
 
 			if(!Socket->HasPendingData(PendingData)) continue;
 			
@@ -161,7 +161,7 @@ uint32 UTCPConnection::Run()
 			if(!Socket->Recv(BinaryBuffer.GetData() + RemainingData, PendingData, BytesRead, ESocketReceiveFlags::WaitAll))
 			{
 				UE_LOG(LogROSBridge, Error, TEXT("Failed to receive from socket. Closing receiver thread."));
-				ReportError(TransportError::SocketError);
+				ReportError(ETransportError::SocketError);
 				bReceiverThreadRunning = false;
 				return EXIT_FAILURE;
 			}
@@ -213,20 +213,20 @@ void UTCPConnection::RegisterIncomingMessageCallback(TFunction<void(ROSData)> Ca
 	IncomingMessageCallback = CallbackFunction;
 }
 
-void UTCPConnection::ReportError(const TransportError Error) const
+void UTCPConnection::ReportError(const ETransportError Error) const
 {
 	switch(Error)
 	{
-	case TransportError::SocketError:
+	case ETransportError::SocketError:
 		UE_LOG(LogROSBridge, Error, TEXT("Socket Error in ROSBridge"));	
 		break;
-	case TransportError::ConnectionClosed:
+	case ETransportError::ConnectionClosed:
 		UE_LOG(LogROSBridge, Error, TEXT("Socket Connection Closed"));	
 		break;
 	}
 }
 
-void UTCPConnection::SetTransportMode(const TransportMode Mode)
+void UTCPConnection::SetTransportMode(const ETransportMode Mode)
 {
 	CurrentTransportMode = Mode;
 }
@@ -236,7 +236,7 @@ bool UTCPConnection::IsHealthy() const
 	return bReceiverThreadRunning;
 }
 
-TransportMode UTCPConnection::GetTransportMode() const
+ETransportMode UTCPConnection::GetTransportMode() const
 {
 	return CurrentTransportMode;
 }

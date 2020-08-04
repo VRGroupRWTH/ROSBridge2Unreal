@@ -20,7 +20,7 @@ public:
 	int Port = 9090;
 
 	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Transportation Mode"))
-	TransportMode TransportationMode = TransportMode::JSON;
+	ETransportMode TransportationMode = ETransportMode::JSON;
 
 	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Emit Clock Events from Unreal"))
 	bool bEmitClockEvents = false;
@@ -33,4 +33,7 @@ public:
 
 	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "The Used Update Interval", ClampMin="0", EditCondition = "bEmitClockEvents && bUseFixedUpdateInterval"))
 	double FixedUpdateInterval = 0.1;
+
+	UPROPERTY(EditAnywhere, config, Category = "Status", meta = (EditCondition = "!bSimulateConnection"))
+	EStatusMessageLevel StatusLevel = EStatusMessageLevel::Error;
 };
