@@ -11,17 +11,25 @@ class UROSServiceBase;
 using ROSData = jsoncons::ojson;
 
 UENUM()
-enum class TransportError : uint8
+enum class ETransportError : uint8
 {
 	SocketError,
 	ConnectionClosed
 };
 
 UENUM()
-enum class TransportMode : uint8
+enum class ETransportMode : uint8
 {
 	JSON UMETA(DisplayName = "JSON Mode"),
 	BSON UMETA(DisplayName = "Binary JSON Mode")
+};
+
+UENUM()
+enum class EStatusMessageLevel : uint8
+{
+	Error, //Whenever a user sends a message that is invalid or requests something that does not exist (ie. Sending an incorrect opcode or publishing to a topic that doesn't exist)
+	Warning, //error, plus, whenever a user does something that may succeed but the user has still done something incorrectly (ie. Providing a partially-complete published message)
+	Info //warning, plus messages indicating success of various operations
 };
 
 namespace CallbackHelper

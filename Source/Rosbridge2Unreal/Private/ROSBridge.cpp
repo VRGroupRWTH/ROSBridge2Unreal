@@ -6,8 +6,10 @@
 #include "Messages/internal/ROSBridgeMessage.h"
 #include "DataHelpers.h"
 #include "LogCategory.h"
+#include "ROSStatusLevelMessage.h"
 
 DEFINE_LOG_CATEGORY(LogROSBridge);
+DEFINE_LOG_CATEGORY(LogROSStatusMessage);
 
 bool UROSBridge::Initialize()
 {
@@ -27,6 +29,14 @@ bool UROSBridge::Initialize()
 	
 	SenderThread = FRunnableThread::Create(this, TEXT("ROSBridgeSenderThread"), 0, TPri_Normal);
 
+	if(ConnectionInitialized)
+	{
+		UROSStatusLevelMessage* StatusLevelMsg = NewObject<UROSStatusLevelMessage>(this);
+		StatusLevelMsg->ID = "ROSBridgeInitialStatusLevelChange";
+		StatusLevelMsg->Level = Settings->StatusLevel;
+		SendMessage(*StatusLevelMsg);
+	}
+	
 	bInitialized = true;
 	
 	return ConnectionInitialized;
@@ -74,7 +84,7 @@ long UROSBridge::GetNextID()
 
 bool UROSBridge::IsBSONMode() const
 {
-	return Connection->GetTransportMode() == TransportMode::BSON;
+	return Connection->GetTransportMode() == ETransportMode::BSON;
 }
 
 bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const
@@ -270,6 +280,28 @@ void UROSBridge::IncomingMessage(const ROSData& Message)
 				Service->IncomingRequest(*ServiceMessage);
 				return;
 			}
+		}
+		return;
+	}
+
+	if(OPCode == "status") //status message from the bridge
+	{
+		FString ID, Level, Msg;
+		DataHelpers::ExtractString(Message, "id", ID);
+		DataHelpers::ExtractString(Message, "level", Level);
+		DataHelpers::ExtractString(Message, "msg", Msg);
+
+		if(Level.Equals("error", ESearchCase::IgnoreCase))
+		{
+			UE_LOG(LogROSStatusMessage, Error, TEXT("Status-Message with ID '%s': %s"), *ID, *Msg);
+		}
+		else if(Level.Equals("warning", ESearchCase::IgnoreCase))
+		{
+			UE_LOG(LogROSStatusMessage, Warning, TEXT("Status-Message with ID '%s': %s"), *ID, *Msg);
+		}
+		else if(Level.Equals("info", ESearchCase::IgnoreCase))
+		{
+			UE_LOG(LogROSStatusMessage, Log, TEXT("Status-Message with ID '%s': %s"), *ID, *Msg);
 		}
 		return;
 	}
