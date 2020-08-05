@@ -33,4 +33,10 @@ public:
 
 	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "The Used Update Interval", ClampMin="0", EditCondition = "bEmitClockEvents && bUseFixedUpdateInterval"))
 	double FixedUpdateInterval = 0.1;
+
+	UPROPERTY(EditAnywhere, config, Category = "Authentication")
+	bool bShouldAuthenticate = false;
+
+	UPROPERTY(EditAnywhere, config, Category = "Authentication", meta = (EditCondition = "bShouldAuthenticate"))
+	FString Secret = "";
 };

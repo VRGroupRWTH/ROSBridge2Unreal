@@ -21,6 +21,7 @@ public:
 	void RegisterIncomingMessageCallback(TFunction<void(ROSData)> CallbackFunction);
 	void ReportError(TransportError Error) const;
 	void SetTransportMode(TransportMode);
+	FString GetOwnIPAddress();
 
 	bool IsHealthy() const;
 	TransportMode GetTransportMode() const;

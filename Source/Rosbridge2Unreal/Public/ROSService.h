@@ -22,7 +22,7 @@ public:
 
 	bool Unadvertise();
 
-	bool CallService(const UROSServiceBase* Request, TFunction<void(const UROSServiceBase*)> Callback, UROSServiceBase* ReusableResponse = nullptr);
+	bool CallService(const UROSServiceBase* Request, TFunction<void(const UROSServiceBase*)> Callback, UROSServiceBase* InReusableResponse = nullptr);
 	
 	void IncomingResponse(const UROSServiceResponseMessage& Message);
 	void IncomingRequest(UROSServiceCallMessage& Message);

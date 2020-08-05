@@ -29,7 +29,7 @@ bool UTCPConnection::Initialize(FString IPAddress, int Port, TransportMode Mode)
 		UE_LOG(LogROSBridge, Error, TEXT("Could not connect to: %s:%d"), *IPAddress, Port);
 		return false;
 	}
-
+	
 	CurrentTransportMode = Mode;
 	
 	// Setting up and starting the receiver thread
@@ -229,6 +229,13 @@ void UTCPConnection::ReportError(const TransportError Error) const
 void UTCPConnection::SetTransportMode(const TransportMode Mode)
 {
 	CurrentTransportMode = Mode;
+}
+
+FString UTCPConnection::GetOwnIPAddress()
+{
+	TSharedRef<FInternetAddr> Address = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
+	Socket->GetAddress(Address.Get());
+	return Address->ToString(false);
 }
 
 bool UTCPConnection::IsHealthy() const

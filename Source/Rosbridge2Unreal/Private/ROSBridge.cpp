@@ -6,6 +6,7 @@
 #include "Messages/internal/ROSBridgeMessage.h"
 #include "DataHelpers.h"
 #include "LogCategory.h"
+#include "ROSAuthMessage.h"
 
 DEFINE_LOG_CATEGORY(LogROSBridge);
 
@@ -28,6 +29,15 @@ bool UROSBridge::Initialize()
 	SenderThread = FRunnableThread::Create(this, TEXT("ROSBridgeSenderThread"), 0, TPri_Normal);
 
 	bInitialized = true;
+
+	if(Settings->bShouldAuthenticate)
+	{
+		UROSAuthMessage* AuthMsg = NewObject<UROSAuthMessage>(this);
+		AuthMsg->Client = Connection->GetOwnIPAddress();
+		AuthMsg->Destination = Settings->IP;
+		AuthMsg->Secret = Settings->Secret;
+		SendMessage(*AuthMsg);
+	}
 	
 	return ConnectionInitialized;
 }
