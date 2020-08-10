@@ -24,6 +24,7 @@ public class Rosbridge2Unreal : ModuleRules
 				"Sockets",
 				"Networking",
 				"Engine",
+				"WebSockets",
 				"jsoncons"
 				// ... add other public dependencies that you statically link with here ...
 			}

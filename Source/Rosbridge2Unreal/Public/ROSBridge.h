@@ -50,7 +50,7 @@ private:
 	bool KeepSenderThreadRunning = true;
 
 	/* The connection to the ROSBridge */
-	UPROPERTY() UTCPConnection* Connection = nullptr;
+	UPROPERTY() UNetworkConnection* Connection = nullptr;
 
 	/* All registered Topics and Services */
 	UPROPERTY() TArray<UROSTopic*> Topics;
