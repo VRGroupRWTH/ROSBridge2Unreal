@@ -19,16 +19,12 @@ bool UWebSockConnection::Initialize(FString IPAddress, int Port, ETransportMode 
 
 	BinaryBuffer.Reserve(65536); //16bit address, used by ROSBridge as a default
 	CurrentTransportMode = Mode;
-	
+
 	Socket->Connect();
-
-	if(!Socket->IsConnected())
-	{
-		UE_LOG(LogROSBridge, Error, TEXT("Could not connect to: %s:%d"), *IPAddress, Port);
-		return false;
-	}
-
-	return true;
+	
+	FPlatformProcess::Sleep( 1);
+	
+	return true; //Always pretend we are connected. 
 }
 
 void UWebSockConnection::Uninitialize()
@@ -72,4 +68,6 @@ void UWebSockConnection::Receive(const void* Data, SIZE_T Size, SIZE_T BytesRema
 			UE_LOG(LogROSBridge, Error, TEXT("Error while parsing JSON message (Ignoring message): %hs"), e.what());
 		}
 	}
+	
+	CurrentMessageLength = 0;	
 }
