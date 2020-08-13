@@ -21,6 +21,10 @@ and started like this (remove '#' to use BSON mode):
 ```shell
 roslaunch rosbridge_server rosbridge_tcp.launch #bson_only_mode:=True
 ```
+or like this for websocket usage (remove '#' to use BSON mode):
+```shell
+roslaunch rosbridge_server rosbridge_websocket.launch #bson_only_mode:=True
+```
 
 ### Unreal Plugin
 
