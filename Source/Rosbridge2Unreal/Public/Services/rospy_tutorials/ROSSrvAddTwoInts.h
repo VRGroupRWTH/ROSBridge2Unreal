@@ -15,7 +15,7 @@ class ROSBRIDGE2UNREAL_API UROSSrvAddTwoInts : public UROSServiceBase
 public:
 	/* Construction */
 	UROSSrvAddTwoInts(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetServiceType() override {return "beginner_tutorials/AddTwoInts";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetServiceType() override {return "rospy_tutorials/AddTwoInts";};
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSSrvAddTwoInts* CreateRequest(int64 A, int64 B);
 	UFUNCTION(BlueprintCallable) static UROSSrvAddTwoInts* CreateEmpty();
 	
