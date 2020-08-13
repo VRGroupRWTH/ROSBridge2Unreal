@@ -6,7 +6,7 @@
 #include "jsoncons_unreal_wrapper.h"
 
 
-bool UTCPConnection::Initialize(FString IPAddress, int Port, TransportMode Mode)
+bool UTCPConnection::Initialize(FString IPAddress, int Port, ETransportMode Mode)
 {
 	Socket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("Rosbridge TCP client"), false);
 	
@@ -49,26 +49,6 @@ void UTCPConnection::Uninitialize()
 		ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(Socket);
 	}
 }
-bool UTCPConnection::SendMessage(ROSData& Data) const
-{
-	if(CurrentTransportMode == TransportMode::BSON)
-	{
-		std::vector<uint8> EncodedData;
-		jsoncons::bson::encode_bson(Data,EncodedData);
-		return SendMessage(EncodedData.data(), EncodedData.size());
-	}else if(CurrentTransportMode == TransportMode::JSON)
-	{
-		std::string EncodedData;
-		Data.dump(EncodedData, jsoncons::indenting::no_indent);
-		return SendMessage(reinterpret_cast<const uint8*>(EncodedData.c_str()), EncodedData.length());
-	}
-	return false;
-}
-
-bool UTCPConnection::SendMessage(FString Data) const
-{
-	return SendMessage(reinterpret_cast<const uint8*>(TCHAR_TO_UTF8(*Data)), Data.Len());
-}
 
 bool UTCPConnection::SendMessage(const uint8_t *Data, const unsigned int Length) const
 {
@@ -95,7 +75,7 @@ uint32 UTCPConnection::Run()
 			continue;
 		} else if (ConnectionState == SCS_ConnectionError){
 			UE_LOG(LogROSBridge, Error, TEXT("Error on connection"));
-			ReportError(TransportError::SocketError);
+			ReportError(ETransportError::SocketError);
 			bReceiverThreadRunning = false;
 			return EXIT_FAILURE;
 		}
@@ -105,7 +85,7 @@ uint32 UTCPConnection::Run()
 			continue; // check if any errors occured
 		}
 
-		if(CurrentTransportMode == TransportMode::BSON){
+		if(CurrentTransportMode == ETransportMode::BSON){
 			if(!Socket->HasPendingData(PendingData) || PendingData < 4)
 			{
 				continue; //wait further
@@ -116,7 +96,7 @@ uint32 UTCPConnection::Run()
 			if(!Socket->Recv(reinterpret_cast<uint8*>(&BSONMessageLength), sizeof(BSONMessageLength), BytesRead) || BytesRead < sizeof(BSONMessageLength))
 			{
 				UE_LOG(LogROSBridge, Error, TEXT("Failed to receive BSON message length. Closing receiver thread."));
-				ReportError(TransportError::SocketError);
+				ReportError(ETransportError::SocketError);
 				bReceiverThreadRunning = false;
 				return EXIT_FAILURE;
 			}
@@ -132,7 +112,7 @@ uint32 UTCPConnection::Run()
 				if(!Socket->Recv(BinaryBuffer.GetData() + TotalBytesRead, BSONMessageLength - TotalBytesRead, BytesRead))
 				{
 					UE_LOG(LogROSBridge, Error, TEXT("Failed to receive from socket. Closing receiver thread."));
-					ReportError(TransportError::SocketError);
+					ReportError(ETransportError::SocketError);
 					bReceiverThreadRunning = false;
 					return EXIT_FAILURE;
 				}
@@ -150,7 +130,7 @@ uint32 UTCPConnection::Run()
 			
 			if (IncomingMessageCallback && !bTerminateReceiverThread) IncomingMessageCallback(Data);
 			
-		} else if(CurrentTransportMode == TransportMode::JSON) {
+		} else if(CurrentTransportMode == ETransportMode::JSON) {
 
 			if(!Socket->HasPendingData(PendingData)) continue;
 			
@@ -161,7 +141,7 @@ uint32 UTCPConnection::Run()
 			if(!Socket->Recv(BinaryBuffer.GetData() + RemainingData, PendingData, BytesRead, ESocketReceiveFlags::WaitAll))
 			{
 				UE_LOG(LogROSBridge, Error, TEXT("Failed to receive from socket. Closing receiver thread."));
-				ReportError(TransportError::SocketError);
+				ReportError(ETransportError::SocketError);
 				bReceiverThreadRunning = false;
 				return EXIT_FAILURE;
 			}
@@ -205,45 +185,4 @@ uint32 UTCPConnection::Run()
 
 	bReceiverThreadRunning = false;
 	return EXIT_SUCCESS;
-}
-
-
-void UTCPConnection::RegisterIncomingMessageCallback(TFunction<void(ROSData)> CallbackFunction)
-{
-	IncomingMessageCallback = CallbackFunction;
-}
-
-void UTCPConnection::ReportError(const TransportError Error) const
-{
-	switch(Error)
-	{
-	case TransportError::SocketError:
-		UE_LOG(LogROSBridge, Error, TEXT("Socket Error in ROSBridge"));	
-		break;
-	case TransportError::ConnectionClosed:
-		UE_LOG(LogROSBridge, Error, TEXT("Socket Connection Closed"));	
-		break;
-	}
-}
-
-void UTCPConnection::SetTransportMode(const TransportMode Mode)
-{
-	CurrentTransportMode = Mode;
-}
-
-FString UTCPConnection::GetOwnIPAddress()
-{
-	TSharedRef<FInternetAddr> Address = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
-	Socket->GetAddress(Address.Get());
-	return Address->ToString(false);
-}
-
-bool UTCPConnection::IsHealthy() const
-{
-	return bReceiverThreadRunning;
-}
-
-TransportMode UTCPConnection::GetTransportMode() const
-{
-	return CurrentTransportMode;
 }

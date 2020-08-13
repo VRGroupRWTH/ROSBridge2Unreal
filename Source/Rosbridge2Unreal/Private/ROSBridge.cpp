@@ -7,6 +7,7 @@
 #include "DataHelpers.h"
 #include "LogCategory.h"
 #include "ROSAuthMessage.h"
+#include "Socket/WebSockConnection.h"
 
 DEFINE_LOG_CATEGORY(LogROSBridge);
 
@@ -17,14 +18,22 @@ bool UROSBridge::Initialize()
 	
 	if(Settings->bSimulateConnection) return true; //Don't attempt connection
 	
+	switch(Settings->SocketMode) {
+		case ESocketMode::TCP:
 	Connection = NewObject<UTCPConnection>(this);
+			break;
+		case ESocketMode::WebSocket:
+			Connection = NewObject<UWebSockConnection>(this);
+			break;
+	}
+
 	Connection->RegisterIncomingMessageCallback([this](const ROSData& Message){
 		AsyncTask(ENamedThreads::GameThread, [this, Message]() {
 			IncomingMessage(Message);
 		});
 	});
 	
-	const bool ConnectionInitialized = Connection->Initialize(TCHAR_TO_UTF8(*Settings->IP), Settings->Port, Settings->TransportationMode);
+	const bool ConnectionInitialized = Connection->Initialize(Settings->IP, Settings->Port, Settings->TransportationMode);
 	
 	SenderThread = FRunnableThread::Create(this, TEXT("ROSBridgeSenderThread"), 0, TPri_Normal);
 
@@ -74,7 +83,7 @@ bool UROSBridge::SendMessage(const FString& Data) const
 {
 	if(bSettingsRead && Settings->bSimulateConnection) return true;
 	if(!bInitialized) return true; /* return true, since this is no error */
-	return Connection->SendMessage(TCHAR_TO_UTF8(*Data));
+	return Connection->SendMessage(Data);
 }
 
 long UROSBridge::GetNextID()
@@ -84,7 +93,7 @@ long UROSBridge::GetNextID()
 
 bool UROSBridge::IsBSONMode() const
 {
-	return Connection->GetTransportMode() == TransportMode::BSON;
+	return Connection->GetTransportMode() == ETransportMode::BSON;
 }
 
 bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const

@@ -20,7 +20,10 @@ public:
 	int Port = 9090;
 
 	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Transportation Mode"))
-	TransportMode TransportationMode = TransportMode::JSON;
+	ESocketMode SocketMode = ESocketMode::TCP;
+	
+	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Transportation Mode"))
+	ETransportMode TransportationMode = ETransportMode::JSON;
 
 	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Emit Clock Events from Unreal"))
 	bool bEmitClockEvents = false;

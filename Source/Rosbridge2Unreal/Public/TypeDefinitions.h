@@ -11,14 +11,21 @@ class UROSServiceBase;
 using ROSData = jsoncons::ojson;
 
 UENUM()
-enum class TransportError : uint8
+enum class ETransportError : uint8
 {
 	SocketError,
 	ConnectionClosed
 };
 
 UENUM()
-enum class TransportMode : uint8
+enum class ESocketMode : uint8
+{
+	TCP UMETA(DisplayName = "TCP Sockets"),
+	WebSocket UMETA(DisplayName = "WebSockets")
+};
+
+UENUM()
+enum class ETransportMode : uint8
 {
 	JSON UMETA(DisplayName = "JSON Mode"),
 	BSON UMETA(DisplayName = "Binary JSON Mode")

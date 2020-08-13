@@ -5,35 +5,24 @@
 #include "TypeDefinitions.h"
 #include "HAL/Runnable.h"
 #include "HAL/RunnableThread.h"
+#include "NetworkConnection.h"
 
 #include "TCPConnection.generated.h"
 
 UCLASS()
-class UTCPConnection : public UObject, public FRunnable {
+class ROSBRIDGE2UNREAL_API UTCPConnection : public UNetworkConnection, public FRunnable {
 	GENERATED_BODY()
 	
 public:
-	bool Initialize(FString IPAddress, int Port, TransportMode Mode);
-	void Uninitialize();
-	bool SendMessage(ROSData& Data) const;
-	bool SendMessage(FString Data) const;
-	bool SendMessage(const uint8_t *Data, unsigned int Length) const;
-	void RegisterIncomingMessageCallback(TFunction<void(ROSData)> CallbackFunction);
-	void ReportError(TransportError Error) const;
-	void SetTransportMode(TransportMode);
-	FString GetOwnIPAddress();
+	bool Initialize(FString IPAddress, int Port, ETransportMode Mode) override;
+	void Uninitialize() override;
+	bool SendMessage(const uint8_t *Data, unsigned int Length) const override;
 
-	bool IsHealthy() const;
-	TransportMode GetTransportMode() const;
-	
 private:
 	FSocket *Socket = nullptr;
-	TransportMode CurrentTransportMode = TransportMode::JSON;
 
 	FRunnableThread* ReceiverThread = nullptr;
 	uint32 Run() override;
 	bool bReceiverThreadRunning = true;
 	bool bTerminateReceiverThread = false;
-	
-	TFunction<void(ROSData)> IncomingMessageCallback;
 };
