@@ -329,6 +329,10 @@ The following message types are pre-implemented. The tables show if the message 
 
 > <sup>1</sup> Since some messages originally use doubles/float64 and these are not compatible with blueprints, a special BP version of the message was implemented, that works in blueprints, but offers less precision
 
+## Notes:
+### Websockets
+The websockets are supported and working, but often result in an issue if another port than 80 or 443 are chosen. To get them working correctly with the newest ROSBridge, you have to have ROS running in Python3 mode and update the package "autobahn" to the newest version `pip3 install autobahn --upgrade`.
+
 ## Contribute:
 
 We are happy for all contributors to this repository! :tada: 
