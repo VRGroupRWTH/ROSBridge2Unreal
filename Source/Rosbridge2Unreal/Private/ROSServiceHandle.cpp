@@ -4,16 +4,8 @@
 #include "IRosbridge2Unreal.h"
 #include "Services/ROSServiceBase.h"
 
-
-void UROSServiceHandle::EndPlay(const EEndPlayReason::Type)
-{
-	Unadvertise(); //Does nothing if not advertised before
-}
-
 void UROSServiceHandle::Initialize(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
-	IRosbridge2Unreal::Get().EnsureConnectionIsInitialized();
-	
 	InternalService = IRosbridge2Unreal::Get().GetService(ServiceName, ServiceClass);
 }
 

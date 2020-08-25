@@ -10,8 +10,6 @@
 #include "Messages/internal/ROSTopicUnadvertiseMessage.h"
 #include "Messages/internal/ROSTopicUnsubscribeMessage.h"
 
-UROSTopic::UROSTopic(){}
-
 void UROSTopic::Initialize(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
 	StoredTopicName = TopicName;
@@ -44,7 +42,7 @@ void UROSTopic::Unsubscribe(const uint32 UniqueId)
 	}
 }
 
-void UROSTopic::ForceUnsubscribeInternal()
+bool UROSTopic::ForceUnsubscribeInternal()
 {
 	UROSTopicUnsubscribeMessage* UnsubscribeMessage = NewObject<UROSTopicUnsubscribeMessage>();
 	
@@ -52,6 +50,7 @@ void UROSTopic::ForceUnsubscribeInternal()
 	UnsubscribeMessage->TopicName = StoredTopicName;
 	
 	IsSubscribed = !IRosbridge2Unreal::Get().SendMessage(*UnsubscribeMessage);
+	return !IsSubscribed;
 }
 
 void UROSTopic::IncomingMessage(const UROSTopicPublishMessage& Message)

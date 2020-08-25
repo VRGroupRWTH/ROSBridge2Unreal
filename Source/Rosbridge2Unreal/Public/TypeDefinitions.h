@@ -33,6 +33,13 @@ enum class ETransportMode : uint8
 
 namespace CallbackHelper
 {
+	/**
+	 * Convenience function to hide a static cast.
+	 * Example usage: `Service->Advertise(CallbackHelper::Advertise<UROSSrvAddTwoInts>([](UROSSrvAddTwoInts* Request){...}));`
+	 * @tparam ServiceType - Service class that is responsible for (de-)serialization
+	 * @param Callback - The function that processes the request
+	 * @return Function that performs the static cast automatically
+	 */
 	template<class ServiceType>
 	static TFunction<void (UROSServiceBase*)> Advertise(TFunction<void(ServiceType*)> Callback)
 	{
@@ -42,6 +49,13 @@ namespace CallbackHelper
 		};
 	}
 	
+	/**
+	 * Convenience function to hide a static cast.
+	 * Example usage: `Service->RegisterResponseCallback(CallbackHelper::Response<UROSSrvAddTwoInts>([](const UROSSrvAddTwoInts* Response){...}));`
+	 * @tparam ServiceType - Service class that is responsible for (de-)serialization
+	 * @param Callback - The function that processes the response
+	 * @return Function that performs the static cast automatically
+	 */
 	template<class ServiceType>
 	static TFunction<void (const UROSServiceBase*)> Response(TFunction<void(const ServiceType*)> Callback)
 	{
@@ -51,6 +65,13 @@ namespace CallbackHelper
 		};
 	}
 
+	/**
+	 * Convenience function to hide a static cast.
+	 * Example usage: `Topic->Subscribe(CallbackHelper::Subscribe<UROSMsgString>([](const UROSMsgString* Message){...}));`
+	 * @tparam MessageType - Message class that is responsible for (de-)serialization
+	 * @param Callback - The function that processes the message
+	 * @return Function that performs the static cast automatically
+	 */
 	template<class MessageType>
 	static TFunction<void(const UROSMessageBase*)> Subscribe(TFunction<void(const MessageType*)> Callback)
 	{

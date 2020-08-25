@@ -19,26 +19,61 @@ class ROSBRIDGE2UNREAL_API UROSBridge : public UObject, public FRunnable
 	GENERATED_BODY()
 public:
 
-	/* Reads settings from project settings and initializes the connection */
+	/**
+	 * Reads settings from project settings and initializes the connection
+	 * @return Connection successful
+	 */
 	bool Initialize();
 	
+	/**
+	 * Uninitialize the bridge. Disconnects and destroys all held topics and services.
+	 */
 	void Uninitialize();
 	
+	/**
+	 * Send a String to the ROS Bridge
+	 * @param Data - The String to send
+	 * @return Success of sending operation
+	 */
 	bool SendMessage(const FString& Data) const;
 
+	/**
+	 * Generated one time IDs that can be used in successive messages
+	 * @return Successive one time IDs
+	 */
 	long GetNextID();
 
+	/**
+	 * @return Check if connection is in BSON mode
+	 */
 	bool IsBSONMode() const;
 
+	/**
+	 * Serialize and send message to the ROS Bridge
+	 * @param Message - The message to send
+	 * @return Success of sending operation
+	 */
 	bool SendMessage(UROSBridgeMessage &Message) const;
 
-	/* Get or create an internal TopicHandle and return it */
+	/**
+	 * Retrieves a topic instance from the already registered ones. Creates a new one of not present so far.
+	 * @param TopicName - The topic name that is used for advertise/subscribe etc.
+	 * @param MessageClass - The message class that is used for (de-)serialization of messages
+	 * @return The topic instance
+	 */
 	UROSTopic* GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass);
 
-	/* Get or create an internal ServiceHandle and return it */
+	/**
+	 * Retrieves a service instance from the already registered ones. Creates a new one of not present so far.
+	 * @param ServiceName - The service name that is used for advertise/call etc.
+	 * @param ServiceClass - The service class that is used for (de-)serialization of requests/responses
+	 * @return The service instance
+	 */
 	UROSService* GetService(FString ServiceName,  TSubclassOf<UROSServiceBase> ServiceClass);
 
-	/* Used to send clock events */
+	/**
+	 * Used internally to send clock events
+	 */
 	void TickEvent(float DeltaTime);
 	
 private:
