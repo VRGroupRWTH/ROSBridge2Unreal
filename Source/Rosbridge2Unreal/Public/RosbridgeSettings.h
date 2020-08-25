@@ -4,6 +4,9 @@
 #include "Engine/DeveloperSettings.h"
 #include "RosbridgeSettings.generated.h"
 
+/**
+ * Settings class that creates a settings page in the project settings
+ */
 UCLASS(config=Game, defaultconfig, meta=(DisplayName="ROS Bridge"))
 class URosbridgeSettings : public UDeveloperSettings
 {

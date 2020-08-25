@@ -2,9 +2,6 @@
 #include "IRosbridge2Unreal.h"
 #include "LogCategory.h"
 
-// Sets default values for this component's properties
-UROSTopicHandle::UROSTopicHandle(){}
-
 void UROSTopicHandle::Initialize(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
 	TopicHandle = IRosbridge2Unreal::Get().GetTopic(TopicName, MessageClass);
