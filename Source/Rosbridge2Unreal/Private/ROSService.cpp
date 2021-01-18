@@ -37,7 +37,7 @@ bool UROSService::Unadvertise()
 	return !bAdvertised;
 }
 
-bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (const UROSServiceBase*)> Callback, UROSServiceBase* ReusableResponse)
+bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (const UROSServiceBase*)> Callback, UROSServiceBase* InReusableResponse)
 {
 	if(bAdvertised) return false; //Can't call ourselfes
 
@@ -46,9 +46,9 @@ bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (co
 	ServiceRequest->ID = FString::Printf(TEXT("call_service:%s:%ld"), *StoredServiceName, IRosbridge2Unreal::Get().GetNextID());
 	Request->RequestToData(ServiceRequest->Data);
 	
-	ResponseCallbacks.Add(ServiceRequest->ID, [this, Callback, ReusableResponse](const UROSServiceResponseMessage& Message)
+	ResponseCallbacks.Add(ServiceRequest->ID, [this, Callback, InReusableResponse](const UROSServiceResponseMessage& Message)
 	{
-		UROSServiceBase* ParsedResponse = ReusableResponse; //either reusable or null
+		UROSServiceBase* ParsedResponse = InReusableResponse; //either reusable or null
 		if(!ParsedResponse) ParsedResponse = NewObject<UROSServiceBase>(this, *StoredServiceClass);
 		ParsedResponse->ResponseFromData(Message.Data);
 
