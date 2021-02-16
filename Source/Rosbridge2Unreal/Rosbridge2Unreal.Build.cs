@@ -23,7 +23,8 @@ public class Rosbridge2Unreal : ModuleRules
 				"Networking",
 				"Engine",
 				"WebSockets",
-				"jsoncons"
+				"jsoncons",
+				"DeveloperSettings"
 			}
 			);        
 		

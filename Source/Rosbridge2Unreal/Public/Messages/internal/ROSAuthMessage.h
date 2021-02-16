@@ -14,7 +14,7 @@ public:
 	FString Secret;
 	FString Client;
 	FString Destination;
-	FString Level = "admin";
+	FString Level = "level";
 
 	/* Transformation Functions */
 	void ToData(ROSData& Message) const override;
