@@ -6,6 +6,7 @@
 #include "Messages/internal/ROSBridgeMessage.h"
 #include "DataHelpers.h"
 #include "LogCategory.h"
+#include "Messages/internal/ROSAuthMessage.h"
 #include "Socket/WebSockConnection.h"
 
 DEFINE_LOG_CATEGORY(LogROSBridge);
@@ -16,7 +17,7 @@ bool UROSBridge::Initialize()
 	bSettingsRead = true;
 	
 	if(Settings->bSimulateConnection) return true; //Don't attempt connection
-
+	
 	switch(Settings->SocketMode) {
 		case ESocketMode::TCP:
 			Connection = NewObject<UTCPConnection>(this);
@@ -37,6 +38,15 @@ bool UROSBridge::Initialize()
 	SenderThread = FRunnableThread::Create(this, TEXT("ROSBridgeSenderThread"), 0, TPri_Normal);
 
 	bInitialized = true;
+
+	if(Settings->bShouldAuthenticate && ConnectionInitialized)
+	{
+		UROSAuthMessage* AuthMsg = NewObject<UROSAuthMessage>(this);
+		AuthMsg->Client = FString::Printf(TEXT("UnrealClient:%s"),FApp::GetProjectName());
+		AuthMsg->Destination = Settings->IP;
+		AuthMsg->Secret = Settings->Secret;
+		SendMessage(*AuthMsg);
+	}
 	
 	return ConnectionInitialized;
 }

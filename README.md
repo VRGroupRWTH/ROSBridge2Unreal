@@ -326,6 +326,7 @@ The following message types are pre-implemented. The tables show if the message 
 | :---------------- | ------- |
 | 4.22              | ✓       |
 | 4.25              | ✓       |
+| 4.26              | ✓       |
 
 > <sup>1</sup> Since some messages originally use doubles/float64 and these are not compatible with blueprints, a special BP version of the message was implemented, that works in blueprints, but offers less precision
 

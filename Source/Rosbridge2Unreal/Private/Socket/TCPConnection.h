@@ -17,7 +17,7 @@ public:
 	bool Initialize(FString IPAddress, int Port, ETransportMode Mode) override;
 	void Uninitialize() override;
 	bool SendMessage(const uint8_t *Data, unsigned int Length) const override;
-	
+
 private:
 	FSocket *Socket = nullptr;
 
