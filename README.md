@@ -319,6 +319,7 @@ The following message types are pre-implemented. The tables show if the message 
 | geometry_msgs/Vector3                   | ✓           | ✘      | ✘                      |
 | rosgraph_msgs/Clock                     | ✓           | ✓      | -                      |
 | nav_msgs/Path                           | ✓           | ✘      | ✓                      |
+| sensor_msgs/CompressedImage             | ✓           | ✓      | -                      |
 
 | Service Message Type       | Implemented | Tested |
 | :------------------------- | ----------- | ------ |
