@@ -23,10 +23,13 @@ public class Rosbridge2Unreal : ModuleRules
 				"Networking",
 				"Engine",
 				"WebSockets",
-				"jsoncons",
-				"DeveloperSettings"
+				"jsoncons"
 			}
-			);        
+			);
+        
+        #if UE_4_26_OR_LATER
+        PublicDependencyModuleNames.Add("DeveloperSettings");
+        #endif
 		
 		PrivateDependencyModuleNames.AddRange(
 			new string[]{}
