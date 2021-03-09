@@ -318,6 +318,7 @@ The following message types are pre-implemented. The tables show if the message 
 | geometry_msgs/TwistWithCovariance       | ✓           | ✘      | ✘                      |
 | geometry_msgs/Vector3                   | ✓           | ✘      | ✘                      |
 | rosgraph_msgs/Clock                     | ✓           | ✓      | -                      |
+| nav_msgs/Path                           | ✓           | ✘      | ✓                      |
 
 | Service Message Type       | Implemented | Tested |
 | :------------------------- | ----------- | ------ |
