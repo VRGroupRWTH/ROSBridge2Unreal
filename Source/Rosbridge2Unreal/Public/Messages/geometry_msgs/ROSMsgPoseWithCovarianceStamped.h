@@ -19,6 +19,9 @@ public:
 	UROSMsgPoseWithCovarianceStamped(){};
 	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/PoseWithCovarianceStamped";}
 
+	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgPoseWithCovarianceStamped* Create(UROSMsgHeader* Header, UROSMsgPoseWithCovariance* Pose);
+	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgPoseWithCovarianceStamped* CreateEmpty();
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector GetPositionInUnrealCoordinateFrame() const;
 	UFUNCTION(BlueprintCallable, BlueprintPure) FQuat GetRotationInUnrealCoordinateFrame() const;
 	

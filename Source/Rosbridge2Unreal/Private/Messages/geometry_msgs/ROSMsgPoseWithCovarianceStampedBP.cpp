@@ -1,6 +1,22 @@
 #include "Messages/geometry_msgs/ROSMsgPoseWithCovarianceStampedBP.h"
 #include "DataHelpers.h"
 
+UROSMsgPoseWithCovarianceStampedBP* UROSMsgPoseWithCovarianceStampedBP::Create(UROSMsgHeader* Header, UROSMsgPoseWithCovarianceBP* Pose)
+{
+	UROSMsgPoseWithCovarianceStampedBP* Message = NewObject<UROSMsgPoseWithCovarianceStampedBP>();
+	Message->Header = Header;
+	Message->Pose = Pose;
+	return Message;
+}
+
+UROSMsgPoseWithCovarianceStampedBP* UROSMsgPoseWithCovarianceStampedBP::CreateEmpty()
+{
+	UROSMsgPoseWithCovarianceStampedBP* Message = NewObject<UROSMsgPoseWithCovarianceStampedBP>();
+	Message->Header = NewObject<UROSMsgHeader>(Message);
+	Message->Pose = NewObject<UROSMsgPoseWithCovarianceBP>(Message);
+	return Message;
+}
+
 FVector UROSMsgPoseWithCovarianceStampedBP::GetPositionInUnrealCoordinateFrame() const
 {
 	if(!Pose->IsValidLowLevelFast() || !Pose->Pose->IsValidLowLevelFast()) return FVector();
