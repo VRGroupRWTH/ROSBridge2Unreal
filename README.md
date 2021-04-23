@@ -297,29 +297,29 @@ This implementation is very similar to the *Implement own Message-Types* chapter
 The following message types are pre-implemented. The tables show if the message types were implemented and tested already. If they were not tested, this does not mean, that they do not work, just that we did not have any use case to test them. If you tested one of them, report your testing result in [this Issue](https://github.com/VRGroupRWTH/ROSBridge2Unreal/issues/1), such that we can update this table.
 
 
-| Topic Message Type                      | Implemented | Tested | \*BP Tested <sup>1</sup> |
-| :-------------------------------------- | ----------- | ------ | ---------------------- |
-| std_msgs/Header                         | ✓           | ✘      | -                      |
-| std_msgs/String                         | ✓           | ✓      | -                      |
-| std_msgs/Float32                        | ✓           | ✘      | -                      |
-| std_msgs/Float32MultiArray              | ✓           | ✘      | -                      |
-| std_msgs/MultiArrayDimension            | ✓           | ✘      | -                      |
-| std_msgs/MultiArrayLayout               | ✓           | ✘      | -                      |
-| std_msgs/UInt8MultiArray                | ✓           | ✘      | -                      |
-| geometry_msgs/Point                     | ✓           | ✘      | ✘                      |
-| geometry_msgs/Pose                      | ✓           | ✓      | ✓                      |
-| geometry_msgs/PoseStamped               | ✓           | ✘      | ✘                      |
-| geometry_msgs/PoseWithCovariance        | ✓           | ✓      | ✓                      |
-| geometry_msgs/PoseWithCovarianceStamped | ✓           | ✓      | ✓                      |
-| geometry_msgs/Quaternion                | ✓           | ✘      | ✘                      |
-| geometry_msgs/Transform                 | ✓           | ✘      | ✘                      |
-| geometry_msgs/TransformStamped          | ✓           | ✘      | ✘                      |
-| geometry_msgs/Twist                     | ✓           | ✘      | ✘                      |
-| geometry_msgs/TwistWithCovariance       | ✓           | ✘      | ✘                      |
-| geometry_msgs/Vector3                   | ✓           | ✘      | ✘                      |
-| rosgraph_msgs/Clock                     | ✓           | ✓      | -                      |
-| nav_msgs/Path                           | ✓           | ✘      | ✓                      |
-| sensor_msgs/CompressedImage             | ✓           | ✓      | -                      |
+| Topic Message Type                            | Implemented | Tested |
+| :-------------------------------------------- | ----------- | ------ |
+| std_msgs/Header                               | ✓           | ✘      |
+| std_msgs/String                               | ✓           | ✓      |
+| std_msgs/Float32                              | ✓           | ✘      |
+| std_msgs/Float32MultiArray                    | ✓           | ✘      |
+| std_msgs/MultiArrayDimension                  | ✓           | ✘      |
+| std_msgs/MultiArrayLayout                     | ✓           | ✘      |
+| std_msgs/UInt8MultiArray                      | ✓           | ✘      |
+| geometry_msgs/Point<sup>1</sup>               | ✓           | ✘      |
+| geometry_msgs/Pose<sup>1</sup>                | ✓           | ✘      |
+| geometry_msgs/PoseStamped                     | ✓           | ✘      |
+| geometry_msgs/PoseWithCovariance<sup>1</sup>  | ✓           | ✘      |
+| geometry_msgs/PoseWithCovarianceStamped       | ✓           | ✓      |
+| geometry_msgs/Quaternion<sup>1</sup>          | ✓           | ✘      |
+| geometry_msgs/Transform<sup>1</sup>           | ✓           | ✘      |
+| geometry_msgs/TransformStamped                | ✓           | ✘      |
+| geometry_msgs/Twist<sup>1</sup>               | ✓           | ✘      |
+| geometry_msgs/TwistWithCovariance<sup>1</sup> | ✓           | ✘      |
+| geometry_msgs/Vector3<sup>1</sup>             | ✓           | ✘      |
+| rosgraph_msgs/Clock                           | ✓           | ✘      |
+| nav_msgs/Path                                 | ✓           | ✘      |
+| sensor_msgs/CompressedImage                   | ✓           | ✓      |
 
 | Service Message Type       | Implemented | Tested |
 | :------------------------- | ----------- | ------ |
@@ -332,7 +332,7 @@ The following message types are pre-implemented. The tables show if the message 
 | 4.25              | ✓       |
 | 4.26              | ✓       |
 
-> <sup>1</sup> Since some messages originally use doubles/float64 and these are not compatible with blueprints, a special BP version of the message was implemented, that works in blueprints, but offers less precision
+> <sup>1</sup> Since some messages originally use doubles/float64 and these are not compatible with blueprints, special BP compatablility functions are implemented, that work in blueprints, but offer less precision compared to the C++ equivalents
 
 ## Notes:
 ### Websockets
