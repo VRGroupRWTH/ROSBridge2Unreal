@@ -13,11 +13,11 @@ public:
 	FString GetMessageType() override {return "rosgraph_msgs/Clock";};
 	
 	/* Convenience Methods */
-	static UROSMsgClock* Create(int32 InSeconds, int32 InNanoSeconds);
+	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgClock* Create(int32 InSeconds, int32 InNanoSeconds);
 	
 	/* Request Data */
-	int32 Seconds;
-	int32 NanoSeconds;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 Seconds;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 NanoSeconds;
 
 	/* Transformation Functions */
 	void ToData(ROSData& Message) const override;

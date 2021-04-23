@@ -4,10 +4,7 @@
 UROSMsgQuaternion* UROSMsgQuaternion::Create(const FQuat& Data)
 {
 	UROSMsgQuaternion* Message = NewObject<UROSMsgQuaternion>();
-	Message->X = Data.X;
-	Message->Y = Data.Y;
-	Message->Z = Data.Z;
-	Message->W = Data.W;
+	Message->SetFromFQuat(Data);
 	return Message;
 }
 
@@ -19,6 +16,14 @@ UROSMsgQuaternion* UROSMsgQuaternion::CreateEmpty()
 FQuat UROSMsgQuaternion::AsFQuat() const
 {
 	return FQuat(X,Y,Z,W);
+}
+
+void UROSMsgQuaternion::SetFromFQuat(const FQuat InQuat)
+{
+	X = InQuat.X;
+	Y = InQuat.Y;
+	Z = InQuat.Z;
+	W = InQuat.W;
 }
 
 void UROSMsgQuaternion::ToData(ROSData& Message) const

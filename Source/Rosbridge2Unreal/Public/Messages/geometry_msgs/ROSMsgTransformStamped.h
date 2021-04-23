@@ -6,10 +6,7 @@
 #include "Messages/geometry_msgs/ROSMsgTransform.h"
 #include "ROSMsgTransformStamped.generated.h"
 
-/**
- * Since 'double' is not supported in Blueprints, refer to the BP class of this one, if you want to use it in Blueprints
- */
-UCLASS()
+UCLASS(BlueprintType)
 class ROSBRIDGE2UNREAL_API UROSMsgTransformStamped : public UROSMessageBase
 {
 	GENERATED_BODY()

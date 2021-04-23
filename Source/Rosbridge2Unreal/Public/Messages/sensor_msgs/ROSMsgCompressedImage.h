@@ -36,6 +36,7 @@ public:
 	/* Transformation Functions */
 	void ToData(ROSData& Message) const override;
 	bool FromData(const ROSData& Message) override;
+
 private:
 	TSharedPtr<IImageWrapper> ImageWrapper;
 	ERGBFormat OutputFormat = ERGBFormat::RGBA;

@@ -4,9 +4,7 @@
 UROSMsgVector3* UROSMsgVector3::CreateFromVector(const FVector& Data)
 {
 	UROSMsgVector3* Message = NewObject<UROSMsgVector3>();
-	Message->X = Data.X;
-	Message->Y = Data.Y;
-	Message->Z = Data.Z;
+	Message->SetFromFVector(Data);
 	return Message;
 }
 
@@ -22,6 +20,13 @@ UROSMsgVector3* UROSMsgVector3::Create(const double& X, const double& Y, const d
 FVector UROSMsgVector3::AsFVector() const
 {
 	return FVector(X,Y,Z);
+}
+
+void UROSMsgVector3::SetFromFVector(const FVector InVector)
+{
+	X = InVector.X;
+	Y = InVector.Y;
+	Z = InVector.Z;
 }
 
 void UROSMsgVector3::ToData(ROSData& Message) const

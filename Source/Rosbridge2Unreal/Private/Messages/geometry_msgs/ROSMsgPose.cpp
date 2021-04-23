@@ -4,13 +4,8 @@
 UROSMsgPose* UROSMsgPose::CreateFromPositionOrientation(const FVector& Position, const FQuat& Orientation)
 {
 	UROSMsgPose* Message = NewObject<UROSMsgPose>();
-	Message->Px = Position.X;
-	Message->Py = Position.Y;
-	Message->Pz = Position.Z;
-	Message->Qx = Orientation.X;
-	Message->Qy = Orientation.Y;
-	Message->Qz = Orientation.Z;
-	Message->Qw = Orientation.W;
+	Message->SetPositionFromFVector(Position);
+	Message->SetOrientationFromQuad(Orientation);
 	return Message;
 }
 
@@ -32,10 +27,26 @@ FVector UROSMsgPose::PositionAsFVector() const
 	return FVector(Px,Py,Pz);
 }
 
+void UROSMsgPose::SetPositionFromFVector(const FVector InPosition)
+{
+	Px = InPosition.X;
+	Py = InPosition.Y;
+	Pz = InPosition.Z;
+}
+
 FQuat UROSMsgPose::OrientationAsQuad() const
 {
 	return FQuat(Qx,Qy,Qz,Qw);
 }
+
+void UROSMsgPose::SetOrientationFromQuad(const FQuat InOrientation)
+{
+	Qx = InOrientation.X;
+	Qy = InOrientation.Y;
+	Qz = InOrientation.Z;
+	Qw = InOrientation.W;
+}
+
 
 void UROSMsgPose::ToData(ROSData& Message) const
 {

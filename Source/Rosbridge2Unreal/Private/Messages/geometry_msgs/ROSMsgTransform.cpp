@@ -9,13 +9,8 @@ UROSMsgTransform* UROSMsgTransform::CreateFromTransform(const FTransform& Transf
 UROSMsgTransform* UROSMsgTransform::CreateFromTranslationRotation(const FVector& Translation, const FQuat& Rotation)
 {
 	UROSMsgTransform* Message = NewObject<UROSMsgTransform>();
-	Message->Tx = Translation.X;
-	Message->Ty = Translation.Y;
-	Message->Tz = Translation.Z;
-	Message->Ry = Rotation.Y;
-	Message->Rz = Rotation.Z;
-	Message->Rw = Rotation.W;
-	Message->Rx = Rotation.X;
+	Message->SetTranslationFromFVector(Translation);
+	Message->SetRotationFromQuad(Rotation);
 	return Message;
 }
 
@@ -45,6 +40,27 @@ FQuat UROSMsgTransform::RotationAsQuad() const
 FTransform UROSMsgTransform::AsTransform() const
 {
 	return FTransform(RotationAsQuad(),TranslationAsFVector());
+}
+
+void UROSMsgTransform::SetTranslationFromFVector(const FVector InVector)
+{
+	Tx = InVector.X;
+	Ty = InVector.Y;
+	Tz = InVector.Z;
+}
+
+void UROSMsgTransform::SetRotationFromQuad(const FQuat InQuat)
+{
+	Ry = InQuat.Y;
+	Rz = InQuat.Z;
+	Rw = InQuat.W;
+	Rx = InQuat.X;
+}
+
+void UROSMsgTransform::SetFromTransform(const FTransform InTransform)
+{
+	SetRotationFromQuad(InTransform.GetRotation());
+	SetTranslationFromFVector(InTransform.GetLocation());
 }
 
 void UROSMsgTransform::ToData(ROSData& Message) const

@@ -5,10 +5,7 @@
 #include "Messages/geometry_msgs/ROSMsgPose.h"
 #include "ROSMsgPoseWithCovariance.generated.h"
 
-/**
- * Since TArray<double> is not supported in Blueprints, refer to the BP class of this one, if you want to use it in Blueprints
- */
-UCLASS()
+UCLASS(BlueprintType)
 class ROSBRIDGE2UNREAL_API UROSMsgPoseWithCovariance : public UROSMessageBase
 {
 	GENERATED_BODY()
@@ -18,7 +15,12 @@ public:
 	UROSMsgPoseWithCovariance(){};
 	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/PoseWithCovariance";};
 	static UROSMsgPoseWithCovariance* Create(UROSMsgPose* Pose, const TArray<double>& Covariance);
+	UFUNCTION(BlueprintCallable) static UROSMsgPoseWithCovariance* Create(UROSMsgPose* Pose, const TArray<float>& Covariance);
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgPoseWithCovariance* CreateEmpty();
+
+	/* Blueprint functions. Ease of use. Lowers the precision */
+	UFUNCTION(BlueprintCallable) TArray<float> CovarianceAsFloatArray() const;
+	UFUNCTION(BlueprintCallable) void SetCovarianceFromFloatArray(const TArray<float> InArray);
 	
 	/* Data */
 	/*

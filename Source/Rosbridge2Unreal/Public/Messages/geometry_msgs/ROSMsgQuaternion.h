@@ -4,10 +4,7 @@
 #include "Messages/ROSMessageBase.h"
 #include "ROSMsgQuaternion.generated.h"
 
-/**
- * Since 'double' is not supported in Blueprints, refer to the BP class of this one, if you want to use it in Blueprints
- */
-UCLASS()
+UCLASS(BlueprintType)
 class ROSBRIDGE2UNREAL_API UROSMsgQuaternion : public UROSMessageBase
 {
 	GENERATED_BODY()
@@ -21,6 +18,7 @@ public:
 
 	/* Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable, BlueprintPure) FQuat AsFQuat() const;
+	UFUNCTION(BlueprintCallable) void SetFromFQuat(const FQuat InQuat);
 	
 	/* Data */
 	double X;

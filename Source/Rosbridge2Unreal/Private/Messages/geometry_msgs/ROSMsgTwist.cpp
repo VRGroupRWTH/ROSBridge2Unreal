@@ -13,6 +13,14 @@ UROSMsgTwist* UROSMsgTwist::Create(const double& Lx, const double& Ly, const dou
 	return Message;
 }
 
+UROSMsgTwist* UROSMsgTwist::CreateFromVectors(const FVector& InLinear, const FVector& InAngular)
+{
+	UROSMsgTwist* Message = NewObject<UROSMsgTwist>();
+	Message->SetLinearFromFVector(InLinear);
+	Message->SetAngularFromFVector(InAngular);
+	return Message;
+}
+
 UROSMsgTwist* UROSMsgTwist::CreateEmpty()
 {
 	return NewObject<UROSMsgTwist>();
@@ -26,6 +34,20 @@ FVector UROSMsgTwist::LinearAsFVector() const
 FVector UROSMsgTwist::AngularAsFVector() const
 {
 	return FVector(AngularX, AngularY, AngularZ);
+}
+
+void UROSMsgTwist::SetLinearFromFVector(const FVector InVector)
+{
+	LinearX = InVector.X;
+	LinearY = InVector.Y;
+	LinearZ = InVector.Z;
+}
+
+void UROSMsgTwist::SetAngularFromFVector(const FVector InVector)
+{
+	AngularX = InVector.X;
+	AngularY = InVector.Y;
+	AngularZ = InVector.Z;
 }
 
 void UROSMsgTwist::ToData(ROSData& Message) const
