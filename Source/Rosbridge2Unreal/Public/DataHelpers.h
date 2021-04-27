@@ -331,4 +331,33 @@ namespace DataHelpers {
 
 		Message.insert_or_assign(Key, ArrayNode);
 	}
+
+	template <typename T>
+	inline bool ExtractSubMessage(const ROSData& Message, const char* Key, T** OutMessageInstance) {
+		check(OutMessageInstance != nullptr);
+
+		if (*OutMessageInstance == nullptr)
+		{
+			*OutMessageInstance = NewObject<T>();
+		}
+
+		if (Key[0] == '/')
+		{
+			return (*OutMessageInstance)->FromData(jsoncons::jsonpointer::get(Message, Key));
+		}
+		else if (Message.contains(Key))
+		{
+			return (*OutMessageInstance)->FromData(Message.at(Key));
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	inline void AppendSubMessage(ROSData& OutMessage, const char* Key, UROSMessageBase* Message) {
+		ROSData Data;
+		Message->ToData(Data);
+		AppendSubDocument(OutMessage, Key, Data);
+	}
 }
