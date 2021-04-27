@@ -257,27 +257,27 @@ class ROSBRIDGE2UNREAL_API UROSMsgString : public UROSMessageBase
 public:
     /* Construction */
     UROSMsgString(){};
-    UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/String";};
-    UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgString* Create(FString Data);
+    UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/String";}
+    UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgString* Create(const FString& Data);
     
     /* Data */
     UPROPERTY(EditAnywhere, BlueprintReadWrite) FString Data;
 
     /* Transformation Functions */
-    void ToData(ROSData& Message) const override;
+    void ToData(ROSData& OutMessage) const override;
     bool FromData(const ROSData& Message) override;
 };
 
-UROSMsgString* UROSMsgString::Create(FString Data)
+UROSMsgString* UROSMsgString::Create(const FString& Data)
 {
     UROSMsgString* Message = NewObject<UROSMsgString>();
     Message->Data = Data;
     return Message;
 }
 
-void UROSMsgString::ToData(ROSData& Message) const
+void UROSMsgString::ToData(ROSData& OutMessage) const
 {
-    DataHelpers::AppendString(Message, "data", Data);
+    DataHelpers::AppendString(OutMessage, "data", Data);
 }
 
 bool UROSMsgString::FromData(const ROSData& Message)

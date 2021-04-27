@@ -19,15 +19,15 @@ UROSMsgTransformStamped* UROSMsgTransformStamped::CreateEmpty()
 	return Message;
 }
 
-void UROSMsgTransformStamped::ToData(ROSData& Message) const
+void UROSMsgTransformStamped::ToData(ROSData& OutMessage) const
 {
 	ROSData SubElementHeader;
 	ROSData SubElementTransform;
 	Header->ToData(SubElementHeader);
 	Transform->ToData(SubElementTransform);
-	DataHelpers::AppendSubDocument(Message,  "header", SubElementHeader);
-	DataHelpers::AppendString(Message,  "child_frame_id", ChildFrameID);
-	DataHelpers::AppendSubDocument(Message,  "transform", SubElementTransform);
+	DataHelpers::AppendSubDocument(OutMessage,  "header", SubElementHeader);
+	DataHelpers::AppendString(OutMessage,  "child_frame_id", ChildFrameID);
+	DataHelpers::AppendSubDocument(OutMessage,  "transform", SubElementTransform);
 }
 
 bool UROSMsgTransformStamped::FromData(const ROSData& Message)

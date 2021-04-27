@@ -14,7 +14,7 @@ class ROSBRIDGE2UNREAL_API UROSMsgPoseStamped : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgPoseStamped(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/PoseStamped";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/PoseStamped";}
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgPoseStamped* Create(UROSMsgHeader* Header, UROSMsgPose* Pose);
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgPoseStamped* CreateEmpty();
 	
@@ -23,6 +23,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UROSMsgPose* Pose;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

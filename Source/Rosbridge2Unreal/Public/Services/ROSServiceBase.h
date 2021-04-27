@@ -24,7 +24,7 @@ public:
 	 * Serialize user request to a message that is sent to ROS Bridge
 	 * @param Message - The message to serialize to
 	 */
-	virtual void RequestToData(ROSData& Message) const PURE_VIRTUAL(UROSServiceBase::RequestToData, return;);
+	virtual void RequestToData(ROSData& OutMessage) const PURE_VIRTUAL(UROSServiceBase::RequestToData, return;);
 	
 	/**
 	 * Deserialize a request that comes from the ROS Bridge
@@ -37,7 +37,7 @@ public:
 	 * Serialize the response to a request that is later sent to the ROS Bridge
 	 * @param Message - The message to serialize to
 	 */
-	virtual void ResponseToData(ROSData& Message) const PURE_VIRTUAL(UROSServiceBase::ResponseToData, return;);
+	virtual void ResponseToData(ROSData& OutMessage) const PURE_VIRTUAL(UROSServiceBase::ResponseToData, return;);
 	
 	/**
 	 * Deserialize a service response from the ROS Bridge

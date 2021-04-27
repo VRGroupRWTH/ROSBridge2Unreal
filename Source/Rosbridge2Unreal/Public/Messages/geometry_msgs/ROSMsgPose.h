@@ -12,9 +12,9 @@ class ROSBRIDGE2UNREAL_API UROSMsgPose : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgPose(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Pose";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Pose";}
 	UFUNCTION(BlueprintCallable)  static UROSMsgPose* CreateFromPositionOrientation(const FVector& Position, const FQuat& Orientation);
-	static UROSMsgPose* Create(const double& Px = 0.0, const double& Py = 0.0, const double& Pz = 0.0, const double& Qx = 0.0, const double& Qy = 0.0, const double& Qz = 0.0, const double& Qw = 0.0);
+	static UROSMsgPose* Create(double Px = 0.0, double Py = 0.0, double Pz = 0.0, double Qx = 0.0, double Qy = 0.0, double Qz = 0.0, double Qw = 0.0);
 
 	/* Blueprint functions. Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector PositionAsFVector() const;
@@ -34,6 +34,6 @@ public:
 	double Qw;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

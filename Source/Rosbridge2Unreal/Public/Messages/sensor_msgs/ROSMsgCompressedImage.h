@@ -34,7 +34,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin=0, ClampMax=100)) int OutputCompressionQuality = 100;
 	
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 
 private:

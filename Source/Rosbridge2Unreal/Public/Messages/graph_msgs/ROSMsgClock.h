@@ -10,7 +10,7 @@ class ROSBRIDGE2UNREAL_API UROSMsgClock : public UROSMessageBase
 	GENERATED_BODY()
 
 public:
-	FString GetMessageType() override {return "rosgraph_msgs/Clock";};
+	FString GetMessageType() override {return "rosgraph_msgs/Clock";}
 	
 	/* Convenience Methods */
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgClock* Create(int32 InSeconds, int32 InNanoSeconds);
@@ -20,6 +20,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int32 NanoSeconds;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

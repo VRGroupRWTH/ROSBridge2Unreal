@@ -96,7 +96,7 @@ bool UROSBridge::IsBSONMode() const
 	return Connection->GetTransportMode() == ETransportMode::BSON;
 }
 
-bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const
+bool UROSBridge::SendMessage(const UROSBridgeMessage& Message) const
 {
 	if(bSettingsRead && Settings->bSimulateConnection) return true;
 	if(!bInitialized) return true; /* return true, since this is no error */
@@ -116,7 +116,7 @@ bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const
 	return false;
 }
 
-UROSTopic* UROSBridge::GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
+UROSTopic* UROSBridge::GetTopic(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
 	UROSTopic** FoundTopic = Topics.FindByPredicate([TopicName](const UROSTopic* Topic)
 	{
@@ -132,7 +132,7 @@ UROSTopic* UROSBridge::GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> 
 	return NewTopic;
 }
 
-UROSService* UROSBridge::GetService(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
+UROSService* UROSBridge::GetService(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
 	UROSService** FoundService = Services.FindByPredicate([ServiceName](const UROSService* Service)
 	{

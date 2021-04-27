@@ -14,7 +14,7 @@ class ROSBRIDGE2UNREAL_API UROSSrvTopics : public UROSServiceBase
 {
 public:
 	GENERATED_BODY()
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetServiceType() override {return "rosapi/Topics";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetServiceType() override {return "rosapi/Topics";}
 	UFUNCTION(BlueprintCallable) static UROSSrvTopics* CreateEmpty();
 
 	/* Data */
@@ -23,10 +23,10 @@ public:
 private:
 	/* Transformation Functions */
 	/* Request */
-	void RequestToData(ROSData& Message) const override;
+	void RequestToData(ROSData& OutMessage) const override;
 	bool RequestFromData(const ROSData& Message) override;
 
 	/* Response */
-	void ResponseToData(ROSData& Message) const override;
+	void ResponseToData(ROSData& OutMessage) const override;
 	bool ResponseFromData(const ROSData& Message) override;
 };

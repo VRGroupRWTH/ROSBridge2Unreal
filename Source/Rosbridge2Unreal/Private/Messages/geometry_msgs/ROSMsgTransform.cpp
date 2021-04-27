@@ -14,7 +14,7 @@ UROSMsgTransform* UROSMsgTransform::CreateFromTranslationRotation(const FVector&
 	return Message;
 }
 
-UROSMsgTransform* UROSMsgTransform::Create(const double& Tx, const double& Ty, const double& Tz, const double& Rx, const double& Ry, const double& Rz, const double& Rw)
+UROSMsgTransform* UROSMsgTransform::Create(double Tx, double Ty, double Tz, double Rx, double Ry, double Rz, double Rw)
 {
 	UROSMsgTransform* Message = NewObject<UROSMsgTransform>();
 	Message->Tx = Tx;
@@ -63,17 +63,17 @@ void UROSMsgTransform::SetFromTransform(const FTransform InTransform)
 	SetTranslationFromFVector(InTransform.GetLocation());
 }
 
-void UROSMsgTransform::ToData(ROSData& Message) const
+void UROSMsgTransform::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendSubDocument(Message, "translation", ROSData());
-	DataHelpers::AppendDouble(Message, "/translation/x", Tx);
-	DataHelpers::AppendDouble(Message, "/translation/y", Ty);
-	DataHelpers::AppendDouble(Message, "/translation/z", Tz);
-	DataHelpers::AppendSubDocument(Message, "rotation", ROSData());
-	DataHelpers::AppendDouble(Message, "/rotation/x", Rx);
-	DataHelpers::AppendDouble(Message, "/rotation/y", Ry);
-	DataHelpers::AppendDouble(Message, "/rotation/z", Rz);
-	DataHelpers::AppendDouble(Message, "/rotation/w", Rw);
+	DataHelpers::AppendSubDocument(OutMessage, "translation", ROSData());
+	DataHelpers::AppendDouble(OutMessage, "/translation/x", Tx);
+	DataHelpers::AppendDouble(OutMessage, "/translation/y", Ty);
+	DataHelpers::AppendDouble(OutMessage, "/translation/z", Tz);
+	DataHelpers::AppendSubDocument(OutMessage, "rotation", ROSData());
+	DataHelpers::AppendDouble(OutMessage, "/rotation/x", Rx);
+	DataHelpers::AppendDouble(OutMessage, "/rotation/y", Ry);
+	DataHelpers::AppendDouble(OutMessage, "/rotation/z", Rz);
+	DataHelpers::AppendDouble(OutMessage, "/rotation/w", Rw);
 }
 
 bool UROSMsgTransform::FromData(const ROSData& Message)

@@ -2,7 +2,7 @@
 #include "IRosbridge2Unreal.h"
 #include "LogCategory.h"
 
-void UROSTopicHandle::Initialize(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
+void UROSTopicHandle::Initialize(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
 	if(!MessageClass)
 	{

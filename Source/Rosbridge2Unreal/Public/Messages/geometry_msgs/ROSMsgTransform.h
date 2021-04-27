@@ -12,10 +12,10 @@ class ROSBRIDGE2UNREAL_API UROSMsgTransform : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgTransform(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Transform";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Transform";}
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgTransform* CreateFromTransform(const FTransform& Transform);
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgTransform* CreateFromTranslationRotation(const FVector& Translation, const FQuat& Rotation);
-	static UROSMsgTransform* Create(const double& Tx,const double& Ty,const double& Tz,const double& Rx,const double& Ry,const double& Rz,const double& Rw);
+	static UROSMsgTransform* Create(double Tx, double Ty, double Tz, double Rx, double Ry, double Rz, double Rw);
 
 	/* Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector TranslationAsFVector() const;
@@ -37,6 +37,6 @@ public:
 	double Rw;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

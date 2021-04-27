@@ -53,7 +53,7 @@ public:
 	 * @param Message - The message to send
 	 * @return Success of sending operation
 	 */
-	bool SendMessage(UROSBridgeMessage &Message) const;
+	bool SendMessage(const UROSBridgeMessage &Message) const;
 
 	/**
 	 * Retrieves a topic instance from the already registered ones. Creates a new one of not present so far.
@@ -61,7 +61,7 @@ public:
 	 * @param MessageClass - The message class that is used for (de-)serialization of messages
 	 * @return The topic instance
 	 */
-	UROSTopic* GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass);
+	UROSTopic* GetTopic(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass);
 
 	/**
 	 * Retrieves a service instance from the already registered ones. Creates a new one of not present so far.
@@ -69,7 +69,7 @@ public:
 	 * @param ServiceClass - The service class that is used for (de-)serialization of requests/responses
 	 * @return The service instance
 	 */
-	UROSService* GetService(FString ServiceName,  TSubclassOf<UROSServiceBase> ServiceClass);
+	UROSService* GetService(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass);
 
 	/**
 	 * Used internally to send clock events

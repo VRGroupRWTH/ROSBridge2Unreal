@@ -8,7 +8,7 @@ UROSMsgVector3* UROSMsgVector3::CreateFromVector(const FVector& Data)
 	return Message;
 }
 
-UROSMsgVector3* UROSMsgVector3::Create(const double& X, const double& Y, const double& Z)
+UROSMsgVector3* UROSMsgVector3::Create(double X, double Y, double Z)
 {
 	UROSMsgVector3* Message = NewObject<UROSMsgVector3>();
 	Message->X = X;
@@ -29,11 +29,11 @@ void UROSMsgVector3::SetFromFVector(const FVector InVector)
 	Z = InVector.Z;
 }
 
-void UROSMsgVector3::ToData(ROSData& Message) const
+void UROSMsgVector3::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendDouble(Message, "x", X);
-	DataHelpers::AppendDouble(Message, "y", Y);
-	DataHelpers::AppendDouble(Message, "z", Z);
+	DataHelpers::AppendDouble(OutMessage, "x", X);
+	DataHelpers::AppendDouble(OutMessage, "y", Y);
+	DataHelpers::AppendDouble(OutMessage, "z", Z);
 }
 
 bool UROSMsgVector3::FromData(const ROSData& Message)

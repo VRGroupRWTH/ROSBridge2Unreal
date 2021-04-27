@@ -12,9 +12,9 @@ class ROSBRIDGE2UNREAL_API UROSMsgPoint : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgPoint(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Point";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Point";}
 	UFUNCTION(BlueprintCallable) static UROSMsgPoint* CreateFromVector(const FVector& Data = FVector::ZeroVector);
-	static UROSMsgPoint* Create(const double& X, const double& Y, const double& Z);
+	static UROSMsgPoint* Create(double X, double Y, double Z);
 
 	/* Blueprint functions. Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector AsFVector() const;
@@ -26,6 +26,6 @@ public:
 	double Z;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

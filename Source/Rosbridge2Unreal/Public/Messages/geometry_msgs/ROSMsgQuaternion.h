@@ -12,13 +12,13 @@ class ROSBRIDGE2UNREAL_API UROSMsgQuaternion : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgQuaternion(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Quaternion";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Quaternion";}
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgQuaternion* Create(const FQuat& Data);
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgQuaternion* CreateEmpty();
 
 	/* Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable, BlueprintPure) FQuat AsFQuat() const;
-	UFUNCTION(BlueprintCallable) void SetFromFQuat(const FQuat InQuat);
+	UFUNCTION(BlueprintCallable) void SetFromFQuat(const FQuat& InQuat);
 	
 	/* Data */
 	double X;
@@ -27,6 +27,6 @@ public:
 	double W;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

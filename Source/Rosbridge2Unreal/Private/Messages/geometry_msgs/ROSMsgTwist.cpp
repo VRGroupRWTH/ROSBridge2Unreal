@@ -1,7 +1,7 @@
 #include "Messages/geometry_msgs/ROSMsgTwist.h"
 #include "DataHelpers.h"
 
-UROSMsgTwist* UROSMsgTwist::Create(const double& Lx, const double& Ly, const double& Lz, const double& Ax, const double& Ay, const double& Az)
+UROSMsgTwist* UROSMsgTwist::Create(double Lx, double Ly, double Lz, double Ax, double Ay, double Az)
 {
 	UROSMsgTwist* Message = NewObject<UROSMsgTwist>();
 	Message->LinearX = Lx;
@@ -50,16 +50,16 @@ void UROSMsgTwist::SetAngularFromFVector(const FVector InVector)
 	AngularZ = InVector.Z;
 }
 
-void UROSMsgTwist::ToData(ROSData& Message) const
+void UROSMsgTwist::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendSubDocument(Message, "linear", ROSData());
-	DataHelpers::AppendDouble(Message, "/linear/x", LinearX);
-	DataHelpers::AppendDouble(Message, "/linear/y", LinearY);
-	DataHelpers::AppendDouble(Message, "/linear/z", LinearZ);
-	DataHelpers::AppendSubDocument(Message, "angular", ROSData());
-	DataHelpers::AppendDouble(Message, "/angular/x", AngularX);
-	DataHelpers::AppendDouble(Message, "/angular/y", AngularY);
-	DataHelpers::AppendDouble(Message, "/angular/z", AngularZ);
+	DataHelpers::AppendSubDocument(OutMessage, "linear", ROSData());
+	DataHelpers::AppendDouble(OutMessage, "/linear/x", LinearX);
+	DataHelpers::AppendDouble(OutMessage, "/linear/y", LinearY);
+	DataHelpers::AppendDouble(OutMessage, "/linear/z", LinearZ);
+	DataHelpers::AppendSubDocument(OutMessage, "angular", ROSData());
+	DataHelpers::AppendDouble(OutMessage, "/angular/x", AngularX);
+	DataHelpers::AppendDouble(OutMessage, "/angular/y", AngularY);
+	DataHelpers::AppendDouble(OutMessage, "/angular/z", AngularZ);
 }
 
 bool UROSMsgTwist::FromData(const ROSData& Message)

@@ -3,7 +3,7 @@
 #include "Messages/internal/ROSServiceAdvertiseMessage.h"
 #include "Messages/internal/ROSServiceUnadvertiseMessage.h"
 
-void UROSService::Initialize(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
+void UROSService::Initialize(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
 	StoredServiceName = ServiceName;
 	StoredServiceClass = ServiceClass;

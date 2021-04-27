@@ -13,7 +13,7 @@ class ROSBRIDGE2UNREAL_API UROSMsgPoseWithCovariance : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgPoseWithCovariance(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/PoseWithCovariance";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/PoseWithCovariance";}
 	static UROSMsgPoseWithCovariance* Create(UROSMsgPose* Pose, const TArray<double>& Covariance);
 	UFUNCTION(BlueprintCallable) static UROSMsgPoseWithCovariance* Create(UROSMsgPose* Pose, const TArray<float>& Covariance);
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgPoseWithCovariance* CreateEmpty();
@@ -33,6 +33,6 @@ public:
 	TArray<double> Covariance;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

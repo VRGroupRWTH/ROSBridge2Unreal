@@ -13,14 +13,14 @@ class ROSBRIDGE2UNREAL_API UROSMsgUInt8MultiArray : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgUInt8MultiArray(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/UInt8MultiArray";};
-	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgUInt8MultiArray* Create(TArray<uint8> Data, UROSMsgMultiArrayLayout* Layout);
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/UInt8MultiArray";}
+	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgUInt8MultiArray* Create(const TArray<uint8>& Data, UROSMsgMultiArrayLayout* Layout);
 	
 	/* Data */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UROSMsgMultiArrayLayout* Layout;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<uint8> Data;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

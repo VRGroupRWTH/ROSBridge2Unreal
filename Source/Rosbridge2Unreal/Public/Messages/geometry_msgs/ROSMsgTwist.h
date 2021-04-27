@@ -12,8 +12,8 @@ class ROSBRIDGE2UNREAL_API UROSMsgTwist : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgTwist(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Twist";};
-	static UROSMsgTwist* Create(const double& Lx,const double& Ly,const double& Lz,const double& Ax,const double& Ay,const double& Az);
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Twist";}
+	static UROSMsgTwist* Create(double Lx, double Ly, double Lz, double Ax, double Ay, double Az);
 	UFUNCTION(BlueprintCallable) static UROSMsgTwist* CreateFromVectors(const FVector& InLinear, const FVector& InAngular);
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgTwist* CreateEmpty();
 
@@ -32,6 +32,6 @@ public:
 	double AngularZ;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

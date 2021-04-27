@@ -1,13 +1,13 @@
 #include "Messages/internal/ROSServiceResponseMessage.h"
 #include "DataHelpers.h"
 
-void UROSServiceResponseMessage::ToData(ROSData& Message) const
+void UROSServiceResponseMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(Message, "op", "service_response");
-	DataHelpers::AppendString(Message, "id", ID);
-	DataHelpers::AppendString(Message, "service", ServiceName);
-	DataHelpers::AppendBool(Message, "result", false); /* I got no clue what it does, but it has to be there and false */
-	DataHelpers::AppendSubDocument(Message, "values", Data);
+	DataHelpers::AppendString(OutMessage, "op", "service_response");
+	DataHelpers::AppendString(OutMessage, "id", ID);
+	DataHelpers::AppendString(OutMessage, "service", ServiceName);
+	DataHelpers::AppendBool(OutMessage, "result", false); /* I got no clue what it does, but it has to be there and false */
+	DataHelpers::AppendSubDocument(OutMessage, "values", Data);
 }
 
 bool UROSServiceResponseMessage::FromData(const ROSData& Message)

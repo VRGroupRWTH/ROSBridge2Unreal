@@ -1,11 +1,11 @@
 #include "Messages/internal/ROSTopicUnsubscribeMessage.h"
 #include "DataHelpers.h"
 
-void UROSTopicUnsubscribeMessage::ToData(ROSData& Message) const
+void UROSTopicUnsubscribeMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(Message, "op", "unsubscribe");
-	DataHelpers::AppendString(Message, "id", ID);
-	DataHelpers::AppendString(Message, "topic", TopicName);
+	DataHelpers::AppendString(OutMessage, "op", "unsubscribe");
+	DataHelpers::AppendString(OutMessage, "id", ID);
+	DataHelpers::AppendString(OutMessage, "topic", TopicName);
 }
 
 bool UROSTopicUnsubscribeMessage::FromData(const ROSData& Message)
