@@ -19,7 +19,7 @@ public:
 	 * Serialize user message to sent to ROS Bridge
 	 * @param Message - The message to serialize to
 	 */
-	virtual void ToData(ROSData& Message) const PURE_VIRTUAL(UROSMessageBase::ToData, return;);
+	virtual void ToData(ROSData& OutMessage) const PURE_VIRTUAL(UROSMessageBase::ToData, return;);
 
 	/**
      * Deserialize message from ROS Bridge

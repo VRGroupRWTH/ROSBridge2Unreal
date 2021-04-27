@@ -1,15 +1,15 @@
 #include "Messages/internal/ROSTopicSubscribeMessage.h"
 #include "DataHelpers.h"
 
-void UROSTopicSubscribeMessage::ToData(ROSData& Message) const
+void UROSTopicSubscribeMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(Message, "op", "subscribe");
-	DataHelpers::AppendString(Message, "id", ID);
-	DataHelpers::AppendString(Message, "topic", TopicName);
-	DataHelpers::AppendString(Message, "type", MessageType);
-	DataHelpers::AppendInt32(Message, "throttle_rate", ThrottleRate);
-	DataHelpers::AppendInt32(Message, "queue_length", QueueLength);
-	DataHelpers::AppendString(Message, "compression", Compression);
+	DataHelpers::AppendString(OutMessage, "op", "subscribe");
+	DataHelpers::AppendString(OutMessage, "id", ID);
+	DataHelpers::AppendString(OutMessage, "topic", TopicName);
+	DataHelpers::AppendString(OutMessage, "type", MessageType);
+	DataHelpers::AppendInt32(OutMessage, "throttle_rate", ThrottleRate);
+	DataHelpers::AppendInt32(OutMessage, "queue_length", QueueLength);
+	DataHelpers::AppendString(OutMessage, "compression", Compression);
 }
 
 bool UROSTopicSubscribeMessage::FromData(const ROSData& Message)

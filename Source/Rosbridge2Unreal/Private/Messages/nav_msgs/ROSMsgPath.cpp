@@ -11,8 +11,8 @@ UROSMsgPath* UROSMsgPath::CreateEmpty()
 
 void UROSMsgPath::AddPoseInUnrealCoordinateFrame(const FTransform& Transform, UROSMsgHeader* HeaderIn)
 {
-	const FQuat Rotation = Transform.GetRotation();
-	const FVector Position = Transform.GetTranslation();
+	const FQuat& Rotation = Transform.GetRotation();
+	const FVector& Position = Transform.GetTranslation();
 
 	UROSMsgPose* Pose = UROSMsgPose::CreateFromPositionOrientation(
 		FVector(Position.Y, Position.X, Position.Z) / FVector(100, 100, 100),
@@ -22,13 +22,13 @@ void UROSMsgPath::AddPoseInUnrealCoordinateFrame(const FTransform& Transform, UR
 	Poses.Add(UROSMsgPoseStamped::Create(HeaderIn, Pose));
 }
 
-void UROSMsgPath::ToData(ROSData& Message) const
+void UROSMsgPath::ToData(ROSData& OutMessage) const
 {
 	ROSData SubElementHeader;
 	Header->ToData(SubElementHeader);
-	DataHelpers::AppendSubDocument(Message,  "header", SubElementHeader);
+	DataHelpers::AppendSubDocument(OutMessage,  "header", SubElementHeader);
 
-	DataHelpers::AppendTArray<UROSMsgPoseStamped*>(Message, "poses", Poses, [](ROSData& Result, const char* Key, const UROSMsgPoseStamped* TArrayElement)
+	DataHelpers::AppendTArray<UROSMsgPoseStamped*>(OutMessage, "poses", Poses, [](ROSData& Result, const char* Key, const UROSMsgPoseStamped* TArrayElement)
 	{
 		ROSData SubElement;
 		TArrayElement->ToData(SubElement);

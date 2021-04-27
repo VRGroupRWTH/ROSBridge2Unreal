@@ -9,13 +9,13 @@ UROSSrvTopics* UROSSrvTopics::CreateEmpty()
 	return NewObject<UROSSrvTopics>();
 }
 
-void UROSSrvTopics::RequestToData(ROSData& Message) const {}
+void UROSSrvTopics::RequestToData(ROSData& OutMessage) const {}
 
 bool UROSSrvTopics::RequestFromData(const ROSData& Message) {return true;}
 
-void UROSSrvTopics::ResponseToData(ROSData& Message) const
+void UROSSrvTopics::ResponseToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendTArray<FString>(Message, "topics", Topics, [](ROSData& Message, const char* Key, const FString& Value)
+	DataHelpers::AppendTArray<FString>(OutMessage, "topics", Topics, [](ROSData& Message, const char* Key, const FString& Value)
 	{
 		DataHelpers::AppendString(Message, Key, Value);
 	});

@@ -82,17 +82,17 @@ void UROSMsgCompressedImage::ReadData()
 	ImageWrapper->SetCompressed(Data.GetData(), Data.Num());
 }
 
-void UROSMsgCompressedImage::ToData(ROSData& Message) const
+void UROSMsgCompressedImage::ToData(ROSData& OutMessage) const
 {
 	ROSData SubElementHeader;
 	Header->ToData(SubElementHeader);
-	DataHelpers::AppendSubDocument(Message, "header", SubElementHeader);
+	DataHelpers::AppendSubDocument(OutMessage, "header", SubElementHeader);
 
-	DataHelpers::AppendString(Message, "format", Format);
+	DataHelpers::AppendString(OutMessage, "format", Format);
 
 	if(ImageWrapper.IsValid()){
 		TArray64<uint8> CompressedData = ImageWrapper->GetCompressed(OutputCompressionQuality);
-		DataHelpers::AppendBinary(Message, "data", CompressedData.GetData(), CompressedData.Num());
+		DataHelpers::AppendBinary(OutMessage, "data", CompressedData.GetData(), CompressedData.Num());
 	}
 }
 

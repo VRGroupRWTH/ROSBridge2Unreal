@@ -4,10 +4,7 @@
 #include "Messages/ROSMessageBase.h"
 #include "ROSMsgTransform.generated.h"
 
-/**
- * Since 'double' is not supported in Blueprints, refer to the BP class of this one, if you want to use it in Blueprints
- */
-UCLASS()
+UCLASS(BlueprintType)
 class ROSBRIDGE2UNREAL_API UROSMsgTransform : public UROSMessageBase
 {
 	GENERATED_BODY()
@@ -15,15 +12,18 @@ class ROSBRIDGE2UNREAL_API UROSMsgTransform : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgTransform(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Transform";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/Transform";}
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgTransform* CreateFromTransform(const FTransform& Transform);
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgTransform* CreateFromTranslationRotation(const FVector& Translation, const FQuat& Rotation);
-	static UROSMsgTransform* Create(const double& Tx,const double& Ty,const double& Tz,const double& Rx,const double& Ry,const double& Rz,const double& Rw);
+	static UROSMsgTransform* Create(double Tx, double Ty, double Tz, double Rx, double Ry, double Rz, double Rw);
 
 	/* Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector TranslationAsFVector() const;
 	UFUNCTION(BlueprintCallable, BlueprintPure) FQuat RotationAsQuad() const;
 	UFUNCTION(BlueprintCallable, BlueprintPure) FTransform AsTransform() const;
+	UFUNCTION(BlueprintCallable) void SetTranslationFromFVector(const FVector& InVector);
+	UFUNCTION(BlueprintCallable) void SetRotationFromQuad(const FQuat& InQuat);
+	UFUNCTION(BlueprintCallable) void SetFromTransform(const FTransform InTransform);
 	
 	/* Data */
 	/* Translation */
@@ -37,6 +37,6 @@ public:
 	double Rw;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

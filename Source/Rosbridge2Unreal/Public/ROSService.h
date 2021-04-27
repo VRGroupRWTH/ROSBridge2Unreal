@@ -16,7 +16,7 @@ class UROSService : public UObject
 public:	
 	UROSService(){};
 
-	void Initialize(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass);
+	void Initialize(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass);
 	
 	bool Advertise(TFunction<void(UROSServiceBase*)> RequestResponseCallback, UROSServiceBase* InReusableRequest = nullptr);
 

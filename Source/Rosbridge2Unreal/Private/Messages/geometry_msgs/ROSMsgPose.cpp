@@ -4,17 +4,12 @@
 UROSMsgPose* UROSMsgPose::CreateFromPositionOrientation(const FVector& Position, const FQuat& Orientation)
 {
 	UROSMsgPose* Message = NewObject<UROSMsgPose>();
-	Message->Px = Position.X;
-	Message->Py = Position.Y;
-	Message->Pz = Position.Z;
-	Message->Qx = Orientation.X;
-	Message->Qy = Orientation.Y;
-	Message->Qz = Orientation.Z;
-	Message->Qw = Orientation.W;
+	Message->SetPositionFromFVector(Position);
+	Message->SetOrientationFromQuad(Orientation);
 	return Message;
 }
 
-UROSMsgPose* UROSMsgPose::Create(const double& Px, const double& Py, const double& Pz, const double& Qx, const double& Qy, const double& Qz, const double& Qw)
+UROSMsgPose* UROSMsgPose::Create(double Px, double Py, double Pz, double Qx, double Qy, double Qz, double Qw)
 {
 	UROSMsgPose* Message = NewObject<UROSMsgPose>();
 	Message->Px = Px;
@@ -32,22 +27,38 @@ FVector UROSMsgPose::PositionAsFVector() const
 	return FVector(Px,Py,Pz);
 }
 
+void UROSMsgPose::SetPositionFromFVector(const FVector& InPosition)
+{
+	Px = InPosition.X;
+	Py = InPosition.Y;
+	Pz = InPosition.Z;
+}
+
 FQuat UROSMsgPose::OrientationAsQuad() const
 {
 	return FQuat(Qx,Qy,Qz,Qw);
 }
 
-void UROSMsgPose::ToData(ROSData& Message) const
+void UROSMsgPose::SetOrientationFromQuad(const FQuat& InOrientation)
 {
-	DataHelpers::AppendSubDocument(Message, "position", ROSData());
-	DataHelpers::AppendDouble(Message, "/position/x", Px);
-	DataHelpers::AppendDouble(Message, "/position/y", Py);
-	DataHelpers::AppendDouble(Message, "/position/z", Pz);
-	DataHelpers::AppendSubDocument(Message, "orientation", ROSData());
-	DataHelpers::AppendDouble(Message, "/orientation/x", Qx);
-	DataHelpers::AppendDouble(Message, "/orientation/y", Qy);
-	DataHelpers::AppendDouble(Message, "/orientation/z", Qz);
-	DataHelpers::AppendDouble(Message, "/orientation/w", Qw);
+	Qx = InOrientation.X;
+	Qy = InOrientation.Y;
+	Qz = InOrientation.Z;
+	Qw = InOrientation.W;
+}
+
+
+void UROSMsgPose::ToData(ROSData& OutMessage) const
+{
+	DataHelpers::AppendSubDocument(OutMessage, "position", ROSData());
+	DataHelpers::AppendDouble(OutMessage, "/position/x", Px);
+	DataHelpers::AppendDouble(OutMessage, "/position/y", Py);
+	DataHelpers::AppendDouble(OutMessage, "/position/z", Pz);
+	DataHelpers::AppendSubDocument(OutMessage, "orientation", ROSData());
+	DataHelpers::AppendDouble(OutMessage, "/orientation/x", Qx);
+	DataHelpers::AppendDouble(OutMessage, "/orientation/y", Qy);
+	DataHelpers::AppendDouble(OutMessage, "/orientation/z", Qz);
+	DataHelpers::AppendDouble(OutMessage, "/orientation/w", Qw);
 }
 
 bool UROSMsgPose::FromData(const ROSData& Message)

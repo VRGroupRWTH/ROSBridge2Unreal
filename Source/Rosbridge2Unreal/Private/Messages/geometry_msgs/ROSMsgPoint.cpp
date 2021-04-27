@@ -4,13 +4,11 @@
 UROSMsgPoint* UROSMsgPoint::CreateFromVector(const FVector& Data)
 {
 	UROSMsgPoint* Message = NewObject<UROSMsgPoint>();
-	Message->X = Data.X;
-	Message->Y = Data.Y;
-	Message->Z = Data.Z;
+	Message->SetFromFVector(Data);
 	return Message;
 }
 
-UROSMsgPoint* UROSMsgPoint::Create(const double& X, const double& Y, const double& Z)
+UROSMsgPoint* UROSMsgPoint::Create(double X, double Y, double Z)
 {
 	UROSMsgPoint* Message = NewObject<UROSMsgPoint>();
 	Message->X = X;
@@ -24,11 +22,18 @@ FVector UROSMsgPoint::AsFVector() const
 	return FVector(X,Y,Z);
 }
 
-void UROSMsgPoint::ToData(ROSData& Message) const
+void UROSMsgPoint::SetFromFVector(const FVector& InVector)
 {
-	DataHelpers::AppendDouble(Message, "x", X);
-	DataHelpers::AppendDouble(Message, "y", Y);
-	DataHelpers::AppendDouble(Message, "z", Z);
+	X = InVector.X;
+	Y = InVector.Y;
+	Z = InVector.Z;
+}
+
+void UROSMsgPoint::ToData(ROSData& OutMessage) const
+{
+	DataHelpers::AppendDouble(OutMessage, "x", X);
+	DataHelpers::AppendDouble(OutMessage, "y", Y);
+	DataHelpers::AppendDouble(OutMessage, "z", Z);
 }
 
 bool UROSMsgPoint::FromData(const ROSData& Message)

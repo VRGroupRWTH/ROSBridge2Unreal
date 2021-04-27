@@ -1,7 +1,7 @@
 #include "Messages/std_msgs/ROSMsgHeader.h"
 #include "DataHelpers.h"
 
-UROSMsgHeader* UROSMsgHeader::CreateWithGeneratedTimeStamp(FString FrameID, int64 SequenceID)
+UROSMsgHeader* UROSMsgHeader::CreateWithGeneratedTimeStamp(const FString& FrameID, int64 SequenceID)
 {
 	UROSMsgHeader* Message = NewObject<UROSMsgHeader>();
 	Message->SequenceID = SequenceID;
@@ -15,7 +15,7 @@ UROSMsgHeader* UROSMsgHeader::CreateWithGeneratedTimeStamp(FString FrameID, int6
 	return Message;
 }
 
-UROSMsgHeader* UROSMsgHeader::Create(FString FrameID, int64 SequenceID, int32 Seconds, int32 NanoSeconds)
+UROSMsgHeader* UROSMsgHeader::Create(const FString& FrameID, int64 SequenceID, int32 Seconds, int32 NanoSeconds)
 {
 	UROSMsgHeader* Message = NewObject<UROSMsgHeader>();
 	Message->SequenceID = SequenceID;
@@ -26,13 +26,13 @@ UROSMsgHeader* UROSMsgHeader::Create(FString FrameID, int64 SequenceID, int32 Se
 	return Message;
 }
 
-void UROSMsgHeader::ToData(ROSData& Message) const
+void UROSMsgHeader::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendUInt32(Message, "seq", SequenceID);
-	DataHelpers::AppendSubDocument(Message, "stamp", ROSData());
-	DataHelpers::AppendInt32(Message, "/stamp/secs", Seconds);
-	DataHelpers::AppendInt32(Message, "/stamp/nsecs", NanoSeconds);
-	DataHelpers::AppendString(Message, "frame_id", FrameID);
+	DataHelpers::AppendUInt32(OutMessage, "seq", SequenceID);
+	DataHelpers::AppendSubDocument(OutMessage, "stamp", ROSData());
+	DataHelpers::AppendInt32(OutMessage, "/stamp/secs", Seconds);
+	DataHelpers::AppendInt32(OutMessage, "/stamp/nsecs", NanoSeconds);
+	DataHelpers::AppendString(OutMessage, "frame_id", FrameID);
 }
 
 bool UROSMsgHeader::FromData(const ROSData& Message)

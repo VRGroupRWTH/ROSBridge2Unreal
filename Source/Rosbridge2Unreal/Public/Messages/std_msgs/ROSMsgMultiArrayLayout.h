@@ -13,15 +13,15 @@ class ROSBRIDGE2UNREAL_API UROSMsgMultiArrayLayout : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgMultiArrayLayout(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/MultiArrayLayout";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/MultiArrayLayout";}
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgMultiArrayLayout* CreateEmpty();
-	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgMultiArrayLayout* Create(TArray<UROSMsgMultiArrayDimension*>& Dimensions, const int64& DataOffset);
+	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgMultiArrayLayout* Create(const TArray<UROSMsgMultiArrayDimension*>& Dimensions, int64 DataOffset);
 	
 	/* Data */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<UROSMsgMultiArrayDimension*> Dimensions;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int64 DataOffset; /* Padding elements in front of the data */
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

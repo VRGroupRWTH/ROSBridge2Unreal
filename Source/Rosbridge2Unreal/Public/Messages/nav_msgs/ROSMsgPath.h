@@ -6,10 +6,7 @@
 #include "Messages/geometry_msgs/ROSMsgPoseStamped.h"
 #include "ROSMsgPath.generated.h"
 
-/*
- * Since double (inside UROSMsgPoseStamped) is not supported in Blueprints, refer to the BP class of this one, if you want to use it in Blueprints
-*/
-UCLASS()
+UCLASS(BlueprintType)
 class ROSBRIDGE2UNREAL_API UROSMsgPath : public UROSMessageBase
 {
 	GENERATED_BODY()
@@ -26,6 +23,6 @@ public:
 	UFUNCTION(BlueprintCallable) void AddPoseInUnrealCoordinateFrame(const FTransform& Transform, UROSMsgHeader* HeaderIn);
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

@@ -1,7 +1,7 @@
 #include "Messages/std_msgs/ROSMsgFloat32MultiArray.h"
 #include "DataHelpers.h"
 
-UROSMsgFloat32MultiArray* UROSMsgFloat32MultiArray::Create(TArray<float>& Data, UROSMsgMultiArrayLayout* Layout)
+UROSMsgFloat32MultiArray* UROSMsgFloat32MultiArray::Create(const TArray<float>& Data, UROSMsgMultiArrayLayout* Layout)
 {
 	UROSMsgFloat32MultiArray* Message = NewObject<UROSMsgFloat32MultiArray>();
 	Message->Data = Data;
@@ -9,7 +9,7 @@ UROSMsgFloat32MultiArray* UROSMsgFloat32MultiArray::Create(TArray<float>& Data, 
 	return Message;
 }
 
-UROSMsgFloat32MultiArray* UROSMsgFloat32MultiArray::CreateWithEmptyLayout(TArray<float>& Data)
+UROSMsgFloat32MultiArray* UROSMsgFloat32MultiArray::CreateWithEmptyLayout(const TArray<float>& Data)
 {
 	UROSMsgFloat32MultiArray* Message = NewObject<UROSMsgFloat32MultiArray>();
 	Message->Data = Data;
@@ -17,16 +17,16 @@ UROSMsgFloat32MultiArray* UROSMsgFloat32MultiArray::CreateWithEmptyLayout(TArray
 	return Message;
 }
 
-void UROSMsgFloat32MultiArray::ToData(ROSData& Message) const
+void UROSMsgFloat32MultiArray::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendTArray<float>(Message, "data", Data, [](ROSData& Array, const char* Key, const float& TArrayValue)
+	DataHelpers::AppendTArray<float>(OutMessage, "data", Data, [](ROSData& Array, const char* Key, const float& TArrayValue)
 	{
 		DataHelpers::AppendFloat(Array, Key, TArrayValue);
 	});
 
 	ROSData SubElement;
 	Layout->ToData(SubElement);
-	DataHelpers::AppendSubDocument(Message,"layout", SubElement);
+	DataHelpers::AppendSubDocument(OutMessage,"layout", SubElement);
 }
 
 bool UROSMsgFloat32MultiArray::FromData(const ROSData& Message)

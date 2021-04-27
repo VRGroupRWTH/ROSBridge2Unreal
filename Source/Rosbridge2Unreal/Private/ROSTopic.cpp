@@ -10,7 +10,7 @@
 #include "Messages/internal/ROSTopicUnadvertiseMessage.h"
 #include "Messages/internal/ROSTopicUnsubscribeMessage.h"
 
-void UROSTopic::Initialize(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
+void UROSTopic::Initialize(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
 	StoredTopicName = TopicName;
 	StoredMessageClass = MessageClass;

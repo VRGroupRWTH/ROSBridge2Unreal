@@ -25,7 +25,7 @@ public:
 	 * @param TopicName - Topic name that is used to subscribe/advertize later. Used as an ID internally.
 	 * @param MessageClass - The message class that is used to (de-)serialize
 	 */
-	void Initialize(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass);
+	void Initialize(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass);
 
 	/**
 	 * Send subscribe message to the ROS Bridge and store a callback that is used for notification in the event of a new message

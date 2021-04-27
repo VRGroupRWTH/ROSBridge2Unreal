@@ -6,23 +6,23 @@ UROSMsgMultiArrayLayout* UROSMsgMultiArrayLayout::CreateEmpty()
 	return NewObject<UROSMsgMultiArrayLayout>();
 }
 
-UROSMsgMultiArrayLayout* UROSMsgMultiArrayLayout::Create(TArray<UROSMsgMultiArrayDimension*>& Dimensions, const int64& DataOffset)
+UROSMsgMultiArrayLayout* UROSMsgMultiArrayLayout::Create(const TArray<UROSMsgMultiArrayDimension*>& InDimensions, int64 InDataOffset)
 {
 	UROSMsgMultiArrayLayout* Message = NewObject<UROSMsgMultiArrayLayout>();
-	Message->Dimensions = Dimensions;
-	Message->DataOffset = DataOffset;
+	Message->Dimensions = InDimensions;
+	Message->DataOffset = InDataOffset;
 	return Message;
 }
 
-void UROSMsgMultiArrayLayout::ToData(ROSData& Message) const
+void UROSMsgMultiArrayLayout::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendTArray<UROSMsgMultiArrayDimension*>(Message, "dim", Dimensions, [](ROSData& Array, const char* Key, UROSMsgMultiArrayDimension* const& TArrayValue)
+	DataHelpers::AppendTArray<UROSMsgMultiArrayDimension*>(OutMessage, "dim", Dimensions, [](ROSData& Array, const char* Key, UROSMsgMultiArrayDimension* const& TArrayValue)
 	{
 		ROSData SubElement;
 		TArrayValue->ToData(SubElement);
 		DataHelpers::AppendSubDocument(Array,  Key, SubElement);
 	});
-	DataHelpers::AppendUInt32(Message, "data_offset", DataOffset);
+	DataHelpers::AppendUInt32(OutMessage, "data_offset", DataOffset);
 }
 
 bool UROSMsgMultiArrayLayout::FromData(const ROSData& Message)

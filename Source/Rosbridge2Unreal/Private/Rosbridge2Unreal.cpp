@@ -68,7 +68,7 @@ bool FRosbridge2UnrealModule::IsBSONMode()
 	return RosBridge->IsBSONMode();
 }
 
-bool FRosbridge2UnrealModule::SendMessage(UROSBridgeMessage& Message)
+bool FRosbridge2UnrealModule::SendMessage(const UROSBridgeMessage& Message)
 {
 	if(!RosBridge) return false;
 	return RosBridge->SendMessage(Message);
@@ -80,13 +80,13 @@ long FRosbridge2UnrealModule::GetNextID()
 	return RosBridge->GetNextID();
 }
 
-UROSTopic* FRosbridge2UnrealModule::GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
+UROSTopic* FRosbridge2UnrealModule::GetTopic(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
 	EnsureConnectionIsInitialized();
 	return RosBridge->GetTopic(TopicName, MessageClass);
 }
 
-UROSService* FRosbridge2UnrealModule::GetService(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
+UROSService* FRosbridge2UnrealModule::GetService(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
 	EnsureConnectionIsInitialized();
 	return RosBridge->GetService(ServiceName, ServiceClass);

@@ -24,7 +24,7 @@ public:
 	 * @param TopicName - Topic name that is used to subscribe/advertise later. Used as an ID internally.
 	 * @param MessageClass - The message class that is used to (de-)serialize
 	 */
-	UFUNCTION(BlueprintCallable) void Initialize(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass);
+	UFUNCTION(BlueprintCallable) void Initialize(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass);
 
 	/**
 	 * Subscribe this handle to the topic and get notified if a new message arrives (C++ variant)

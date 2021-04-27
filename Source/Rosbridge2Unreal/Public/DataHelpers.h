@@ -171,7 +171,7 @@ namespace DataHelpers {
 			return Internal::Extract<double, double>(Message, Key, OutData);
 		}
 
-		static void AppendDouble(ROSData& Message, const char* Key, const double& InData)
+		static void AppendDouble(ROSData& Message, const char* Key, double InData)
 		{
 			Internal::Append<double>(Message, Key, InData);
 		}
