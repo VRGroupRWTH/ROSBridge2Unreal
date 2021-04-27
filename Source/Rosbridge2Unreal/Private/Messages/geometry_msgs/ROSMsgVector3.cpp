@@ -22,7 +22,7 @@ FVector UROSMsgVector3::AsFVector() const
 	return FVector(X,Y,Z);
 }
 
-void UROSMsgVector3::SetFromFVector(const FVector InVector)
+void UROSMsgVector3::SetFromFVector(const FVector& InVector)
 {
 	X = InVector.X;
 	Y = InVector.Y;

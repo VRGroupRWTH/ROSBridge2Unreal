@@ -27,7 +27,7 @@ FVector UROSMsgPose::PositionAsFVector() const
 	return FVector(Px,Py,Pz);
 }
 
-void UROSMsgPose::SetPositionFromFVector(const FVector InPosition)
+void UROSMsgPose::SetPositionFromFVector(const FVector& InPosition)
 {
 	Px = InPosition.X;
 	Py = InPosition.Y;
@@ -39,7 +39,7 @@ FQuat UROSMsgPose::OrientationAsQuad() const
 	return FQuat(Qx,Qy,Qz,Qw);
 }
 
-void UROSMsgPose::SetOrientationFromQuad(const FQuat InOrientation)
+void UROSMsgPose::SetOrientationFromQuad(const FQuat& InOrientation)
 {
 	Qx = InOrientation.X;
 	Qy = InOrientation.Y;

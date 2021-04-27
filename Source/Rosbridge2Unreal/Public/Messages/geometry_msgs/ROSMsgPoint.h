@@ -18,7 +18,7 @@ public:
 
 	/* Blueprint functions. Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector AsFVector() const;
-	UFUNCTION(BlueprintCallable) void SetFromFVector(const FVector InVector);
+	UFUNCTION(BlueprintCallable) void SetFromFVector(const FVector& InVector);
 
 	/* Data */
 	double X;

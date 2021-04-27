@@ -21,8 +21,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector TranslationAsFVector() const;
 	UFUNCTION(BlueprintCallable, BlueprintPure) FQuat RotationAsQuad() const;
 	UFUNCTION(BlueprintCallable, BlueprintPure) FTransform AsTransform() const;
-	UFUNCTION(BlueprintCallable) void SetTranslationFromFVector(const FVector InVector);
-	UFUNCTION(BlueprintCallable) void SetRotationFromQuad(const FQuat InQuat);
+	UFUNCTION(BlueprintCallable) void SetTranslationFromFVector(const FVector& InVector);
+	UFUNCTION(BlueprintCallable) void SetRotationFromQuad(const FQuat& InQuat);
 	UFUNCTION(BlueprintCallable) void SetFromTransform(const FTransform InTransform);
 	
 	/* Data */

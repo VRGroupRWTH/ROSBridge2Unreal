@@ -18,9 +18,9 @@ public:
 
 	/* Blueprint functions. Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector PositionAsFVector() const;
-	UFUNCTION(BlueprintCallable) void SetPositionFromFVector(const FVector InPosition);
+	UFUNCTION(BlueprintCallable) void SetPositionFromFVector(const FVector& InPosition);
 	UFUNCTION(BlueprintCallable, BlueprintPure) FQuat OrientationAsQuad() const;
-	UFUNCTION(BlueprintCallable) void SetOrientationFromQuad(const FQuat InOrientation);
+	UFUNCTION(BlueprintCallable) void SetOrientationFromQuad(const FQuat& InOrientation);
 	
 	/* Data */
 	/* Position */

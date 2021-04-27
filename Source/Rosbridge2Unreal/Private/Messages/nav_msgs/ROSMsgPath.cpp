@@ -11,8 +11,8 @@ UROSMsgPath* UROSMsgPath::CreateEmpty()
 
 void UROSMsgPath::AddPoseInUnrealCoordinateFrame(const FTransform& Transform, UROSMsgHeader* HeaderIn)
 {
-	const FQuat Rotation = Transform.GetRotation();
-	const FVector Position = Transform.GetTranslation();
+	const FQuat& Rotation = Transform.GetRotation();
+	const FVector& Position = Transform.GetTranslation();
 
 	UROSMsgPose* Pose = UROSMsgPose::CreateFromPositionOrientation(
 		FVector(Position.Y, Position.X, Position.Z) / FVector(100, 100, 100),

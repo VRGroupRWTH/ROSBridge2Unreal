@@ -36,14 +36,14 @@ FVector UROSMsgTwist::AngularAsFVector() const
 	return FVector(AngularX, AngularY, AngularZ);
 }
 
-void UROSMsgTwist::SetLinearFromFVector(const FVector InVector)
+void UROSMsgTwist::SetLinearFromFVector(const FVector& InVector)
 {
 	LinearX = InVector.X;
 	LinearY = InVector.Y;
 	LinearZ = InVector.Z;
 }
 
-void UROSMsgTwist::SetAngularFromFVector(const FVector InVector)
+void UROSMsgTwist::SetAngularFromFVector(const FVector& InVector)
 {
 	AngularX = InVector.X;
 	AngularY = InVector.Y;

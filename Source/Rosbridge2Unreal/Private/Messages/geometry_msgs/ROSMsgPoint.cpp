@@ -22,7 +22,7 @@ FVector UROSMsgPoint::AsFVector() const
 	return FVector(X,Y,Z);
 }
 
-void UROSMsgPoint::SetFromFVector(const FVector InVector)
+void UROSMsgPoint::SetFromFVector(const FVector& InVector)
 {
 	X = InVector.X;
 	Y = InVector.Y;

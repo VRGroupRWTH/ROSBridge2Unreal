@@ -42,14 +42,14 @@ FTransform UROSMsgTransform::AsTransform() const
 	return FTransform(RotationAsQuad(),TranslationAsFVector());
 }
 
-void UROSMsgTransform::SetTranslationFromFVector(const FVector InVector)
+void UROSMsgTransform::SetTranslationFromFVector(const FVector& InVector)
 {
 	Tx = InVector.X;
 	Ty = InVector.Y;
 	Tz = InVector.Z;
 }
 
-void UROSMsgTransform::SetRotationFromQuad(const FQuat InQuat)
+void UROSMsgTransform::SetRotationFromQuad(const FQuat& InQuat)
 {
 	Ry = InQuat.Y;
 	Rz = InQuat.Z;

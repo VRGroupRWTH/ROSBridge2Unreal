@@ -20,8 +20,8 @@ public:
 	/* Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector LinearAsFVector() const;
 	UFUNCTION(BlueprintCallable, BlueprintPure) FVector AngularAsFVector() const;
-	UFUNCTION(BlueprintCallable) void SetLinearFromFVector(const FVector InVector);
-	UFUNCTION(BlueprintCallable) void SetAngularFromFVector(const FVector InVector);
+	UFUNCTION(BlueprintCallable) void SetLinearFromFVector(const FVector& InVector);
+	UFUNCTION(BlueprintCallable) void SetAngularFromFVector(const FVector& InVector);
 	
 	/* Data */
 	double LinearX;
