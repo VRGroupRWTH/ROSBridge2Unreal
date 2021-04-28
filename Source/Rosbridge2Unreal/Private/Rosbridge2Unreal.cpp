@@ -24,12 +24,12 @@ void FRosbridge2UnrealModule::OnSessionEnd(UWorld* World, bool bSessionEnded, bo
 {
 	if (!World->IsGameWorld() || !bSessionEnded) return;
 	
-	if(RosBridge){
+	if(RosBridge)
+	{
 		RosBridge->Uninitialize();
 		RosBridge->RemoveFromRoot(); /* remove the object from the root set to allow garbage collection */
 		RosBridge = nullptr;
 	}
-	bRosBridgeInitialized = false;
 }
 
 #if ENGINE_MINOR_VERSION > 23
@@ -43,18 +43,25 @@ void FRosbridge2UnrealModule::OnWorldTickStart(ELevelTick TickType, float DeltaT
 	if(RosBridge) RosBridge->TickEvent(DeltaTime);
 }
 
-void FRosbridge2UnrealModule::InitializeConnection()
+bool FRosbridge2UnrealModule::InitializeConnection()
 {
-	if(bRosBridgeInitialized) return;
-		
-	RosBridge = NewObject<UROSBridge>();
-	RosBridge->AddToRoot(); /* Disallow Garbage Collection for this UObject */
-	bRosBridgeInitialized = RosBridge->Initialize();
+	// Only try to intitialize the connection once.
+	// For every subsequent call only return whether we are connected.
+	if (RosBridge == nullptr)
+	{
+		RosBridge = NewObject<UROSBridge>();
+		RosBridge->AddToRoot();
+		return RosBridge->Initialize();
+	}
+	else
+	{
+		return RosBridge->IsInitialized();
+	}
 }
 
-void FRosbridge2UnrealModule::EnsureConnectionIsInitialized()
+bool FRosbridge2UnrealModule::IsConnected()
 {
-	if(!bRosBridgeInitialized) InitializeConnection();	
+	return RosBridge != nullptr && RosBridge->IsInitialized();
 }
 
 UROSBridge* FRosbridge2UnrealModule::GetBridge()
@@ -70,26 +77,22 @@ bool FRosbridge2UnrealModule::IsBSONMode()
 
 bool FRosbridge2UnrealModule::SendMessage(const UROSBridgeMessage& Message)
 {
-	if(!RosBridge) return false;
-	return RosBridge->SendMessage(Message);
+	return InitializeConnection() ? RosBridge->SendMessage(Message) : false;
 }
 
 long FRosbridge2UnrealModule::GetNextID()
 {
-	if(!RosBridge) return -1;
-	return RosBridge->GetNextID();
+	return InitializeConnection() ? RosBridge->GetNextID() : -1;
 }
 
 UROSTopic* FRosbridge2UnrealModule::GetTopic(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
-	EnsureConnectionIsInitialized();
-	return RosBridge->GetTopic(TopicName, MessageClass);
+	return InitializeConnection() ? RosBridge->GetTopic(TopicName, MessageClass) : nullptr;
 }
 
 UROSService* FRosbridge2UnrealModule::GetService(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
-	EnsureConnectionIsInitialized();
-	return RosBridge->GetService(ServiceName, ServiceClass);
+	return InitializeConnection() ? RosBridge->GetService(ServiceName, ServiceClass) : nullptr;
 }
 
 

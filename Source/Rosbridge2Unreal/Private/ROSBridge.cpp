@@ -16,8 +16,11 @@ bool UROSBridge::Initialize()
 	Settings = GetDefault<URosbridgeSettings>();
 	bSettingsRead = true;
 	
-	if(Settings->bSimulateConnection) return true; //Don't attempt connection
-	
+	if(Settings->bSimulateConnection)
+	{
+		bInitialized = true;
+		return true; //Don't attempt connection
+	}
 	switch(Settings->SocketMode) {
 		case ESocketMode::TCP:
 			Connection = NewObject<UTCPConnection>(this);
