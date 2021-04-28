@@ -31,6 +31,12 @@ public:
 	void Uninitialize();
 	
 	/**
+	 * Returns whether the connection is initalized.
+	 * @return Connection successful 
+	 */
+	inline bool IsInitialized() const { return bInitialized; }
+	
+	/**
 	 * Send a String to the ROS Bridge
 	 * @param Data - The String to send
 	 * @return Success of sending operation

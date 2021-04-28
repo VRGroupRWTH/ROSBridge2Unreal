@@ -28,10 +28,10 @@ public:
 	#endif
 	
 	/* Initializes with Settings in Project */
-	void InitializeConnection() override;
+	bool InitializeConnection() override;
 
-	/* Ensure connection is made */
-	void EnsureConnectionIsInitialized() override;
+	/* Returns whether the connection is initalized. */
+	bool IsConnected() override;
 
 	/* Getter for the rosbridge2cpp::ROSBridge */
 	UROSBridge* GetBridge() override;
@@ -49,7 +49,6 @@ private:
 
 	/* Internal Bridge Network */
 	UROSBridge* RosBridge = nullptr;
-	bool bRosBridgeInitialized = false;
 	
  /* ROSTopics and Services */
 public:
