@@ -334,8 +334,6 @@ namespace DataHelpers {
 
 	template <typename T>
 	inline bool ExtractSubMessage(const ROSData& Message, const char* Key, T*& OutMessageInstance) {
-		check(OutMessageInstance != nullptr);
-
 		if (OutMessageInstance == nullptr)
 		{
 			OutMessageInstance = NewObject<T>();
