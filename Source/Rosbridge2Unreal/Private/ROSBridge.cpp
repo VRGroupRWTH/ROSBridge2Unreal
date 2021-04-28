@@ -15,7 +15,11 @@ bool UROSBridge::Initialize()
 	Settings = GetDefault<URosbridgeSettings>();
 	bSettingsRead = true;
 	
-	if(Settings->bSimulateConnection) return true; //Don't attempt connection
+	if(Settings->bSimulateConnection)
+	{
+		bInitialized = true;
+		return true; //Don't attempt connection
+	}
 
 	switch(Settings->SocketMode) {
 		case ESocketMode::TCP:
@@ -86,7 +90,7 @@ bool UROSBridge::IsBSONMode() const
 	return Connection->GetTransportMode() == ETransportMode::BSON;
 }
 
-bool UROSBridge::SendMessage(UROSBridgeMessage& Message) const
+bool UROSBridge::SendMessage(const UROSBridgeMessage& Message) const
 {
 	if(bSettingsRead && Settings->bSimulateConnection) return true;
 	if(!bInitialized) return true; /* return true, since this is no error */

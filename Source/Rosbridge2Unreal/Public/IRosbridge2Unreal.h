@@ -41,12 +41,13 @@ public:
 	 * Reads settings from project settings and initializes the connection
 	 * @return Connection successful
 	 */
-	virtual void InitializeConnection() = 0;
+	virtual bool InitializeConnection() = 0;
 
 	/**
-	 * Ensure a connection to the ROS Bridge is made and instantiate a new Bridge instance if necessary
+	 * Checks if we are connected.
+	 * @return Connection successful
 	 */
-	virtual void EnsureConnectionIsInitialized() = 0;
+	virtual bool IsConnected() = 0;
 
 	/**
 	 * @return Check if connection is in BSON mode (True if BSON is used, false if JSON)
@@ -79,7 +80,7 @@ public:
 	 * @param Message - The message to send
 	 * @return Success of sending operation
 	 */
-	virtual bool SendMessage(UROSBridgeMessage& Message) = 0;
+	virtual bool SendMessage(const UROSBridgeMessage& Message) = 0;
 
 	/**
 	 * Generated one time IDs that can be used in successive messages

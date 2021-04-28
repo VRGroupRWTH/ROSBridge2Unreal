@@ -31,6 +31,12 @@ public:
 	void Uninitialize();
 	
 	/**
+	 * Returns whether the connection is initalized.
+	 * @return Connection successful 
+	 */
+	inline bool IsInitialized() const { return bInitialized; }
+	
+	/**
 	 * Send a String to the ROS Bridge
 	 * @param Data - The String to send
 	 * @return Success of sending operation
@@ -53,7 +59,7 @@ public:
 	 * @param Message - The message to send
 	 * @return Success of sending operation
 	 */
-	bool SendMessage(UROSBridgeMessage &Message) const;
+	bool SendMessage(const UROSBridgeMessage &Message) const;
 
 	/**
 	 * Retrieves a topic instance from the already registered ones. Creates a new one of not present so far.
