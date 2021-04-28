@@ -355,7 +355,7 @@ namespace DataHelpers {
 		}
 	}
 
-	inline void AppendSubMessage(ROSData& OutMessage, const char* Key, UROSMessageBase* Message) {
+	inline void AppendSubMessage(ROSData& OutMessage, const char* Key, const UROSMessageBase* Message) {
 		ROSData Data;
 		Message->ToData(Data);
 		AppendSubDocument(OutMessage, Key, Data);
