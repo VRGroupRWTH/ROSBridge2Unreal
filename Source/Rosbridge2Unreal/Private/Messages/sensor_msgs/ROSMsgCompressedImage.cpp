@@ -84,10 +84,7 @@ void UROSMsgCompressedImage::ReadData()
 
 void UROSMsgCompressedImage::ToData(ROSData& OutMessage) const
 {
-	ROSData SubElementHeader;
-	Header->ToData(SubElementHeader);
-	DataHelpers::AppendSubDocument(OutMessage, "header", SubElementHeader);
-
+	DataHelpers::AppendSubMessage(OutMessage, "header", Header);
 	DataHelpers::AppendString(OutMessage, "format", Format);
 
 	if(ImageWrapper.IsValid()){

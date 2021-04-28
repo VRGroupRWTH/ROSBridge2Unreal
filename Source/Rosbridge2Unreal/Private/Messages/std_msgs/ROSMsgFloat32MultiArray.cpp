@@ -23,10 +23,7 @@ void UROSMsgFloat32MultiArray::ToData(ROSData& OutMessage) const
 	{
 		DataHelpers::AppendFloat(Array, Key, TArrayValue);
 	});
-
-	ROSData SubElement;
-	Layout->ToData(SubElement);
-	DataHelpers::AppendSubDocument(OutMessage,"layout", SubElement);
+	DataHelpers::AppendSubMessage(OutMessage,"layout", Layout);
 }
 
 bool UROSMsgFloat32MultiArray::FromData(const ROSData& Message)

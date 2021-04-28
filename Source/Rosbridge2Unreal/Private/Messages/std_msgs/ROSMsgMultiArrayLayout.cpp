@@ -18,9 +18,7 @@ void UROSMsgMultiArrayLayout::ToData(ROSData& OutMessage) const
 {
 	DataHelpers::AppendTArray<UROSMsgMultiArrayDimension*>(OutMessage, "dim", Dimensions, [](ROSData& Array, const char* Key, UROSMsgMultiArrayDimension* const& TArrayValue)
 	{
-		ROSData SubElement;
-		TArrayValue->ToData(SubElement);
-		DataHelpers::AppendSubDocument(Array,  Key, SubElement);
+		DataHelpers::AppendSubMessage(Array, Key, TArrayValue);
 	});
 	DataHelpers::AppendUInt32(OutMessage, "data_offset", DataOffset);
 }

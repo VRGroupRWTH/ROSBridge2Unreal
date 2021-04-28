@@ -46,9 +46,7 @@ void UROSMsgPoseWithCovariance::SetCovarianceFromFloatArray(const TArray<float> 
 
 void UROSMsgPoseWithCovariance::ToData(ROSData& OutMessage) const
 {
-	ROSData SubElementPose;
-	Pose->ToData(SubElementPose);
-	DataHelpers::AppendSubDocument(OutMessage,  "pose", SubElementPose);
+	DataHelpers::AppendSubMessage(OutMessage, "pose", Pose);
 	if(Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
 
 	DataHelpers::AppendTArray<double>(OutMessage, "covariance", Covariance, [](ROSData& Array, const char* Key, double TArrayValue)

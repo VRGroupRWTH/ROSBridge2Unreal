@@ -24,15 +24,11 @@ void UROSMsgPath::AddPoseInUnrealCoordinateFrame(const FTransform& Transform, UR
 
 void UROSMsgPath::ToData(ROSData& OutMessage) const
 {
-	ROSData SubElementHeader;
-	Header->ToData(SubElementHeader);
-	DataHelpers::AppendSubDocument(OutMessage,  "header", SubElementHeader);
+	DataHelpers::AppendSubMessage(OutMessage, "header", Header);
 
 	DataHelpers::AppendTArray<UROSMsgPoseStamped*>(OutMessage, "poses", Poses, [](ROSData& Result, const char* Key, const UROSMsgPoseStamped* TArrayElement)
 	{
-		ROSData SubElement;
-		TArrayElement->ToData(SubElement);
-		DataHelpers::AppendSubDocument(Result,  Key, SubElement);
+		DataHelpers::AppendSubMessage(Result, Key, TArrayElement);
 	});
 }
 

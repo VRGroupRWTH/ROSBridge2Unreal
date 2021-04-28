@@ -19,12 +19,8 @@ UROSMsgPoseStamped* UROSMsgPoseStamped::CreateEmpty()
 
 void UROSMsgPoseStamped::ToData(ROSData& OutMessage) const
 {
-	ROSData SubElementHeader;
-	ROSData SubElementPose;
-	Header->ToData(SubElementHeader);
-	Pose->ToData(SubElementPose);
-	DataHelpers::AppendSubDocument(OutMessage,  "header", SubElementHeader);
-	DataHelpers::AppendSubDocument(OutMessage,  "pose", SubElementPose);
+	DataHelpers::AppendSubMessage(OutMessage, "header", Header);
+	DataHelpers::AppendSubMessage(OutMessage, "pose", Pose);
 }
 
 bool UROSMsgPoseStamped::FromData(const ROSData& Message)

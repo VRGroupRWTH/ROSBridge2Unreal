@@ -46,9 +46,7 @@ void UROSMsgTwistWithCovariance::SetCovarianceFromFloatArray(const TArray<float>
 
 void UROSMsgTwistWithCovariance::ToData(ROSData& OutMessage) const
 {
-	ROSData SubElementTwist;
-	Twist->ToData(SubElementTwist);
-	DataHelpers::AppendSubDocument(OutMessage,  "twist", SubElementTwist);
+	DataHelpers::AppendSubMessage(OutMessage, "twist", Twist);
 	if(Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Covariance Matrix in UROSMsgTwistWithCovariance does not have 36 values, it has %d"), Covariance.Num());
 
 	DataHelpers::AppendTArray<double>(OutMessage, "covariance", Covariance, [](ROSData& Array, const char* Key, double TArrayValue)
