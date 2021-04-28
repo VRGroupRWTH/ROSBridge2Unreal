@@ -38,14 +38,9 @@ void UROSMsgPath::ToData(ROSData& OutMessage) const
 
 bool UROSMsgPath::FromData(const ROSData& Message)
 {
-	if(!Header) Header = NewObject<UROSMsgHeader>(this);
-	Poses = TArray<UROSMsgPoseStamped*>();
-	
-	ROSData SubElementHeader;
-	return DataHelpers::ExtractSubDocument(Message, "header", SubElementHeader) && Header->FromData(SubElementHeader)
+	return DataHelpers::ExtractSubMessage(Message, "header", Header)
 	&& DataHelpers::ExtractTArrayOfUObjects<UROSMsgPoseStamped>(Message, "poses", Poses, this, [](const ROSData& Array, const char* Key, UROSMsgPoseStamped*& Result)
 	{
-		ROSData SubElement;
-		return DataHelpers::ExtractSubDocument(Array, Key, SubElement) && Result->FromData(SubElement);
+		return DataHelpers::ExtractSubMessage(Array, Key, Result);
 	});
 }

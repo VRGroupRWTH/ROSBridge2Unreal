@@ -59,12 +59,10 @@ void UROSMsgTwistWithCovariance::ToData(ROSData& OutMessage) const
 
 bool UROSMsgTwistWithCovariance::FromData(const ROSData& Message)
 {
-	if(!Twist) Twist = NewObject<UROSMsgTwist>(this);
-	
-	ROSData SubElementTwist;
-	return DataHelpers::ExtractSubDocument(Message, "twist", SubElementTwist) && Twist->FromData(SubElementTwist)
-	&& DataHelpers::ExtractTArray<double>(Message, "covariance", Covariance, [](const ROSData& Array, const char* Key, double& Result)
-	{
-		return DataHelpers::ExtractDouble(Array, Key, Result);
-	});
+	return
+		DataHelpers::ExtractSubMessage(Message, "twist", Twist) &&
+		DataHelpers::ExtractTArray<double>(Message, "covariance", Covariance, [](const ROSData& Array, const char* Key, double& Result)
+		{
+			return DataHelpers::ExtractDouble(Array, Key, Result);
+		});
 }

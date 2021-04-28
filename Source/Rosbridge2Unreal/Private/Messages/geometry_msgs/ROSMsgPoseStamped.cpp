@@ -29,11 +29,7 @@ void UROSMsgPoseStamped::ToData(ROSData& OutMessage) const
 
 bool UROSMsgPoseStamped::FromData(const ROSData& Message)
 {
-	if(!Header) Header = NewObject<UROSMsgHeader>(this);
-	if(!Pose) Pose = NewObject<UROSMsgPose>(this);
-	
-	ROSData SubElementHeader;
-	ROSData SubElementPose;
-	return DataHelpers::ExtractSubDocument(Message, "header", SubElementHeader) && Header->FromData(SubElementHeader)
-	&& DataHelpers::ExtractSubDocument(Message, "pose", SubElementPose) && Pose->FromData(SubElementPose);
+	return
+		DataHelpers::ExtractSubMessage(Message, "header", Header) &&
+		DataHelpers::ExtractSubMessage(Message, "pose", Pose);
 }

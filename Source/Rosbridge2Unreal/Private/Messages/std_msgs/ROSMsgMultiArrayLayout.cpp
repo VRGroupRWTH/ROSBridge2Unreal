@@ -29,8 +29,7 @@ bool UROSMsgMultiArrayLayout::FromData(const ROSData& Message)
 {
 	return DataHelpers::ExtractTArrayOfUObjects<UROSMsgMultiArrayDimension>(Message, "dim", Dimensions, this, [](const ROSData& Array, const char* Key, UROSMsgMultiArrayDimension*& Result)
 	{
-		ROSData SubElement;
-		return DataHelpers::ExtractSubDocument(Array, Key, SubElement) && Result->FromData(SubElement);
+		return DataHelpers::ExtractSubMessage(Array, Key, Result);
 	})
 	&& DataHelpers::ExtractInt64(Message, "data_offset", DataOffset);
 }

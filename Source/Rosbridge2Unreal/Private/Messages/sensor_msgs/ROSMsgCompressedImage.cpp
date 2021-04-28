@@ -98,10 +98,8 @@ void UROSMsgCompressedImage::ToData(ROSData& OutMessage) const
 
 bool UROSMsgCompressedImage::FromData(const ROSData& Message)
 {
-	if(!Header) Header = NewObject<UROSMsgHeader>(this);
-	ROSData SubElementHeader;
-
-	return DataHelpers::ExtractSubDocument(Message, "header", SubElementHeader) && Header->FromData(SubElementHeader)
-	    && DataHelpers::ExtractString(Message, "format", Format)
-	    && DataHelpers::ExtractBinary(Message, "data", Data);
+	return
+		DataHelpers::ExtractSubMessage(Message, "header", Header) &&
+		DataHelpers::ExtractString(Message, "format", Format) &&
+		DataHelpers::ExtractBinary(Message, "data", Data);
 }

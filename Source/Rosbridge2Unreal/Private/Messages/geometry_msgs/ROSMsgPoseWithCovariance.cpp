@@ -59,11 +59,8 @@ void UROSMsgPoseWithCovariance::ToData(ROSData& OutMessage) const
 
 bool UROSMsgPoseWithCovariance::FromData(const ROSData& Message)
 {
-	if(!Pose) Pose = NewObject<UROSMsgPose>(this);
-	
-	ROSData SubElementPose;
-	return DataHelpers::ExtractSubDocument(Message, "pose", SubElementPose) && Pose->FromData(SubElementPose)
-	&& DataHelpers::ExtractTArray<double>(Message, "covariance", Covariance, [](const ROSData& Array, const char* Key, double& Result)
+	return DataHelpers::ExtractSubMessage(Message, "pose", Pose)
+		&& DataHelpers::ExtractTArray<double>(Message, "covariance", Covariance, [](const ROSData& Array, const char* Key, double& Result)
 	{
 		return DataHelpers::ExtractDouble(Array, Key, Result);
 	});

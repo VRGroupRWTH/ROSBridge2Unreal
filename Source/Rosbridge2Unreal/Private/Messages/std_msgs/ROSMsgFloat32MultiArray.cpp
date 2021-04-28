@@ -31,13 +31,9 @@ void UROSMsgFloat32MultiArray::ToData(ROSData& OutMessage) const
 
 bool UROSMsgFloat32MultiArray::FromData(const ROSData& Message)
 {
-	if(!Layout) Layout = NewObject<UROSMsgMultiArrayLayout>(this);
-
-	ROSData SubElement;
-	
 	return DataHelpers::ExtractTArray<float>(Message, "data", Data, [](const ROSData& Array, const char* Key, float& Result)
 	{
 		return DataHelpers::ExtractFloat(Array, Key, Result);
 	})
-	&& DataHelpers::ExtractSubDocument(Message, "layout", SubElement) && Layout->FromData(SubElement);
+	&& DataHelpers::ExtractSubMessage(Message, "layout", Layout);
 }
