@@ -1,12 +1,12 @@
 #include "Messages/internal/ROSServiceCallMessage.h"
 #include "DataHelpers.h"
 
-void UROSServiceCallMessage::ToData(ROSData& Message) const
+void UROSServiceCallMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(Message, "op", "call_service");
-	DataHelpers::AppendString(Message, "id", ID);
-	DataHelpers::AppendString(Message, "service", ServiceName);
-	DataHelpers::AppendSubDocument(Message, "args", Data);
+	DataHelpers::AppendString(OutMessage, "op", "call_service");
+	DataHelpers::AppendString(OutMessage, "id", ID);
+	DataHelpers::AppendString(OutMessage, "service", ServiceName);
+	DataHelpers::AppendSubDocument(OutMessage, "args", Data);
 }
 
 bool UROSServiceCallMessage::FromData(const ROSData& Message)

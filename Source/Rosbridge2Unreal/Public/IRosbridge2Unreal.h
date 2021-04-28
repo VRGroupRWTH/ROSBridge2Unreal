@@ -14,7 +14,7 @@ public:
 	*/
 	static inline IRosbridge2Unreal& Get()
 	{
-		return FModuleManager::LoadModuleChecked< IRosbridge2Unreal >("Rosbridge2Unreal");
+		return FModuleManager::LoadModuleChecked<IRosbridge2Unreal>("Rosbridge2Unreal");
 	}
 
 	/**
@@ -65,7 +65,7 @@ public:
 	 * @param MessageClass - The message class that is used for (de-)serialization of messages
 	 * @return The topic instance
 	 */
-	virtual UROSTopic* GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass) = 0;
+	virtual UROSTopic* GetTopic(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass) = 0;
 
 	/**
 	 * Retrieves a service instance from the already registered ones. Creates a new one of not present so far.
@@ -73,7 +73,7 @@ public:
 	 * @param ServiceClass - The service class that is used for (de-)serialization of requests/responses
 	 * @return The service instance
 	 */
-	virtual UROSService* GetService(FString ServiceName,  TSubclassOf<UROSServiceBase> ServiceClass) = 0;
+	virtual UROSService* GetService(const FString& ServiceName,  TSubclassOf<UROSServiceBase> ServiceClass) = 0;
 
 	/**
 	 * Serialize and send message to the ROS Bridge

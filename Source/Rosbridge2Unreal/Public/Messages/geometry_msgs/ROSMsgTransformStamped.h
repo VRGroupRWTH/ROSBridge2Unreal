@@ -6,10 +6,7 @@
 #include "Messages/geometry_msgs/ROSMsgTransform.h"
 #include "ROSMsgTransformStamped.generated.h"
 
-/**
- * Since 'double' is not supported in Blueprints, refer to the BP class of this one, if you want to use it in Blueprints
- */
-UCLASS()
+UCLASS(BlueprintType)
 class ROSBRIDGE2UNREAL_API UROSMsgTransformStamped : public UROSMessageBase
 {
 	GENERATED_BODY()
@@ -17,7 +14,7 @@ class ROSBRIDGE2UNREAL_API UROSMsgTransformStamped : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgTransformStamped(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/TransformStamped";};
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "geometry_msgs/TransformStamped";}
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgTransformStamped* Create(UROSMsgHeader* Header, const FString& ChildFrameID, UROSMsgTransform* Transform);
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgTransformStamped* CreateEmpty();
 	
@@ -27,6 +24,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString ChildFrameID;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

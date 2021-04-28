@@ -1,8 +1,11 @@
 #include "WebSockConnection.h"
 
+
+#include "HttpModule.h"
 #include "LogCategory.h"
 #include "SocketSubsystem.h"
 #include "IPAddress.h"
+#include "Sockets.h"
 #include "jsoncons_unreal_wrapper.h"
 
 

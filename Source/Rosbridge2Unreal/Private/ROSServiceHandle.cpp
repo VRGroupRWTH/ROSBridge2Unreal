@@ -4,8 +4,13 @@
 #include "IRosbridge2Unreal.h"
 #include "Services/ROSServiceBase.h"
 
-void UROSServiceHandle::Initialize(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
+void UROSServiceHandle::Initialize(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
+	if(!ServiceClass)
+	{
+		UE_LOG(LogROSBridge, Error, TEXT("No class given for initialization of ROSServiceHandle for service %s."), *ServiceName);
+		return;
+	}
 	InternalService = IRosbridge2Unreal::Get().GetService(ServiceName, ServiceClass);
 }
 

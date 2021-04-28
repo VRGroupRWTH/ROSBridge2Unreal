@@ -28,7 +28,7 @@ public:
 	 * @param ServiceName - Service name that is used to advertise/call later. Used as an ID internally.
 	 * @param ServiceClass - The service class that is responsible for (de-)serialization of messages
 	 */
-	UFUNCTION(BlueprintCallable) void Initialize(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass);
+	UFUNCTION(BlueprintCallable) void Initialize(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass);
 	
 	/**
 	 * Unadvertise this service from the ROS Bridge (does nothing if not advertised)

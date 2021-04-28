@@ -2,8 +2,13 @@
 #include "IRosbridge2Unreal.h"
 #include "LogCategory.h"
 
-void UROSTopicHandle::Initialize(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
+void UROSTopicHandle::Initialize(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
+	if(!MessageClass)
+	{
+		UE_LOG(LogROSBridge, Error, TEXT("No class given for initialization of ROSTopicHandle for topic %s."), *TopicName);
+		return;
+	}
 	TopicHandle = IRosbridge2Unreal::Get().GetTopic(TopicName, MessageClass);
 }
 

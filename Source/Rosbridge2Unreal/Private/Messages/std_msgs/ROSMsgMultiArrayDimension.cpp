@@ -1,7 +1,7 @@
 #include "Messages/std_msgs/ROSMsgMultiArrayDimension.h"
 #include "DataHelpers.h"
 
-UROSMsgMultiArrayDimension* UROSMsgMultiArrayDimension::Create(const FString Label, const int64 Size, const int64 Stride)
+UROSMsgMultiArrayDimension* UROSMsgMultiArrayDimension::Create(const FString& Label, const int64 Size, const int64 Stride)
 {
 	UROSMsgMultiArrayDimension* Message = NewObject<UROSMsgMultiArrayDimension>();
 	Message->Label = Label;
@@ -11,11 +11,11 @@ UROSMsgMultiArrayDimension* UROSMsgMultiArrayDimension::Create(const FString Lab
 }
 
 
-void UROSMsgMultiArrayDimension::ToData(ROSData& Message) const
+void UROSMsgMultiArrayDimension::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(Message, "label", Label);
-	DataHelpers::AppendUInt32(Message, "size", Size);
-	DataHelpers::AppendUInt32(Message, "stride", Stride);
+	DataHelpers::AppendString(OutMessage, "label", Label);
+	DataHelpers::AppendUInt32(OutMessage, "size", Size);
+	DataHelpers::AppendUInt32(OutMessage, "stride", Stride);
 }
 
 bool UROSMsgMultiArrayDimension::FromData(const ROSData& Message)

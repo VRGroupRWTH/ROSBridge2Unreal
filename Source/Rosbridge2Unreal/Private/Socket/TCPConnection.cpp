@@ -29,7 +29,7 @@ bool UTCPConnection::Initialize(FString IPAddress, int Port, ETransportMode Mode
 		UE_LOG(LogROSBridge, Error, TEXT("Could not connect to: %s:%d"), *IPAddress, Port);
 		return false;
 	}
-
+	
 	CurrentTransportMode = Mode;
 	
 	// Setting up and starting the receiver thread

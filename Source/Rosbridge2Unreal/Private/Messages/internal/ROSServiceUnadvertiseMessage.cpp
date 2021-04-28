@@ -1,11 +1,11 @@
 #include "Messages/internal/ROSServiceUnadvertiseMessage.h"
 #include "DataHelpers.h"
 
-void UROSServiceUnadvertiseMessage::ToData(ROSData& Message) const
+void UROSServiceUnadvertiseMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(Message, "op", "unadvertise_service");
-	DataHelpers::AppendString(Message, "id", ID);
-	DataHelpers::AppendString(Message, "service", ServiceName);
+	DataHelpers::AppendString(OutMessage, "op", "unadvertise_service");
+	DataHelpers::AppendString(OutMessage, "id", ID);
+	DataHelpers::AppendString(OutMessage, "service", ServiceName);
 }
 
 bool UROSServiceUnadvertiseMessage::FromData(const ROSData& Message)

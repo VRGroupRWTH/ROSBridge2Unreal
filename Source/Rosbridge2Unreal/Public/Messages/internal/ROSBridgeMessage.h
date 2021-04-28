@@ -12,7 +12,7 @@ class ROSBRIDGE2UNREAL_API UROSBridgeMessage : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void ToData(ROSData& Message) const PURE_VIRTUAL(UROSBridgeMessage::ToData, return;);
+	virtual void ToData(ROSData& OutMessage) const PURE_VIRTUAL(UROSBridgeMessage::ToData, return;);
 	virtual bool FromData(const ROSData& Message) PURE_VIRTUAL(UROSBridgeMessage::FromData, return false;);
 };
 

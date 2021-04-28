@@ -1,12 +1,12 @@
 #include "Messages/internal/ROSTopicPublishMessage.h"
 #include "DataHelpers.h"
 
-void UROSTopicPublishMessage::ToData(ROSData& Message) const
+void UROSTopicPublishMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(Message, "op", "publish");
-	DataHelpers::AppendString(Message, "id", ID);
-	DataHelpers::AppendString(Message, "topic", TopicName);
-	DataHelpers::AppendSubDocument(Message, "msg", Data);
+	DataHelpers::AppendString(OutMessage, "op", "publish");
+	DataHelpers::AppendString(OutMessage, "id", ID);
+	DataHelpers::AppendString(OutMessage, "topic", TopicName);
+	DataHelpers::AppendSubDocument(OutMessage, "msg", Data);
 }
 
 bool UROSTopicPublishMessage::FromData(const ROSData& Message)

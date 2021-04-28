@@ -12,8 +12,8 @@ class ROSBRIDGE2UNREAL_API UROSMsgMultiArrayDimension : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgMultiArrayDimension(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/MultiArrayDimension";};
-	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgMultiArrayDimension* Create(const FString Label, const int64 Size, const int64 Stride);
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/MultiArrayDimension";}
+	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgMultiArrayDimension* Create(const FString& Label, const int64 Size, const int64 Stride);
 	
 	/* Data */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString Label; /* Label of given Dimension */
@@ -21,6 +21,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int64 Stride; /* Stride of given Dimension */
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

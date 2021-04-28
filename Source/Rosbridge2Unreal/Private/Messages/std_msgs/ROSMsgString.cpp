@@ -1,16 +1,16 @@
 #include "Messages/std_msgs/ROSMsgString.h"
 #include "DataHelpers.h"
 
-UROSMsgString* UROSMsgString::Create(FString Data)
+UROSMsgString* UROSMsgString::Create(const FString& InData)
 {
 	UROSMsgString* Message = NewObject<UROSMsgString>();
-	Message->Data = Data;
+	Message->Data = InData;
 	return Message;
 }
 
-void UROSMsgString::ToData(ROSData& Message) const
+void UROSMsgString::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(Message, "data", Data);
+	DataHelpers::AppendString(OutMessage, "data", Data);
 }
 
 bool UROSMsgString::FromData(const ROSData& Message)

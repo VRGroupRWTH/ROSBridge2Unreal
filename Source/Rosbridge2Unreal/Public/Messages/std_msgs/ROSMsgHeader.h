@@ -12,9 +12,9 @@ class ROSBRIDGE2UNREAL_API UROSMsgHeader : public UROSMessageBase
 public:
 	/* Construction */
 	UROSMsgHeader(){};
-	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/Header";};
-	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgHeader* CreateWithGeneratedTimeStamp(FString FrameID, int64 SequenceID);
-	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgHeader* Create(FString FrameID, int64 SequenceID, int32 Seconds, int32 NanoSeconds);
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetMessageType() override {return "std_msgs/Header";}
+	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgHeader* CreateWithGeneratedTimeStamp(const FString& FrameID, int64 SequenceID);
+	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgHeader* Create(const FString& FrameID, int64 SequenceID, int32 Seconds, int32 NanoSeconds);
 	
 	/* Data */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) int64 SequenceID;
@@ -23,6 +23,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FString FrameID;
 
 	/* Transformation Functions */
-	void ToData(ROSData& Message) const override;
+	void ToData(ROSData& OutMessage) const override;
 	bool FromData(const ROSData& Message) override;
 };

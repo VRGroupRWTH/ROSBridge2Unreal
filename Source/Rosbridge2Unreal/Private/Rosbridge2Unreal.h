@@ -40,7 +40,7 @@ public:
 	bool IsBSONMode() override;
 
 	/* Send an internal Message to the other side */
-	bool SendMessage(const UROSBridgeMessage& Message) override;
+	bool SendMessage(const UROSBridgeMessage& OutMessage) override;
 
 	/* IDs used for internal sending */
 	long GetNextID() override;
@@ -53,8 +53,8 @@ private:
  /* ROSTopics and Services */
 public:
 	/* Get or create an internal TopicHandle and return it */
-	UROSTopic* GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass) override;
+	UROSTopic* GetTopic(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass) override;
 
 	/* Get or create an internal ServiceHandle and return it */
-	UROSService* GetService(FString ServiceName,  TSubclassOf<UROSServiceBase> ServiceClass) override;
+	UROSService* GetService(const FString& ServiceName,  TSubclassOf<UROSServiceBase> ServiceClass) override;
 };

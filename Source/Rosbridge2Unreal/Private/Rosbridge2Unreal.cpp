@@ -85,12 +85,12 @@ long FRosbridge2UnrealModule::GetNextID()
 	return InitializeConnection() ? RosBridge->GetNextID() : -1;
 }
 
-UROSTopic* FRosbridge2UnrealModule::GetTopic(FString TopicName, TSubclassOf<UROSMessageBase> MessageClass)
+UROSTopic* FRosbridge2UnrealModule::GetTopic(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
 	return InitializeConnection() ? RosBridge->GetTopic(TopicName, MessageClass) : nullptr;
 }
 
-UROSService* FRosbridge2UnrealModule::GetService(FString ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
+UROSService* FRosbridge2UnrealModule::GetService(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
 	return InitializeConnection() ? RosBridge->GetService(ServiceName, ServiceClass) : nullptr;
 }

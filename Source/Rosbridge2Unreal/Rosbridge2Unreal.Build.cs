@@ -10,11 +10,9 @@ public class Rosbridge2Unreal : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDefinitions.AddRange(
-            new string[]
-            {
-            }
-            );
+		PublicDefinitions.AddRange(
+			new string[]{}
+			);
 		
 		PublicDependencyModuleNames.AddRange(
 			new string[]
@@ -26,24 +24,22 @@ public class Rosbridge2Unreal : ModuleRules
 				"Engine",
 				"WebSockets",
 				"jsoncons"
-				// ... add other public dependencies that you statically link with here ...
 			}
 			);
-			
+		
+		#if UE_4_26_OR_LATER
+		PublicDependencyModuleNames.Add("DeveloperSettings");
+		#endif
 		
 		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
-				// ... add private dependencies that you statically link with here ...	
-			}
+			new string[]{}
 			);
 
 
-        DynamicallyLoadedModuleNames.AddRange(
-            new string[]
-            {
-                // ... add any modules that your module loads dynamically here ...
-            }
-        );
-    }
+		DynamicallyLoadedModuleNames.AddRange(
+			new string[]{}
+		);
+
+		AddEngineThirdPartyPrivateStaticDependencies(Target, "OpenSSL");
+	}
 }
