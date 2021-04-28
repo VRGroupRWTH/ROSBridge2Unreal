@@ -333,21 +333,21 @@ namespace DataHelpers {
 	}
 
 	template <typename T>
-	inline bool ExtractSubMessage(const ROSData& Message, const char* Key, T** OutMessageInstance) {
+	inline bool ExtractSubMessage(const ROSData& Message, const char* Key, T*& OutMessageInstance) {
 		check(OutMessageInstance != nullptr);
 
-		if (*OutMessageInstance == nullptr)
+		if (OutMessageInstance == nullptr)
 		{
-			*OutMessageInstance = NewObject<T>();
+			OutMessageInstance = NewObject<T>();
 		}
 
 		if (Key[0] == '/')
 		{
-			return (*OutMessageInstance)->FromData(jsoncons::jsonpointer::get(Message, Key));
+			return OutMessageInstance->FromData(jsoncons::jsonpointer::get(Message, Key));
 		}
 		else if (Message.contains(Key))
 		{
-			return (*OutMessageInstance)->FromData(Message.at(Key));
+			return OutMessageInstance->FromData(Message.at(Key));
 		}
 		else
 		{
