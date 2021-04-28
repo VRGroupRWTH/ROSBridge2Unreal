@@ -24,28 +24,19 @@ void UROSMsgPath::AddPoseInUnrealCoordinateFrame(const FTransform& Transform, UR
 
 void UROSMsgPath::ToData(ROSData& OutMessage) const
 {
-	ROSData SubElementHeader;
-	Header->ToData(SubElementHeader);
-	DataHelpers::AppendSubDocument(OutMessage,  "header", SubElementHeader);
+	DataHelpers::AppendSubMessage(OutMessage, "header", Header);
 
 	DataHelpers::AppendTArray<UROSMsgPoseStamped*>(OutMessage, "poses", Poses, [](ROSData& Result, const char* Key, const UROSMsgPoseStamped* TArrayElement)
 	{
-		ROSData SubElement;
-		TArrayElement->ToData(SubElement);
-		DataHelpers::AppendSubDocument(Result,  Key, SubElement);
+		DataHelpers::AppendSubMessage(Result, Key, TArrayElement);
 	});
 }
 
 bool UROSMsgPath::FromData(const ROSData& Message)
 {
-	if(!Header) Header = NewObject<UROSMsgHeader>(this);
-	Poses = TArray<UROSMsgPoseStamped*>();
-	
-	ROSData SubElementHeader;
-	return DataHelpers::ExtractSubDocument(Message, "header", SubElementHeader) && Header->FromData(SubElementHeader)
+	return DataHelpers::ExtractSubMessage(Message, "header", Header)
 	&& DataHelpers::ExtractTArrayOfUObjects<UROSMsgPoseStamped>(Message, "poses", Poses, this, [](const ROSData& Array, const char* Key, UROSMsgPoseStamped*& Result)
 	{
-		ROSData SubElement;
-		return DataHelpers::ExtractSubDocument(Array, Key, SubElement) && Result->FromData(SubElement);
+		return DataHelpers::ExtractSubMessage(Array, Key, Result);
 	});
 }

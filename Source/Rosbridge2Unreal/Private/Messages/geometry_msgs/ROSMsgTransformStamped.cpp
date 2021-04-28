@@ -21,23 +21,15 @@ UROSMsgTransformStamped* UROSMsgTransformStamped::CreateEmpty()
 
 void UROSMsgTransformStamped::ToData(ROSData& OutMessage) const
 {
-	ROSData SubElementHeader;
-	ROSData SubElementTransform;
-	Header->ToData(SubElementHeader);
-	Transform->ToData(SubElementTransform);
-	DataHelpers::AppendSubDocument(OutMessage,  "header", SubElementHeader);
-	DataHelpers::AppendString(OutMessage,  "child_frame_id", ChildFrameID);
-	DataHelpers::AppendSubDocument(OutMessage,  "transform", SubElementTransform);
+	DataHelpers::AppendSubMessage(OutMessage, "header", Header);
+	DataHelpers::AppendString(OutMessage, "child_frame_id", ChildFrameID);
+	DataHelpers::AppendSubMessage(OutMessage, "transform", Transform);
 }
 
 bool UROSMsgTransformStamped::FromData(const ROSData& Message)
 {
-	if(!Header) Header = NewObject<UROSMsgHeader>(this);
-	if(!Transform) Transform = NewObject<UROSMsgTransform>(this);
-	
-	ROSData SubElementHeader;
-	ROSData SubElementTransform;
-	return DataHelpers::ExtractSubDocument(Message, "header", SubElementHeader) && Header->FromData(SubElementHeader)
-	&& DataHelpers::ExtractString(Message, "child_frame_id", ChildFrameID)
-	&& DataHelpers::ExtractSubDocument(Message, "transform", SubElementTransform) && Transform->FromData(SubElementTransform);
+	return
+		DataHelpers::ExtractSubMessage(Message, "header", Header) &&
+		DataHelpers::ExtractString(Message, "child_frame_id", ChildFrameID) &&
+		DataHelpers::ExtractSubMessage(Message, "transform", Transform);
 }

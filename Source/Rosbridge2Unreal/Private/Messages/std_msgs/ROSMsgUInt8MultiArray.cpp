@@ -15,21 +15,14 @@ void UROSMsgUInt8MultiArray::ToData(ROSData& OutMessage) const
 	{
 		DataHelpers::AppendUInt8(Array, Key, TArrayValue);
 	});
-
-	ROSData SubElement;
-	Layout->ToData(SubElement);
-	DataHelpers::AppendSubDocument(OutMessage,"layout", SubElement);
+	DataHelpers::AppendSubMessage(OutMessage,"layout", Layout);
 }
 
 bool UROSMsgUInt8MultiArray::FromData(const ROSData& Message)
 {
-	if(!Layout) Layout = NewObject<UROSMsgMultiArrayLayout>(this);
-
-	ROSData SubElement;
-	
 	return DataHelpers::ExtractTArray<uint8>(Message, "data", Data, [](const ROSData& Array, const char* Key, uint8& Result)
 	{
 		return DataHelpers::ExtractUInt8(Array, Key, Result);
 	})
-	&& DataHelpers::ExtractSubDocument(Message, "layout", SubElement) && Layout->FromData(SubElement);
+	&& DataHelpers::ExtractSubMessage(Message, "layout", Layout);
 }

@@ -18,9 +18,7 @@ void UROSMsgMultiArrayLayout::ToData(ROSData& OutMessage) const
 {
 	DataHelpers::AppendTArray<UROSMsgMultiArrayDimension*>(OutMessage, "dim", Dimensions, [](ROSData& Array, const char* Key, UROSMsgMultiArrayDimension* const& TArrayValue)
 	{
-		ROSData SubElement;
-		TArrayValue->ToData(SubElement);
-		DataHelpers::AppendSubDocument(Array,  Key, SubElement);
+		DataHelpers::AppendSubMessage(Array, Key, TArrayValue);
 	});
 	DataHelpers::AppendUInt32(OutMessage, "data_offset", DataOffset);
 }
@@ -29,8 +27,7 @@ bool UROSMsgMultiArrayLayout::FromData(const ROSData& Message)
 {
 	return DataHelpers::ExtractTArrayOfUObjects<UROSMsgMultiArrayDimension>(Message, "dim", Dimensions, this, [](const ROSData& Array, const char* Key, UROSMsgMultiArrayDimension*& Result)
 	{
-		ROSData SubElement;
-		return DataHelpers::ExtractSubDocument(Array, Key, SubElement) && Result->FromData(SubElement);
+		return DataHelpers::ExtractSubMessage(Array, Key, Result);
 	})
 	&& DataHelpers::ExtractInt64(Message, "data_offset", DataOffset);
 }

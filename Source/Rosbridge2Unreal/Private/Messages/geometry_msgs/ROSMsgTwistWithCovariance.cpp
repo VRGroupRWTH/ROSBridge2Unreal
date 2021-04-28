@@ -46,9 +46,7 @@ void UROSMsgTwistWithCovariance::SetCovarianceFromFloatArray(const TArray<float>
 
 void UROSMsgTwistWithCovariance::ToData(ROSData& OutMessage) const
 {
-	ROSData SubElementTwist;
-	Twist->ToData(SubElementTwist);
-	DataHelpers::AppendSubDocument(OutMessage,  "twist", SubElementTwist);
+	DataHelpers::AppendSubMessage(OutMessage, "twist", Twist);
 	if(Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Covariance Matrix in UROSMsgTwistWithCovariance does not have 36 values, it has %d"), Covariance.Num());
 
 	DataHelpers::AppendTArray<double>(OutMessage, "covariance", Covariance, [](ROSData& Array, const char* Key, double TArrayValue)
@@ -59,12 +57,10 @@ void UROSMsgTwistWithCovariance::ToData(ROSData& OutMessage) const
 
 bool UROSMsgTwistWithCovariance::FromData(const ROSData& Message)
 {
-	if(!Twist) Twist = NewObject<UROSMsgTwist>(this);
-	
-	ROSData SubElementTwist;
-	return DataHelpers::ExtractSubDocument(Message, "twist", SubElementTwist) && Twist->FromData(SubElementTwist)
-	&& DataHelpers::ExtractTArray<double>(Message, "covariance", Covariance, [](const ROSData& Array, const char* Key, double& Result)
-	{
-		return DataHelpers::ExtractDouble(Array, Key, Result);
-	});
+	return
+		DataHelpers::ExtractSubMessage(Message, "twist", Twist) &&
+		DataHelpers::ExtractTArray<double>(Message, "covariance", Covariance, [](const ROSData& Array, const char* Key, double& Result)
+		{
+			return DataHelpers::ExtractDouble(Array, Key, Result);
+		});
 }

@@ -43,12 +43,7 @@ void UROSMsgPoseWithCovarianceStamped::ToData(ROSData& OutMessage) const
 
 bool UROSMsgPoseWithCovarianceStamped::FromData(const ROSData& Message)
 {
-	if(!Header) Header = NewObject<UROSMsgHeader>(this);
-	if(!Pose) Pose = NewObject<UROSMsgPoseWithCovariance>(this);
-	
-	ROSData SubElementHeader;
-	ROSData SubElementPose;
-	
-	return DataHelpers::ExtractSubDocument(Message,  "header", SubElementHeader) && Header->FromData(SubElementHeader)
-	&& DataHelpers::ExtractSubDocument(Message,  "pose", SubElementPose) && Pose->FromData(SubElementPose);
+	return
+		DataHelpers::ExtractSubMessage(Message, "header", Header) &&
+		DataHelpers::ExtractSubMessage(Message, "pose", Pose);
 }
