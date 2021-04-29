@@ -3,23 +3,23 @@
 
 void UROSTopicSubscribeMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(OutMessage, "op", "subscribe");
-	DataHelpers::AppendString(OutMessage, "id", ID);
-	DataHelpers::AppendString(OutMessage, "topic", TopicName);
-	DataHelpers::AppendString(OutMessage, "type", MessageType);
-	DataHelpers::AppendInt32(OutMessage, "throttle_rate", ThrottleRate);
-	DataHelpers::AppendInt32(OutMessage, "queue_length", QueueLength);
-	DataHelpers::AppendString(OutMessage, "compression", Compression);
+	DataHelpers::Append<FString>(OutMessage, "op", "subscribe");
+	DataHelpers::Append<FString>(OutMessage, "id", ID);
+	DataHelpers::Append<FString>(OutMessage, "topic", TopicName);
+	DataHelpers::Append<FString>(OutMessage, "type", MessageType);
+	DataHelpers::Append<int32>(OutMessage, "throttle_rate", ThrottleRate);
+	DataHelpers::Append<int32>(OutMessage, "queue_length", QueueLength);
+	DataHelpers::Append<FString>(OutMessage, "compression", Compression);
 }
 
 bool UROSTopicSubscribeMessage::FromData(const ROSData& Message)
 {
 	//optional
-	DataHelpers::ExtractString(Message, "id", ID);
-	DataHelpers::ExtractString(Message, "type", MessageType);
-	DataHelpers::ExtractInt32(Message, "throttle_rate", ThrottleRate);
-	DataHelpers::ExtractInt32(Message, "queue_length", QueueLength);
-	DataHelpers::ExtractString(Message, "compression", Compression);
+	DataHelpers::Extract<FString>(Message, "id", ID);
+	DataHelpers::Extract<FString>(Message, "type", MessageType);
+	DataHelpers::Extract<int32>(Message, "throttle_rate", ThrottleRate);
+	DataHelpers::Extract<int32>(Message, "queue_length", QueueLength);
+	DataHelpers::Extract<FString>(Message, "compression", Compression);
 	
-	return DataHelpers::ExtractString(Message, "topic", TopicName);
+	return DataHelpers::Extract<FString>(Message, "topic", TopicName);
 }

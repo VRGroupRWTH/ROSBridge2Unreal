@@ -20,7 +20,7 @@ void UROSMsgMultiArrayLayout::ToData(ROSData& OutMessage) const
 	{
 		DataHelpers::AppendSubMessage(Array, Key, TArrayValue);
 	});
-	DataHelpers::AppendUInt32(OutMessage, "data_offset", DataOffset);
+	DataHelpers::Append<uint32>(OutMessage, "data_offset", DataOffset);
 }
 
 bool UROSMsgMultiArrayLayout::FromData(const ROSData& Message)
@@ -29,5 +29,5 @@ bool UROSMsgMultiArrayLayout::FromData(const ROSData& Message)
 	{
 		return DataHelpers::ExtractSubMessage(Array, Key, Result);
 	})
-	&& DataHelpers::ExtractInt64(Message, "data_offset", DataOffset);
+	&& DataHelpers::Extract<int64>(Message, "data_offset", DataOffset);
 }

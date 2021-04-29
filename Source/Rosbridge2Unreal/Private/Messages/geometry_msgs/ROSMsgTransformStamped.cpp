@@ -22,7 +22,7 @@ UROSMsgTransformStamped* UROSMsgTransformStamped::CreateEmpty()
 void UROSMsgTransformStamped::ToData(ROSData& OutMessage) const
 {
 	DataHelpers::AppendSubMessage(OutMessage, "header", Header);
-	DataHelpers::AppendString(OutMessage, "child_frame_id", ChildFrameID);
+	DataHelpers::Append<FString>(OutMessage, "child_frame_id", ChildFrameID);
 	DataHelpers::AppendSubMessage(OutMessage, "transform", Transform);
 }
 
@@ -30,6 +30,6 @@ bool UROSMsgTransformStamped::FromData(const ROSData& Message)
 {
 	return
 		DataHelpers::ExtractSubMessage(Message, "header", Header) &&
-		DataHelpers::ExtractString(Message, "child_frame_id", ChildFrameID) &&
+		DataHelpers::Extract<FString>(Message, "child_frame_id", ChildFrameID) &&
 		DataHelpers::ExtractSubMessage(Message, "transform", Transform);
 }

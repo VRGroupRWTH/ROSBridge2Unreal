@@ -228,7 +228,7 @@ void UROSBridge::IncomingMessage(const ROSData& Message)
 	
 	FString OPCode;
 
-	if(!DataHelpers::ExtractString(Message, "op", OPCode)){
+	if(!DataHelpers::Extract<FString>(Message, "op", OPCode)){
 		UE_LOG(LogROSBridge, Warning, TEXT("Received message without op code."));	
 		return;
 	}
@@ -263,7 +263,7 @@ void UROSBridge::IncomingMessage(const ROSData& Message)
 				if(Service->IsAdvertised())
 				{
 					FString Error;
-					DataHelpers::ExtractString(Message, "values", Error);
+					DataHelpers::Extract<FString>(Message, "values", Error);
 					UE_LOG(LogROSBridge, Warning, 
 						TEXT("We received a response to a known service that we have not called. This can be the result of an error in responding to a request. The response is: %s"),
 						*Error

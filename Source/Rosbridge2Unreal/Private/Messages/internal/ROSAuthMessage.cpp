@@ -16,14 +16,14 @@ void UROSAuthMessage::ToData(ROSData& OutMessage) const
 	const int64 EndTime = FDateTime::UtcNow().ToUnixTimestamp() + 31556952; // Now + 1 Year
 	const FString Mac = EncodeSHA512(FString::Printf(TEXT("%s%s%s%s%lld%s%lld"), *Secret , *Client , *Destination , *Random , Time , *Level , EndTime));
 
-	DataHelpers::AppendString(OutMessage, "op", "auth");
-	DataHelpers::AppendString(OutMessage, "mac", Mac);
-	DataHelpers::AppendString(OutMessage, "client", Client);
-	DataHelpers::AppendString(OutMessage, "dest", Destination);
-	DataHelpers::AppendString(OutMessage, "rand", Random);
-	DataHelpers::AppendInt64(OutMessage, "t", Time);
-	DataHelpers::AppendString(OutMessage, "level", Level);
-	DataHelpers::AppendInt64(OutMessage, "end", EndTime);
+	DataHelpers::Append<FString>(OutMessage, "op", "auth");
+	DataHelpers::Append<FString>(OutMessage, "mac", Mac);
+	DataHelpers::Append<FString>(OutMessage, "client", Client);
+	DataHelpers::Append<FString>(OutMessage, "dest", Destination);
+	DataHelpers::Append<FString>(OutMessage, "rand", Random);
+	DataHelpers::Append<int64>(OutMessage, "t", Time);
+	DataHelpers::Append<FString>(OutMessage, "level", Level);
+	DataHelpers::Append<int64>(OutMessage, "end", EndTime);
 }
 
 bool UROSAuthMessage::FromData(const ROSData& Message)

@@ -19,13 +19,13 @@ UROSMsgPoseStamped* UROSMsgPoseStamped::CreateEmpty()
 
 void UROSMsgPoseStamped::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendSubMessage(OutMessage, "header", Header);
-	DataHelpers::AppendSubMessage(OutMessage, "pose", Pose);
+	DataHelpers::Append<UROSMsgHeader>(OutMessage, "header", Header);
+	DataHelpers::Append<UROSMsgPose>(OutMessage, "pose", Pose);
 }
 
 bool UROSMsgPoseStamped::FromData(const ROSData& Message)
 {
 	return
-		DataHelpers::ExtractSubMessage(Message, "header", Header) &&
-		DataHelpers::ExtractSubMessage(Message, "pose", Pose);
+		DataHelpers::Extract<UROSMsgHeader>(Message, "header", Header) &&
+		DataHelpers::Extract<UROSMsgPose>(Message, "pose", Pose);
 }

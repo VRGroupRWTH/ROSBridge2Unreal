@@ -21,7 +21,7 @@ void UROSMsgFloat32MultiArray::ToData(ROSData& OutMessage) const
 {
 	DataHelpers::AppendTArray<float>(OutMessage, "data", Data, [](ROSData& Array, const char* Key, const float& TArrayValue)
 	{
-		DataHelpers::AppendFloat(Array, Key, TArrayValue);
+		DataHelpers::Append<float>(Array, Key, TArrayValue);
 	});
 	DataHelpers::AppendSubMessage(OutMessage,"layout", Layout);
 }
@@ -30,7 +30,7 @@ bool UROSMsgFloat32MultiArray::FromData(const ROSData& Message)
 {
 	return DataHelpers::ExtractTArray<float>(Message, "data", Data, [](const ROSData& Array, const char* Key, float& Result)
 	{
-		return DataHelpers::ExtractFloat(Array, Key, Result);
+		return DataHelpers::Extract<float>(Array, Key, Result);
 	})
 	&& DataHelpers::ExtractSubMessage(Message, "layout", Layout);
 }

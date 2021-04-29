@@ -3,13 +3,13 @@
 
 void UROSTopicUnadvertiseMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(OutMessage, "op", "unadvertise");
-	DataHelpers::AppendString(OutMessage, "id", ID);
-	DataHelpers::AppendString(OutMessage, "topic", TopicName);
+	DataHelpers::Append<FString>(OutMessage, "op", "unadvertise");
+	DataHelpers::Append<FString>(OutMessage, "id", ID);
+	DataHelpers::Append<FString>(OutMessage, "topic", TopicName);
 }
 
 bool UROSTopicUnadvertiseMessage::FromData(const ROSData& Message)
 {
-	DataHelpers::ExtractString(Message, "id", ID); //optional
-	return DataHelpers::ExtractString(Message, "topic", TopicName);
+	DataHelpers::Extract<FString>(Message, "id", ID); //optional
+	return DataHelpers::Extract<FString>(Message, "topic", TopicName);
 }

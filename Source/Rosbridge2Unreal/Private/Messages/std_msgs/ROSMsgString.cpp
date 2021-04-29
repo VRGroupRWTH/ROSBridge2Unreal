@@ -10,10 +10,10 @@ UROSMsgString* UROSMsgString::Create(const FString& InData)
 
 void UROSMsgString::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(OutMessage, "data", Data);
+	DataHelpers::Append<FString>(OutMessage, "data", Data);
 }
 
 bool UROSMsgString::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractString(Message, "data", Data);
+	return DataHelpers::Extract<FString>(Message, "data", Data);
 }

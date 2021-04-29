@@ -13,7 +13,7 @@ void UROSMsgUInt8MultiArray::ToData(ROSData& OutMessage) const
 {
 	DataHelpers::AppendTArray<uint8>(OutMessage, "data", Data, [](ROSData& Array, const char* Key, const uint8& TArrayValue)
 	{
-		DataHelpers::AppendUInt8(Array, Key, TArrayValue);
+		DataHelpers::Append<uint8>(Array, Key, TArrayValue);
 	});
 	DataHelpers::AppendSubMessage(OutMessage,"layout", Layout);
 }
@@ -22,7 +22,7 @@ bool UROSMsgUInt8MultiArray::FromData(const ROSData& Message)
 {
 	return DataHelpers::ExtractTArray<uint8>(Message, "data", Data, [](const ROSData& Array, const char* Key, uint8& Result)
 	{
-		return DataHelpers::ExtractUInt8(Array, Key, Result);
+		return DataHelpers::Extract<uint8>(Array, Key, Result);
 	})
 	&& DataHelpers::ExtractSubMessage(Message, "layout", Layout);
 }

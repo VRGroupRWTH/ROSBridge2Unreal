@@ -3,13 +3,13 @@
 
 void UROSServiceUnadvertiseMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(OutMessage, "op", "unadvertise_service");
-	DataHelpers::AppendString(OutMessage, "id", ID);
-	DataHelpers::AppendString(OutMessage, "service", ServiceName);
+	DataHelpers::Append<FString>(OutMessage, "op", "unadvertise_service");
+	DataHelpers::Append<FString>(OutMessage, "id", ID);
+	DataHelpers::Append<FString>(OutMessage, "service", ServiceName);
 }
 
 bool UROSServiceUnadvertiseMessage::FromData(const ROSData& Message)
 {
-	DataHelpers::ExtractString(Message, "id", ID); //optional
-	return DataHelpers::ExtractString(Message, "service", ServiceName);
+	DataHelpers::Extract<FString>(Message, "id", ID); //optional
+	return DataHelpers::Extract<FString>(Message, "service", ServiceName);
 }

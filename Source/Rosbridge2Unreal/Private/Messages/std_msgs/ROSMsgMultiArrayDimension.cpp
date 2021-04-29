@@ -13,15 +13,15 @@ UROSMsgMultiArrayDimension* UROSMsgMultiArrayDimension::Create(const FString& La
 
 void UROSMsgMultiArrayDimension::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(OutMessage, "label", Label);
-	DataHelpers::AppendUInt32(OutMessage, "size", Size);
-	DataHelpers::AppendUInt32(OutMessage, "stride", Stride);
+	DataHelpers::Append<FString>(OutMessage, "label", Label);
+	DataHelpers::Append<uint32>(OutMessage, "size", Size);
+	DataHelpers::Append<uint32>(OutMessage, "stride", Stride);
 }
 
 bool UROSMsgMultiArrayDimension::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractString(Message, "label", Label)
-	&& DataHelpers::ExtractInt64(Message, "size", Size)
-	&& DataHelpers::ExtractInt64(Message, "stride", Stride);
+	return DataHelpers::Extract<FString>(Message, "label", Label)
+	&& DataHelpers::Extract<int64>(Message, "size", Size)
+	&& DataHelpers::Extract<int64>(Message, "stride", Stride);
 }
 

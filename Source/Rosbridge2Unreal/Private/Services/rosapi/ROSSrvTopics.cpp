@@ -17,7 +17,7 @@ void UROSSrvTopics::ResponseToData(ROSData& OutMessage) const
 {
 	DataHelpers::AppendTArray<FString>(OutMessage, "topics", Topics, [](ROSData& Message, const char* Key, const FString& Value)
 	{
-		DataHelpers::AppendString(Message, Key, Value);
+		DataHelpers::Append<FString>(Message, Key, Value);
 	});
 }
 
@@ -25,6 +25,6 @@ bool UROSSrvTopics::ResponseFromData(const ROSData& Message)
 {
 	return DataHelpers::ExtractTArray<FString>(Message, "topics", Topics, [](const ROSData& Message, const char* Key, FString& Value)
 	{
-		return DataHelpers::ExtractString(Message, Key, Value);
+		return DataHelpers::Extract<FString>(Message, Key, Value);
 	});
 }

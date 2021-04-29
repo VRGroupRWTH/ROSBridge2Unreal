@@ -85,7 +85,7 @@ void UROSMsgCompressedImage::ReadData()
 void UROSMsgCompressedImage::ToData(ROSData& OutMessage) const
 {
 	DataHelpers::AppendSubMessage(OutMessage, "header", Header);
-	DataHelpers::AppendString(OutMessage, "format", Format);
+	DataHelpers::Append<FString>(OutMessage, "format", Format);
 
 	if(ImageWrapper.IsValid()){
 		TArray64<uint8> CompressedData = ImageWrapper->GetCompressed(OutputCompressionQuality);
@@ -97,6 +97,6 @@ bool UROSMsgCompressedImage::FromData(const ROSData& Message)
 {
 	return
 		DataHelpers::ExtractSubMessage(Message, "header", Header) &&
-		DataHelpers::ExtractString(Message, "format", Format) &&
+		DataHelpers::Extract<FString>(Message, "format", Format) &&
 		DataHelpers::ExtractBinary(Message, "data", Data);
 }

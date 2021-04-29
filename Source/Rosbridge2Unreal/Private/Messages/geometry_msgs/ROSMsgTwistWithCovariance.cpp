@@ -51,7 +51,7 @@ void UROSMsgTwistWithCovariance::ToData(ROSData& OutMessage) const
 
 	DataHelpers::AppendTArray<double>(OutMessage, "covariance", Covariance, [](ROSData& Array, const char* Key, double TArrayValue)
 	{
-		DataHelpers::AppendDouble(Array, Key, TArrayValue);
+		DataHelpers::Append<double>(Array, Key, TArrayValue);
 	});
 }
 
@@ -61,6 +61,6 @@ bool UROSMsgTwistWithCovariance::FromData(const ROSData& Message)
 		DataHelpers::ExtractSubMessage(Message, "twist", Twist) &&
 		DataHelpers::ExtractTArray<double>(Message, "covariance", Covariance, [](const ROSData& Array, const char* Key, double& Result)
 		{
-			return DataHelpers::ExtractDouble(Array, Key, Result);
+			return DataHelpers::Extract<double>(Array, Key, Result);
 		});
 }

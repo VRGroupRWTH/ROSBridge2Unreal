@@ -3,15 +3,15 @@
 
 void UROSServiceAdvertiseMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(OutMessage, "op", "advertise_service");
-	DataHelpers::AppendString(OutMessage, "id", ID);
-	DataHelpers::AppendString(OutMessage, "service", ServiceName);
-	DataHelpers::AppendString(OutMessage, "type", ServiceType);
+	DataHelpers::Append<FString>(OutMessage, "op", "advertise_service");
+	DataHelpers::Append<FString>(OutMessage, "id", ID);
+	DataHelpers::Append<FString>(OutMessage, "service", ServiceName);
+	DataHelpers::Append<FString>(OutMessage, "type", ServiceType);
 }
 
 bool UROSServiceAdvertiseMessage::FromData(const ROSData& Message)
 {
-	DataHelpers::ExtractString(Message, "id", ID); //optional
-	return DataHelpers::ExtractString(Message, "service", ServiceName)
-	&& DataHelpers::ExtractString(Message, "type", ServiceType);
+	DataHelpers::Extract<FString>(Message, "id", ID); //optional
+	return DataHelpers::Extract<FString>(Message, "service", ServiceName)
+	&& DataHelpers::Extract<FString>(Message, "type", ServiceType);
 }

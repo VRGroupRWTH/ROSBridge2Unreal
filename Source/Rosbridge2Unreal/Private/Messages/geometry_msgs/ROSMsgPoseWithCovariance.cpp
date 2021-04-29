@@ -51,7 +51,7 @@ void UROSMsgPoseWithCovariance::ToData(ROSData& OutMessage) const
 
 	DataHelpers::AppendTArray<double>(OutMessage, "covariance", Covariance, [](ROSData& Array, const char* Key, double TArrayValue)
 	{
-		DataHelpers::AppendDouble(Array, Key, TArrayValue);
+		DataHelpers::Append<double>(Array, Key, TArrayValue);
 	});
 }
 
@@ -60,6 +60,6 @@ bool UROSMsgPoseWithCovariance::FromData(const ROSData& Message)
 	return DataHelpers::ExtractSubMessage(Message, "pose", Pose)
 		&& DataHelpers::ExtractTArray<double>(Message, "covariance", Covariance, [](const ROSData& Array, const char* Key, double& Result)
 	{
-		return DataHelpers::ExtractDouble(Array, Key, Result);
+		return DataHelpers::Extract<double>(Array, Key, Result);
 	});
 }

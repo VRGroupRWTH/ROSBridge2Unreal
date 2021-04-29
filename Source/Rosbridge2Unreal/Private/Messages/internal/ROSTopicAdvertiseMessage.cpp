@@ -3,15 +3,15 @@
 
 void UROSTopicAdvertiseMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(OutMessage, "op", "advertise");
-	DataHelpers::AppendString(OutMessage, "id", ID);
-	DataHelpers::AppendString(OutMessage, "topic", TopicName);
-	DataHelpers::AppendString(OutMessage, "type", MessageType);
+	DataHelpers::Append<FString>(OutMessage, "op", "advertise");
+	DataHelpers::Append<FString>(OutMessage, "id", ID);
+	DataHelpers::Append<FString>(OutMessage, "topic", TopicName);
+	DataHelpers::Append<FString>(OutMessage, "type", MessageType);
 }
 
 bool UROSTopicAdvertiseMessage::FromData(const ROSData& Message)
 {
-	DataHelpers::ExtractString(Message, "id", ID); //optional
-	return DataHelpers::ExtractString(Message, "topic", TopicName)
-	&& DataHelpers::ExtractString(Message, "type", MessageType);
+	DataHelpers::Extract<FString>(Message, "id", ID); //optional
+	return DataHelpers::Extract<FString>(Message, "topic", TopicName)
+	&& DataHelpers::Extract<FString>(Message, "type", MessageType);
 }

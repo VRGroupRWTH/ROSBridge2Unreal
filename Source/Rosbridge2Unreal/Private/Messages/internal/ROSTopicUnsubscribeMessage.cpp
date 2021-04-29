@@ -3,13 +3,13 @@
 
 void UROSTopicUnsubscribeMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(OutMessage, "op", "unsubscribe");
-	DataHelpers::AppendString(OutMessage, "id", ID);
-	DataHelpers::AppendString(OutMessage, "topic", TopicName);
+	DataHelpers::Append<FString>(OutMessage, "op", "unsubscribe");
+	DataHelpers::Append<FString>(OutMessage, "id", ID);
+	DataHelpers::Append<FString>(OutMessage, "topic", TopicName);
 }
 
 bool UROSTopicUnsubscribeMessage::FromData(const ROSData& Message)
 {
-	DataHelpers::ExtractString(Message, "id", ID); //optional
-	return DataHelpers::ExtractString(Message, "topic", TopicName);
+	DataHelpers::Extract<FString>(Message, "id", ID); //optional
+	return DataHelpers::Extract<FString>(Message, "topic", TopicName);
 }

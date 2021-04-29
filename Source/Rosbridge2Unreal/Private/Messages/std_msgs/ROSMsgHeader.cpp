@@ -28,17 +28,17 @@ UROSMsgHeader* UROSMsgHeader::Create(const FString& FrameID, int64 SequenceID, i
 
 void UROSMsgHeader::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendUInt32(OutMessage, "seq", SequenceID);
-	DataHelpers::AppendSubDocument(OutMessage, "stamp", ROSData());
-	DataHelpers::AppendInt32(OutMessage, "/stamp/secs", Seconds);
-	DataHelpers::AppendInt32(OutMessage, "/stamp/nsecs", NanoSeconds);
-	DataHelpers::AppendString(OutMessage, "frame_id", FrameID);
+	DataHelpers::Append<uint32>(OutMessage, "seq", SequenceID);
+	DataHelpers::Append<ROSData>(OutMessage, "stamp", ROSData());
+	DataHelpers::Append<int32>(OutMessage, "/stamp/secs", Seconds);
+	DataHelpers::Append<int32>(OutMessage, "/stamp/nsecs", NanoSeconds);
+	DataHelpers::Append<FString>(OutMessage, "frame_id", FrameID);
 }
 
 bool UROSMsgHeader::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractInt64(Message, "seq", SequenceID)
-	&& DataHelpers::ExtractString(Message, "frame_id", FrameID)
-	&& DataHelpers::ExtractInt32(Message, "/stamp/secs", Seconds)
-	&& DataHelpers::ExtractInt32(Message, "/stamp/nsecs", NanoSeconds);
+	return DataHelpers::Extract<int64>(Message, "seq", SequenceID)
+	&& DataHelpers::Extract<FString>(Message, "frame_id", FrameID)
+	&& DataHelpers::Extract<int32>(Message, "/stamp/secs", Seconds)
+	&& DataHelpers::Extract<int32>(Message, "/stamp/nsecs", NanoSeconds);
 }
