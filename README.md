@@ -307,14 +307,14 @@ The following message types are pre-implemented. The tables show if the message 
 | std_msgs/MultiArrayLayout                     | ✓           | ✘      |
 | std_msgs/UInt8MultiArray                      | ✓           | ✘      |
 | geometry_msgs/Point<sup>1</sup>               | ✓           | ✘      |
-| geometry_msgs/Pose<sup>1</sup>                | ✓           | ✘      |
+| geometry_msgs/Pose<sup>1</sup>                | ✓           | ✓      |
 | geometry_msgs/PoseStamped                     | ✓           | ✘      |
 | geometry_msgs/PoseWithCovariance<sup>1</sup>  | ✓           | ✘      |
 | geometry_msgs/PoseWithCovarianceStamped       | ✓           | ✓      |
 | geometry_msgs/Quaternion<sup>1</sup>          | ✓           | ✘      |
 | geometry_msgs/Transform<sup>1</sup>           | ✓           | ✘      |
 | geometry_msgs/TransformStamped                | ✓           | ✘      |
-| geometry_msgs/Twist<sup>1</sup>               | ✓           | ✘      |
+| geometry_msgs/Twist<sup>1</sup>               | ✓           | ✓      |
 | geometry_msgs/TwistWithCovariance<sup>1</sup> | ✓           | ✘      |
 | geometry_msgs/Vector3<sup>1</sup>             | ✓           | ✘      |
 | rosgraph_msgs/Clock                           | ✓           | ✘      |
