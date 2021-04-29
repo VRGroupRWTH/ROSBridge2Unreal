@@ -33,17 +33,13 @@ FQuat UROSMsgPoseWithCovarianceStamped::GetRotationInUnrealCoordinateFrame() con
 
 void UROSMsgPoseWithCovarianceStamped::ToData(ROSData& OutMessage) const
 {
-	ROSData SubElementHeader;
-	ROSData SubElementPose;
-	Header->ToData(SubElementHeader);
-	Pose->ToData(SubElementPose);
-	DataHelpers::Append<ROSData>(OutMessage,  "header", SubElementHeader);
-	DataHelpers::Append<ROSData>(OutMessage,  "pose", SubElementPose);
+	DataHelpers::Append<UROSMsgHeader*>(OutMessage, "header", Header);
+	DataHelpers::Append<UROSMsgPoseWithCovariance*>(OutMessage, "pose", Pose);
 }
 
 bool UROSMsgPoseWithCovarianceStamped::FromData(const ROSData& Message)
 {
 	return
-		DataHelpers::ExtractSubMessage(Message, "header", Header) &&
-		DataHelpers::ExtractSubMessage(Message, "pose", Pose);
+		DataHelpers::Extract<UROSMsgHeader*>(Message, "header", Header) &&
+		DataHelpers::Extract<UROSMsgPoseWithCovariance*>(Message, "pose", Pose);
 }

@@ -6,9 +6,7 @@
 
 namespace DataHelpers
 {
-
-	/* Misc Types */
-
+	// Internal functionality
 	namespace Internal
 	{
 		template <typename JSONType, typename UnrealType>
@@ -70,107 +68,150 @@ namespace DataHelpers
 			Document.dump(S, jsoncons::indenting::indent);
 			return UTF8_TO_TCHAR(S.c_str());
 		}
-	}
 
-#define DEFINE_SIMPLE_DATA_TYPE(InternalType, UnrealType)                                          \
-	template <>                                                                                    \
-	inline void Append<UnrealType>(ROSData & OutMessage, const char *Key, const UnrealType &Value) \
-	{                                                                                              \
-		Internal::Append<UnrealType>(OutMessage, Key, Value);                                      \
-	}                                                                                              \
-	template <>                                                                                    \
-	inline bool Extract<UnrealType>(const ROSData &Message, const char *Key, UnrealType &OutValue) \
-	{                                                                                              \
-		return Internal::Extract<UnrealType>(Message, Key, OutValue);                              \
+		template <typename T, typename Enable = void>
+		struct DataConverter;
+
+#define DEFINE_SIMPLE_DATA_TYPE(InternalType, UnrealType)                                         \
+	template <>                                                                                   \
+	struct DataConverter<UnrealType>                                                              \
+	{                                                                                             \
+		static inline void Append(ROSData &OutMessage, const char *Key, const UnrealType &Value)  \
+		{                                                                                         \
+			Internal::Append<InternalType>(OutMessage, Key, Value);                               \
+		}                                                                                         \
+		static inline bool Extract(const ROSData &Message, const char *Key, UnrealType &OutValue) \
+		{                                                                                         \
+			return Internal::Extract<InternalType>(Message, Key, OutValue);                       \
+		}                                                                                         \
+	};
+
+		DEFINE_SIMPLE_DATA_TYPE(int64, int64)
+		DEFINE_SIMPLE_DATA_TYPE(int32, int32)
+		DEFINE_SIMPLE_DATA_TYPE(int32, int16)
+		DEFINE_SIMPLE_DATA_TYPE(int32, int8)
+
+		DEFINE_SIMPLE_DATA_TYPE(uint64, uint64)
+		DEFINE_SIMPLE_DATA_TYPE(uint32, uint32)
+		DEFINE_SIMPLE_DATA_TYPE(uint32, uint16)
+		DEFINE_SIMPLE_DATA_TYPE(uint32, uint8)
+
+		DEFINE_SIMPLE_DATA_TYPE(double, double)
+		DEFINE_SIMPLE_DATA_TYPE(double, float)
+
+		DEFINE_SIMPLE_DATA_TYPE(bool, bool)
+
+		DEFINE_SIMPLE_DATA_TYPE(ROSData, ROSData)
+#undef DEFINE_SIMPLE_DATA_TYPE
+
+		// String type
+		template <>
+		struct DataConverter<FString>
+		{
+			static inline void Append(ROSData &OutMessage, const char *Key, const FString &Value)
+			{
+				Internal::Append<const char *>(OutMessage, Key, TCHAR_TO_UTF8(*Value));
+			}
+
+			static inline bool Extract(const ROSData &Message, const char *Key, FString &OutValue)
+			{
+				const char *CString;
+				if (Internal::Extract<const char *>(Message, Key, CString))
+				{
+					OutValue = UTF8_TO_TCHAR(CString);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		};
+
+		// Message types
+		template <typename T>
+		struct DataConverter<T*, typename TEnableIf<std::is_base_of<UROSMessageBase, T>::value>::Type>
+		{
+			static inline void Append(ROSData &OutMessage, const char *Key, const T* Message)
+			{
+				ROSData Data;
+				Message->ToData(Data);
+				DataHelpers::Append<ROSData>(OutMessage, Key, Data);
+			}
+
+			static inline bool Extract(const ROSData &Message, const char *Key, T*& OutMessageInstance)
+			{
+				if (OutMessageInstance == nullptr)
+				{
+					OutMessageInstance = NewObject<T>();
+				}
+
+				if (Key[0] == '/')
+				{
+					return OutMessageInstance->FromData(jsoncons::jsonpointer::get(Message, Key));
+				}
+				else if (Message.contains(Key))
+				{
+					return OutMessageInstance->FromData(Message.at(Key));
+				}
+				else
+				{
+					return false;
+				}
+			}
+		};
+
+		template <typename T>
+		struct DataConverter<TArray<T>>
+		{
+			static inline void Append(ROSData& OutMessage, const char* Key, const TArray<T>& Array)
+			{
+				ROSData ArrayData = ROSData(jsoncons::json_array_arg);
+				ArrayData.reserve(Array.Num());
+
+				for (const auto& Value : Array)
+				{
+					const std::string Path = "/" + std::to_string(ArrayData.size());
+					DataHelpers::Append(ArrayData, Path.c_str(), Value);
+				}
+
+				DataHelpers::Append<ROSData>(OutMessage, Key, ArrayData);
+			}
+
+			template <typename T>
+			static inline bool Extract(const ROSData& Message, const char* Key, TArray<T>& Array)
+			{
+				ROSData ArrayData;
+				if (!DataHelpers::Extract<ROSData>(Message, Key, ArrayData) || !ArrayData.is_array())
+				{
+					return false;
+				}
+
+				Array.SetNum(ArrayData.size());
+				for (uint64 i = 0; i < ArrayData.size(); i++)
+				{
+					const std::string Path = "/" + std::to_string(i);
+					if (!DataHelpers::Extract(ArrayData, Path.c_str(), Array[i]))
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		};
+
+	} // namespace Internal
+
+	template <typename T>
+	inline void Append(ROSData &OutMessage, const char *Key, const T &Value)
+	{
+		Internal::DataConverter<T>::Append(OutMessage, Key, Value);
 	}
 
 	template <typename T>
-	inline void Append(ROSData &OutMessage, const char *Key, const T &Value);
-
-	template <typename T>
-	inline bool Extract(const ROSData &Message, const char *Key, T &OutValue);
-
-	DEFINE_SIMPLE_DATA_TYPE(int64, int64)
-	DEFINE_SIMPLE_DATA_TYPE(int32, int32)
-	DEFINE_SIMPLE_DATA_TYPE(int32, int16)
-	DEFINE_SIMPLE_DATA_TYPE(int32, int8)
-
-	DEFINE_SIMPLE_DATA_TYPE(uint64, uint64)
-	DEFINE_SIMPLE_DATA_TYPE(uint32, uint32)
-	DEFINE_SIMPLE_DATA_TYPE(uint32, uint16)
-	DEFINE_SIMPLE_DATA_TYPE(uint32, uint8)
-
-	DEFINE_SIMPLE_DATA_TYPE(double, double)
-	DEFINE_SIMPLE_DATA_TYPE(double, float)
-
-	DEFINE_SIMPLE_DATA_TYPE(bool, bool)
-
-	DEFINE_SIMPLE_DATA_TYPE(ROSData, ROSData)
-
-	template <>
-	inline void Append<FString>(ROSData &OutMessage, const char *Key, const FString &Value)
+	inline bool Extract(const ROSData &Message, const char *Key, T &OutValue)
 	{
-		Internal::Append<const char *>(OutMessage, Key, TCHAR_TO_UTF8(*Value));
-	}
-
-	template <>
-	inline bool Extract<FString>(const ROSData &Message, const char *Key, FString &OutValue)
-	{
-		const char *CString;
-		if (Internal::Extract<const char *>(Message, Key, CString))
-		{
-			OutValue = UTF8_TO_TCHAR(CString);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	template <typename T>
-	inline typename TEnableIf<std::is_base_of<UROSMessageBase, T>::value, void>::Type Append(ROSData &OutMessage, const char *Key, const T *Message)
-	{
-		ROSData Data;
-		Message->ToData(Data);
-		Append<ROSData>(OutMessage, Key, Data);
-	}
-
-	template <typename T>
-	inline typename TEnableIf<std::is_base_of<UROSMessageBase, T>::value, bool>::Type Extract(const ROSData &Message, const char *Key, T *&OutMessageInstance)
-	{
-		if (OutMessageInstance == nullptr)
-		{
-			OutMessageInstance = NewObject<T>();
-		}
-
-		if (Key[0] == '/')
-		{
-			return OutMessageInstance->FromData(jsoncons::jsonpointer::get(Message, Key));
-		}
-		else if (Message.contains(Key))
-		{
-			return OutMessageInstance->FromData(Message.at(Key));
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	template <typename T>
-	inline void Append(ROSData &OutMessage, const char *Key, const TArray<T>& Array)
-	{
-		ROSData ArrayData = ROSData(jsoncons::json_array_arg);
-		ArrayData.reserve(Array.Num());
-
-		for (const auto& Value : Array)
-		{
-			const std::string path = "/" + std::to_string(ArrayData.size());
-			Append(ArrayData, Key, Value);
-		}
-
-		OutMessage.insert_or_assign(Key, ArrayData);
+		return Internal::DataConverter<T>::Extract(Message, Key, OutValue);
 	}
 
 	static bool ExtractBinary(const ROSData &Message, const char *Key, TArray<uint8> &OutData)
@@ -200,53 +241,5 @@ namespace DataHelpers
 		{
 			Message.insert_or_assign(Key, Data);
 		}
-	}
-
-	/* Arrays */
-
-	template <typename T>
-	static bool ExtractTArrayOfUObjects(const ROSData &Message, const char *Key, TArray<T *> &Array, UObject *ParentObject, const TFunction<bool(const ROSData &, const char *, T *&)> &ExtractElement)
-	{
-		if (!Message.contains(Key) || !Message[Key].is_array())
-			return false;
-
-		Array.SetNum(Message[Key].size());
-
-		for (uint64 i = 0; i < Message[Key].size(); i++)
-		{
-			T *Temp = NewObject<T>(ParentObject); //Needs to be used for UObject
-			if (ExtractElement(Message[Key], ("/" + std::to_string(i)).c_str(), Temp))
-			{
-				Array[i] = MoveTempIfPossible(Temp);
-			}
-			else
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	template <typename T>
-	static bool ExtractTArray(const ROSData &Message, const char *Key, TArray<T> &Array, const TFunction<bool(const ROSData &, const char *, T &)> &ExtractElement)
-	{
-		if (!Message.contains(Key) || !Message[Key].is_array())
-			return false;
-
-		Array.SetNum(Message[Key].size());
-
-		for (uint64 i = 0; i < Message[Key].size(); i++)
-		{
-			T Temp;
-			if (ExtractElement(Message[Key], ("/" + std::to_string(i)).c_str(), Temp))
-			{
-				Array[i] = MoveTempIfPossible(Temp);
-			}
-			else
-			{
-				return false;
-			}
-		}
-		return true;
 	}
 }

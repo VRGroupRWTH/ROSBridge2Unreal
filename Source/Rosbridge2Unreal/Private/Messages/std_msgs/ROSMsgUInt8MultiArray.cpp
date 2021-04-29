@@ -11,18 +11,13 @@ UROSMsgUInt8MultiArray* UROSMsgUInt8MultiArray::Create(const TArray<uint8>& Data
 
 void UROSMsgUInt8MultiArray::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendTArray<uint8>(OutMessage, "data", Data, [](ROSData& Array, const char* Key, const uint8& TArrayValue)
-	{
-		DataHelpers::Append<uint8>(Array, Key, TArrayValue);
-	});
-	DataHelpers::AppendSubMessage(OutMessage,"layout", Layout);
+	DataHelpers::Append<TArray<uint8>>(OutMessage, "data", Data);
+	DataHelpers::Append<UROSMsgMultiArrayLayout*>(OutMessage, "layout", Layout);
 }
 
 bool UROSMsgUInt8MultiArray::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractTArray<uint8>(Message, "data", Data, [](const ROSData& Array, const char* Key, uint8& Result)
-	{
-		return DataHelpers::Extract<uint8>(Array, Key, Result);
-	})
-	&& DataHelpers::ExtractSubMessage(Message, "layout", Layout);
+	return
+		DataHelpers::Extract<TArray<uint8>>(Message, "data", Data) &&
+		DataHelpers::Extract<UROSMsgMultiArrayLayout*>(Message, "layout", Layout);
 }

@@ -46,20 +46,16 @@ void UROSMsgPoseWithCovariance::SetCovarianceFromFloatArray(const TArray<float> 
 
 void UROSMsgPoseWithCovariance::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendSubMessage(OutMessage, "pose", Pose);
-	if(Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
+	if (Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
 
-	DataHelpers::AppendTArray<double>(OutMessage, "covariance", Covariance, [](ROSData& Array, const char* Key, double TArrayValue)
-	{
-		DataHelpers::Append<double>(Array, Key, TArrayValue);
-	});
+	DataHelpers::Append<UROSMsgPose*>(OutMessage, "pose", Pose);
+	DataHelpers::Append<TArray<double>>(OutMessage, "covariance", Covariance);
 }
 
 bool UROSMsgPoseWithCovariance::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractSubMessage(Message, "pose", Pose)
-		&& DataHelpers::ExtractTArray<double>(Message, "covariance", Covariance, [](const ROSData& Array, const char* Key, double& Result)
-	{
-		return DataHelpers::Extract<double>(Array, Key, Result);
-	});
+	return
+		DataHelpers::Extract<UROSMsgPose*>(Message, "pose", Pose) &&
+		DataHelpers::Extract<TArray<double>>(Message, "covariance", Covariance) &&
+		Covariance.Num() == 36;
 }
