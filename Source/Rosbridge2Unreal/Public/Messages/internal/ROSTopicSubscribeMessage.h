@@ -17,6 +17,7 @@ public:
 	FString Compression = "none";
 	int ThrottleRate = 0;
 	int QueueLength = 10;
+	int FragmentSize = -1;
 
 	/* Transformation Functions */
 	void ToData(ROSData& OutMessage) const override;

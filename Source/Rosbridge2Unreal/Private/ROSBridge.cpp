@@ -5,16 +5,17 @@
 #include "Async/Async.h"
 #include "Messages/internal/ROSBridgeMessage.h"
 #include "DataHelpers.h"
+#include "IRosbridge2Unreal.h"
 #include "LogCategory.h"
 #include "Messages/internal/ROSAuthMessage.h"
 #include "Socket/WebSockConnection.h"
+#include "jsoncons_unreal_wrapper.h"
 
 DEFINE_LOG_CATEGORY(LogROSBridge);
 
 bool UROSBridge::Initialize()
 {
-	Settings = GetDefault<URosbridgeSettings>();
-	bSettingsRead = true;
+	const URosbridgeSettings* Settings = IRosbridge2Unreal::Get().GetSettings();
 	
 	if(Settings->bSimulateConnection)
 	{
@@ -84,7 +85,7 @@ void UROSBridge::Uninitialize()
 
 bool UROSBridge::SendMessage(const FString& Data) const
 {
-	if(bSettingsRead && Settings->bSimulateConnection) return true;
+	if(IRosbridge2Unreal::Get().GetSettings()->bSimulateConnection) return true;
 	if(!bInitialized) return true; /* return true, since this is no error */
 	return Connection->SendMessage(Data);
 }
@@ -101,7 +102,7 @@ bool UROSBridge::IsBSONMode() const
 
 bool UROSBridge::SendMessage(const UROSBridgeMessage& Message) const
 {
-	if(bSettingsRead && Settings->bSimulateConnection) return true;
+	if(IRosbridge2Unreal::Get().GetSettings()->bSimulateConnection) return true;
 	if(!bInitialized) return true; /* return true, since this is no error */
 	
 	ROSData Data;
@@ -153,7 +154,7 @@ UROSService* UROSBridge::GetService(const FString& ServiceName, TSubclassOf<UROS
 
 void UROSBridge::TickEvent(float DeltaTime)
 {
-	if(!bSettingsRead || !Settings->bEmitClockEvents || !bInitialized) return; //Nothing to do here
+	if(!IRosbridge2Unreal::Get().GetSettings()->bEmitClockEvents || !bInitialized) return; //Nothing to do here
 	
 	if(!ClockTopic)
 	{
@@ -167,12 +168,12 @@ void UROSBridge::TickEvent(float DeltaTime)
 
 	if(!bSetUpdateIntervalSettings)
 	{
-		FApp::SetFixedDeltaTime(Settings->FixedUpdateInterval);
-		FApp::SetUseFixedTimeStep(Settings->bUseFixedUpdateInterval);
+		FApp::SetFixedDeltaTime(IRosbridge2Unreal::Get().GetSettings()->FixedUpdateInterval);
+		FApp::SetUseFixedTimeStep(IRosbridge2Unreal::Get().GetSettings()->bUseFixedUpdateInterval);
 		bSetUpdateIntervalSettings = true;
 	}
 	
-	if(Settings->bUseWallClockTime)
+	if(IRosbridge2Unreal::Get().GetSettings()->bUseWallClockTime)
 	{
 		const FTimespan WallClockTime = FDateTime::UtcNow() - FDateTime::FromUnixTimestamp(0);
 		ClockMessage->Seconds = static_cast<int32>(WallClockTime.GetTotalSeconds()); //Implicit floor
@@ -292,6 +293,43 @@ void UROSBridge::IncomingMessage(const ROSData& Message)
 				Service->IncomingRequest(*ServiceMessage);
 				return;
 			}
+		}
+		return;
+	}
+
+	if(OPCode == "fragment") //fragmented message
+	{
+		FString Id, Data;
+		int64 Num, Total, NumCharacters = 0;
+		DataHelpers::ExtractString(Message, "id", Id);
+		DataHelpers::ExtractString(Message, "data", Data);
+		DataHelpers::ExtractInt64(Message, "num", Num);
+		DataHelpers::ExtractInt64(Message, "total", Total);
+		TArray<FString>& Fragments = MessageFragments.FindOrAdd(Id);
+		Fragments.SetNum(Total);
+		Fragments[Num] = Data;
+		for(FString& Fragment : Fragments)
+		{
+			NumCharacters += Fragment.Len();
+			if(Fragment.IsEmpty()) return; //At least one is missing
+		}
+
+		/* Message complete */
+		FString CompleteMessage = "";
+		CompleteMessage.Reserve(NumCharacters);
+		for(const FString& Fragment : Fragments)
+		{
+			CompleteMessage += Fragment;
+		}
+		
+		ROSData ParsedData;
+		try{
+			ParsedData = jsoncons::ojson::parse(jsoncons::ojson::string_view_type(TCHAR_TO_UTF8(*CompleteMessage), NumCharacters));
+			MessageFragments.Remove(Id); //Parsed completely
+			this->IncomingMessage(ParsedData);
+		}catch(jsoncons::ser_error e)
+		{
+			UE_LOG(LogROSBridge, Error, TEXT("Error while parsing JSON message (Ignoring message): %hs"), e.what());
 		}
 		return;
 	}

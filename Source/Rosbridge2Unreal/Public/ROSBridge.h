@@ -97,6 +97,9 @@ private:
 	UPROPERTY() TArray<UROSTopic*> Topics;
 	UPROPERTY() TArray<UROSService*> Services;
 
+	/* Fragmented Messages */
+	TMap<FString,TArray<FString>> MessageFragments;
+	
 	/* Used to generate increasing IDs for messages */
 	long IDCounter = 0;
 
@@ -110,10 +113,6 @@ private:
 	UPROPERTY() UROSTopic* ClockTopic = nullptr;
 	UPROPERTY() UROSMsgClock* ClockMessage;
 	bool bSetUpdateIntervalSettings = false;
-
-	/* Settings */
-	UPROPERTY() const URosbridgeSettings* Settings;
-	bool bSettingsRead = false;
 
 	/* Status */
 	bool bInitialized = false;

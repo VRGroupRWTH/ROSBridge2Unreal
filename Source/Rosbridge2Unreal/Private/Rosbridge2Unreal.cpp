@@ -85,6 +85,15 @@ long FRosbridge2UnrealModule::GetNextID()
 	return InitializeConnection() ? RosBridge->GetNextID() : -1;
 }
 
+const URosbridgeSettings* FRosbridge2UnrealModule::GetSettings()
+{
+	if(Settings == nullptr)
+	{
+		Settings = GetDefault<URosbridgeSettings>();
+	}
+	return Settings;
+}
+
 UROSTopic* FRosbridge2UnrealModule::GetTopic(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
 	return InitializeConnection() ? RosBridge->GetTopic(TopicName, MessageClass) : nullptr;

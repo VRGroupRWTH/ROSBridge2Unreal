@@ -26,6 +26,10 @@ bool UROSTopic::Subscribe(TFunction<void(const UROSMessageBase* )>& Callback, co
 		SubscribeMessage->ID = FString::Printf(TEXT("subscribe:%s"), *StoredTopicName);
 		SubscribeMessage->TopicName = StoredTopicName;
 		SubscribeMessage->MessageType = StoredMessageClass.GetDefaultObject()->GetMessageType();
+		if(IRosbridge2Unreal::Get().GetSettings()->bFragmentMessages)
+		{
+			SubscribeMessage->FragmentSize = IRosbridge2Unreal::Get().GetSettings()->FragmentSize;
+		}
 		
 		IsSubscribed = IRosbridge2Unreal::Get().SendMessage(*SubscribeMessage);
 	}

@@ -45,4 +45,10 @@ public:
 
 	UPROPERTY(EditAnywhere, config, Category = "Authentication", meta = (EditCondition = "bShouldAuthenticate"))
 	FString Secret = "";
+
+	UPROPERTY(EditAnywhere, config, Category = "Fragmentation")
+	bool bFragmentMessages = false;
+
+	UPROPERTY(EditAnywhere, config, Category = "Fragmentation", meta = (EditCondition = "bFragmentMessages"))
+	int FragmentSize = 60000;
 };

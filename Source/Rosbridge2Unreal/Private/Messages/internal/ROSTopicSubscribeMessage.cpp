@@ -10,6 +10,11 @@ void UROSTopicSubscribeMessage::ToData(ROSData& OutMessage) const
 	DataHelpers::AppendInt32(OutMessage, "throttle_rate", ThrottleRate);
 	DataHelpers::AppendInt32(OutMessage, "queue_length", QueueLength);
 	DataHelpers::AppendString(OutMessage, "compression", Compression);
+	if(FragmentSize > 0)
+	{
+		DataHelpers::AppendInt32(OutMessage, "fragment_size", FragmentSize);
+	}
+	
 }
 
 bool UROSTopicSubscribeMessage::FromData(const ROSData& Message)
@@ -19,6 +24,7 @@ bool UROSTopicSubscribeMessage::FromData(const ROSData& Message)
 	DataHelpers::ExtractString(Message, "type", MessageType);
 	DataHelpers::ExtractInt32(Message, "throttle_rate", ThrottleRate);
 	DataHelpers::ExtractInt32(Message, "queue_length", QueueLength);
+	DataHelpers::ExtractInt32(Message, "fragment_size", FragmentSize);
 	DataHelpers::ExtractString(Message, "compression", Compression);
 	
 	return DataHelpers::ExtractString(Message, "topic", TopicName);

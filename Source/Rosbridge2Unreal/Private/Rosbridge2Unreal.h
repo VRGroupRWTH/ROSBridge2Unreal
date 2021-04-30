@@ -44,11 +44,17 @@ public:
 
 	/* IDs used for internal sending */
 	long GetNextID() override;
+
+	/* Internal settings object */
+	const URosbridgeSettings* GetSettings() override;
 	
 private:
 
 	/* Internal Bridge Network */
 	UROSBridge* RosBridge = nullptr;
+
+	/* Internal settings object */
+	const URosbridgeSettings* Settings = nullptr;
 	
  /* ROSTopics and Services */
 public:

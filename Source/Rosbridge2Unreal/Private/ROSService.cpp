@@ -44,6 +44,10 @@ bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (co
 	UROSServiceCallMessage* ServiceRequest = NewObject<UROSServiceCallMessage>();
 	ServiceRequest->ServiceName = StoredServiceName;
 	ServiceRequest->ID = FString::Printf(TEXT("call_service:%s:%ld"), *StoredServiceName, IRosbridge2Unreal::Get().GetNextID());
+	if(IRosbridge2Unreal::Get().GetSettings()->bFragmentMessages)
+	{
+		ServiceRequest->FragmentSize = IRosbridge2Unreal::Get().GetSettings()->FragmentSize;
+	}
 	Request->RequestToData(ServiceRequest->Data);
 	
 	ResponseCallbacks.Add(ServiceRequest->ID, [this, Callback, InReusableResponse](const UROSServiceResponseMessage& Message)

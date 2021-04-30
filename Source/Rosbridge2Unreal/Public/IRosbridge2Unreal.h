@@ -87,4 +87,10 @@ public:
 	 * @return Successive one time IDs
 	 */
 	virtual long GetNextID() = 0;
+
+	/**
+	 * Get Settings for the ROSBridge
+	 * @return immutable URosbridgeSettings object
+	 */
+	virtual const URosbridgeSettings* GetSettings() = 0;
 };
