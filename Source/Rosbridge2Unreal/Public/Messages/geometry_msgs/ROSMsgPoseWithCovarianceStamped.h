@@ -19,9 +19,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgPoseWithCovarianceStamped* Create(UROSMsgHeader* Header, UROSMsgPoseWithCovariance* Pose);
 	UFUNCTION(BlueprintCallable, BlueprintPure) static UROSMsgPoseWithCovarianceStamped* CreateEmpty();
 	
-	UFUNCTION(BlueprintCallable, BlueprintPure) FVector GetPositionInUnrealCoordinateFrame() const;
-	UFUNCTION(BlueprintCallable, BlueprintPure) FQuat GetRotationInUnrealCoordinateFrame() const;
-	
 	/* Data */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UROSMsgHeader* Header;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UROSMsgPoseWithCovariance* Pose;
