@@ -15,8 +15,7 @@ bool UTCPConnection::Initialize(FString IPAddress, int Port, ETransportMode Mode
 	InternetAddress->SetIp(*IPAddress, bIPValid);
 	InternetAddress->SetPort(Port);
 
-	int32 NewSize = 0;
-	Socket->SetReceiveBufferSize(65536, NewSize); //16bit address, used by ROSBridge as a default
+	Socket->SetReceiveBufferSize(65536, ReceiveBufferSize); //16bit address, used by ROSBridge as a default
 	
 	if (!bIPValid)
 	{
@@ -62,9 +61,10 @@ uint32 UTCPConnection::Run()
 	bReceiverThreadRunning = true;
 	
 	TArray<uint8> BinaryBuffer;
-	BinaryBuffer.Reserve(65536); //16bit address, used by ROSBridge as a default
+	BinaryBuffer.Reserve(ReceiveBufferSize); // at least accomodate the whole socket buffer
 	uint32 PendingData = 0;
-	uint32 RemainingData = 0;
+	jsoncons::json_decoder<jsoncons::ojson> Decoder;
+	jsoncons::json_parser Parser;
 
 	while (!bTerminateReceiverThread) {
 
@@ -135,10 +135,10 @@ uint32 UTCPConnection::Run()
 			if(!Socket->HasPendingData(PendingData)) continue;
 			
 			//Ensure space in buffer
-			if(static_cast<uint32>(BinaryBuffer.Num()) < PendingData + RemainingData) BinaryBuffer.SetNumZeroed(PendingData + RemainingData, false);
+			if(static_cast<uint32>(BinaryBuffer.Num()) < PendingData) BinaryBuffer.SetNumUninitialized(PendingData, false);
 			
 			int32 BytesRead = 0;
-			if(!Socket->Recv(BinaryBuffer.GetData() + RemainingData, PendingData, BytesRead, ESocketReceiveFlags::WaitAll))
+			if(!Socket->Recv(BinaryBuffer.GetData(), PendingData, BytesRead))
 			{
 				UE_LOG(LogROSBridge, Error, TEXT("Failed to receive from socket. Closing receiver thread."));
 				ReportError(ETransportError::SocketError);
@@ -148,37 +148,23 @@ uint32 UTCPConnection::Run()
 
 			if(BytesRead <= 0) continue;
 
-			//Split multiple jsons into single ones
-			uint64 StartChar = 0;
-			int64 OpenScopes = 0;
-			for(uint64 i = 0; i < BytesRead + RemainingData; ++i)
-			{
-				if(BinaryBuffer[i] == '{' && OpenScopes == 0) StartChar = i;
-				if(BinaryBuffer[i] == '{') OpenScopes++;
-				if(BinaryBuffer[i] == '}') OpenScopes--;
-				if(OpenScopes < 0){
-					StartChar = i;
-					OpenScopes = 0;
-				}
-				if(OpenScopes == 0 && i - StartChar > 0)
+			try{
+				Parser.update(reinterpret_cast<char*>(BinaryBuffer.GetData()), BytesRead);
+				do
 				{
-					ROSData Data;
-					try{
-						Data = jsoncons::ojson::parse(jsoncons::ojson::string_view_type(reinterpret_cast<char*>(BinaryBuffer.GetData() + StartChar), i - StartChar + 1));
-						if (IncomingMessageCallback && !bTerminateReceiverThread) IncomingMessageCallback(Data);
-					}catch(jsoncons::ser_error e)
+					Parser.parse_some(Decoder);
+					
+					if(Parser.done())
 					{
-						UE_LOG(LogROSBridge, Error, TEXT("Error while parsing JSON message (Ignoring message): %hs"), e.what());
-						continue;
+						ROSData Data = Decoder.get_result();
+						if (IncomingMessageCallback && !bTerminateReceiverThread) IncomingMessageCallback(Data);
+						Parser.reset();
 					}
-					StartChar = i + 1;
-				}
-			}
-
-			RemainingData = BytesRead + RemainingData - StartChar;
-			if(RemainingData >= 0) //Remaining Data (incomplete JSON)
+				} while(!Parser.source_exhausted());
+			}catch(jsoncons::ser_error e)
 			{
-				FMemory::Memmove(BinaryBuffer.GetData(),BinaryBuffer.GetData() + StartChar, RemainingData);
+				UE_LOG(LogROSBridge, Fatal, TEXT("Error while parsing JSON message: %hs"), e.what());
+				throw;
 			}
 		}
 	}
