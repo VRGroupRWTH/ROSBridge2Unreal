@@ -12,6 +12,7 @@ void UROSTopicPublishMessage::ToData(ROSData& OutMessage) const
 bool UROSTopicPublishMessage::FromData(const ROSData& Message)
 {
 	DataHelpers::Extract<FString>(Message, "id", ID); //optional
-	return DataHelpers::Extract<FString>(Message, "topic", TopicName)
-	&& DataHelpers::Extract<ROSData>(Message, "msg", Data);
+	return
+		DataHelpers::Extract<FString>(Message, "topic", TopicName) &&
+		DataHelpers::Extract<ROSData>(Message, "msg", Data);
 }

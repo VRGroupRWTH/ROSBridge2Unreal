@@ -21,7 +21,8 @@ bool UROSTopic::Subscribe(TFunction<void(const UROSMessageBase* )>& Callback, co
 	StoredCallbacks.Add(UniqueId, Callback);
 	ReusableMessage = InReusableMessage;
 	
-	if(!IsSubscribed){
+	if (!IsSubscribed)
+	{
 		UROSTopicSubscribeMessage* SubscribeMessage = NewObject<UROSTopicSubscribeMessage>();
 		SubscribeMessage->ID = FString::Printf(TEXT("subscribe:%s"), *StoredTopicName);
 		SubscribeMessage->TopicName = StoredTopicName;
@@ -36,7 +37,7 @@ void UROSTopic::Unsubscribe(const uint32 UniqueId)
 {
 	StoredCallbacks.Remove(UniqueId);
 
-	if(IsSubscribed && StoredCallbacks.Num() <= 0)
+	if (IsSubscribed && StoredCallbacks.Num() <= 0)
 	{
 		ForceUnsubscribeInternal();
 	}
@@ -57,12 +58,12 @@ void UROSTopic::IncomingMessage(const UROSTopicPublishMessage& Message)
 {
 	UROSMessageBase* ParsedMessage = ReusableMessage;
 
-	if(!ParsedMessage) //Only generate new, if we don't have a reusable message
+	if (!ParsedMessage) //Only generate new, if we don't have a reusable message
 	{
 		ParsedMessage = NewObject<UROSMessageBase>(this, *StoredMessageClass);
 	}
 	
-	if(!ParsedMessage->FromData(Message.Data))
+	if (!ParsedMessage->FromData(Message.Data))
 	{
 		UE_LOG(LogROSBridge, Warning, TEXT("Error Parsing Message on Topic: %s"), *StoredTopicName);
 		return;
@@ -78,7 +79,7 @@ FString UROSTopic::GetTopicName() const
 
 bool UROSTopic::Advertise()
 {
-	if(!IsAdvertised){
+	if (!IsAdvertised){
 		UROSTopicAdvertiseMessage* AdvertiseMessage = NewObject<UROSTopicAdvertiseMessage>();
 		AdvertiseMessage->ID = FString::Printf(TEXT("advertise:%s"), *StoredTopicName);
 		AdvertiseMessage->TopicName = StoredTopicName;
@@ -92,7 +93,8 @@ bool UROSTopic::Advertise()
 
 bool UROSTopic::Unadvertise()
 {
-	if(IsAdvertised){
+	if (IsAdvertised)
+	{
 		UROSTopicUnadvertiseMessage* UnadvertiseMessage = NewObject<UROSTopicUnadvertiseMessage>();
 		UnadvertiseMessage->ID = FString::Printf(TEXT("advertise:%s"), *StoredTopicName);
 		UnadvertiseMessage->TopicName = StoredTopicName;
@@ -105,7 +107,7 @@ bool UROSTopic::Unadvertise()
 
 void UROSTopic::Publish(const UROSMessageBase* Message)
 {
-	if(!Message)
+	if (!Message)
 	{
 		UE_LOG(LogROSBridge, Warning, TEXT("Tried to publish null message! Ignoring."));
 		return;
@@ -125,7 +127,7 @@ void UROSTopic::Publish(const UROSMessageBase* Message)
 
 void UROSTopic::Notify(UROSMessageBase* Message)
 {
-	for(auto Callback : StoredCallbacks)
+	for (auto Callback : StoredCallbacks)
 	{
 		Callback.Value(Message);
 	}

@@ -6,7 +6,7 @@
 
 void UROSServiceHandle::Initialize(const FString& ServiceName, TSubclassOf<UROSServiceBase> ServiceClass)
 {
-	if(!ServiceClass)
+	if (!ServiceClass)
 	{
 		UE_LOG(LogROSBridge, Error, TEXT("No class given for initialization of ROSServiceHandle for service %s."), *ServiceName);
 		return;
@@ -16,7 +16,8 @@ void UROSServiceHandle::Initialize(const FString& ServiceName, TSubclassOf<UROSS
 
 void UROSServiceHandle::Advertise(TFunction<void (UROSServiceBase*)> Callback, UROSServiceBase* InReusableRequest)
 {
-	if(!InternalService){
+	if (!InternalService)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSServiceHandle before you Advertise to it."));
 		return;
 	}
@@ -36,7 +37,7 @@ void UROSServiceHandle::AdvertiseWithReusableRequest(UROSServiceBase* ReusableRe
 
 void UROSServiceHandle::Unadvertise()
 {
-	if(!InternalService) return;
+	if (!InternalService) return;
 	
 	InternalService->Unadvertise();
 }
@@ -44,7 +45,7 @@ void UROSServiceHandle::Unadvertise()
 
 void UROSServiceHandle::Call(const UROSServiceBase* Request, TFunction<void (const UROSServiceBase*)> Callback, UROSServiceBase* ReusableResponse)
 {
-	if(!InternalService){
+	if (!InternalService){
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSServiceHandle before you can Call it."));
 		return;
 	}
@@ -54,7 +55,7 @@ void UROSServiceHandle::Call(const UROSServiceBase* Request, TFunction<void (con
 
 void UROSServiceHandle::Call(const UROSServiceBase* Request)
 {
-	if(!RecurrentResponseCallback){
+	if (!RecurrentResponseCallback){
 		RegisterResponseCallback([this](const UROSServiceBase* Message){OnResponse.Broadcast(Message);});
 	}
 	CallRecurrent(Request);
@@ -62,7 +63,7 @@ void UROSServiceHandle::Call(const UROSServiceBase* Request)
 
 void UROSServiceHandle::CallWithReusableResponse(const UROSServiceBase* Request, UROSServiceBase* ReusableResponse)
 {
-	if(!RecurrentResponseCallback){
+	if (!RecurrentResponseCallback){
 		RegisterResponseCallback([this](const UROSServiceBase* Message){OnResponse.Broadcast(Message);});
 	}
 	CallRecurrent(Request, ReusableResponse);
@@ -70,7 +71,7 @@ void UROSServiceHandle::CallWithReusableResponse(const UROSServiceBase* Request,
 
 void UROSServiceHandle::CallRecurrent(const UROSServiceBase* Request, UROSServiceBase* ReusableResponse)
 {
-	if(!InternalService){
+	if (!InternalService){
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSServiceHandle before you can Call it."));
 		return;
 	}

@@ -36,9 +36,10 @@ void UROSMsgQuaternion::ToData(ROSData& OutMessage) const
 
 bool UROSMsgQuaternion::FromData(const ROSData& Message)
 {
-	return DataHelpers::Extract<double>(Message, "x", X)
-	&& DataHelpers::Extract<double>(Message, "y", Y)
-	&& DataHelpers::Extract<double>(Message, "z", Z)
-	&& DataHelpers::Extract<double>(Message, "w", W);
+	return
+		DataHelpers::Extract<double>(Message, "x", X) &&
+		DataHelpers::Extract<double>(Message, "y", Y) &&
+		DataHelpers::Extract<double>(Message, "z", Z) &&
+		DataHelpers::Extract<double>(Message, "w", W);
 }
 

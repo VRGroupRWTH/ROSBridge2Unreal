@@ -63,12 +63,13 @@ void UROSMsgPose::ToData(ROSData& OutMessage) const
 
 bool UROSMsgPose::FromData(const ROSData& Message)
 {
-	return DataHelpers::Extract<double>(Message, "/position/x", Px)
-	&& DataHelpers::Extract<double>(Message, "/position/y", Py)
-	&& DataHelpers::Extract<double>(Message, "/position/z", Pz)
-	&& DataHelpers::Extract<double>(Message, "/orientation/x", Qx)
-	&& DataHelpers::Extract<double>(Message, "/orientation/y", Qy)
-	&& DataHelpers::Extract<double>(Message, "/orientation/z", Qz)
-	&& DataHelpers::Extract<double>(Message, "/orientation/w", Qw);
+	return
+		DataHelpers::Extract<double>(Message, "/position/x", Px) &&
+		DataHelpers::Extract<double>(Message, "/position/y", Py) &&
+		DataHelpers::Extract<double>(Message, "/position/z", Pz) &&
+		DataHelpers::Extract<double>(Message, "/orientation/x", Qx) &&
+		DataHelpers::Extract<double>(Message, "/orientation/y", Qy) &&
+		DataHelpers::Extract<double>(Message, "/orientation/z", Qz) &&
+		DataHelpers::Extract<double>(Message, "/orientation/w", Qw);
 }
 

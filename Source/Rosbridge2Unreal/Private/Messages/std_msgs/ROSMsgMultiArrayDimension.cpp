@@ -20,8 +20,9 @@ void UROSMsgMultiArrayDimension::ToData(ROSData& OutMessage) const
 
 bool UROSMsgMultiArrayDimension::FromData(const ROSData& Message)
 {
-	return DataHelpers::Extract<FString>(Message, "label", Label)
-	&& DataHelpers::Extract<int64>(Message, "size", Size)
-	&& DataHelpers::Extract<int64>(Message, "stride", Stride);
+	return
+		DataHelpers::Extract<FString>(Message, "label", Label) &&
+		DataHelpers::Extract<int64>(Message, "size", Size) &&
+		DataHelpers::Extract<int64>(Message, "stride", Stride);
 }
 

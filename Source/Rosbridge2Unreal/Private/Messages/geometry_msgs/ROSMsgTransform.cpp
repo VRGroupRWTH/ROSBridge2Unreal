@@ -78,11 +78,12 @@ void UROSMsgTransform::ToData(ROSData& OutMessage) const
 
 bool UROSMsgTransform::FromData(const ROSData& Message)
 {
-	return DataHelpers::Extract<double>(Message, "/translation/x", Tx)
-	&& DataHelpers::Extract<double>(Message, "/translation/y", Ty)
-	&& DataHelpers::Extract<double>(Message, "/translation/z", Tz)
-	&& DataHelpers::Extract<double>(Message, "/rotation/x", Rx)
-	&& DataHelpers::Extract<double>(Message, "/rotation/y", Ry)
-	&& DataHelpers::Extract<double>(Message, "/rotation/z", Rz)
-	&& DataHelpers::Extract<double>(Message, "/rotation/w", Rw);
+	return
+		DataHelpers::Extract<double>(Message, "/translation/x", Tx) &&
+		DataHelpers::Extract<double>(Message, "/translation/y", Ty) &&
+		DataHelpers::Extract<double>(Message, "/translation/z", Tz) &&
+		DataHelpers::Extract<double>(Message, "/rotation/x", Rx) &&
+		DataHelpers::Extract<double>(Message, "/rotation/y", Ry) &&
+		DataHelpers::Extract<double>(Message, "/rotation/z", Rz) &&
+		DataHelpers::Extract<double>(Message, "/rotation/w", Rw);
 }

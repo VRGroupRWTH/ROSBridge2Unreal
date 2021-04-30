@@ -1,8 +1,9 @@
 #pragma once
 
-#include <type_traits> // For is_base_of, unreal does not seem to have an equivalent
 #include "CoreMinimal.h"
 #include "TypeDefinitions.h"
+
+#include <type_traits>	  // For is_base_of, unreal does not seem to have an equivalent
 
 namespace DataHelpers
 {
@@ -10,7 +11,7 @@ namespace DataHelpers
 	namespace Internal
 	{
 		template <typename JSONType, typename UnrealType>
-		bool Extract(const ROSData &Message, const char *Key, UnrealType &OutData)
+		bool Extract(const ROSData& Message, const char* Key, UnrealType& OutData)
 		{
 			if (Key[0] == '/')
 			{
@@ -30,7 +31,7 @@ namespace DataHelpers
 		}
 
 		template <typename JSONType, typename UnrealType>
-		bool Append(ROSData &Message, const char *Key, const UnrealType &InData)
+		bool Append(ROSData& Message, const char* Key, const UnrealType& InData)
 		{
 			if (Key[0] == '/')
 			{
@@ -43,7 +44,7 @@ namespace DataHelpers
 			return false;
 		}
 
-		static bool DecodeBinary(const ROSData &Message, TArray<uint8> &OutData)
+		static bool DecodeBinary(const ROSData& Message, TArray<uint8>& OutData)
 		{
 			if (Message.is_byte_string_view()) /* Real byte string in BSON */
 			{
@@ -62,7 +63,7 @@ namespace DataHelpers
 		}
 
 		/* Just for debugging purposes */
-		static FString DataToString(const ROSData &Document)
+		static FString DataToString(const ROSData& Document)
 		{
 			std::string S;
 			Document.dump(S, jsoncons::indenting::indent);
@@ -76,11 +77,11 @@ namespace DataHelpers
 	template <>                                                                                   \
 	struct DataConverter<UnrealType>                                                              \
 	{                                                                                             \
-		static inline void Append(ROSData &OutMessage, const char *Key, const UnrealType &Value)  \
+		static inline void Append(ROSData& OutMessage, const char* Key, const UnrealType& Value)  \
 		{                                                                                         \
 			Internal::Append<InternalType>(OutMessage, Key, Value);                               \
 		}                                                                                         \
-		static inline bool Extract(const ROSData &Message, const char *Key, UnrealType &OutValue) \
+		static inline bool Extract(const ROSData& Message, const char* Key, UnrealType& OutValue) \
 		{                                                                                         \
 			return Internal::Extract<InternalType>(Message, Key, OutValue);                       \
 		}                                                                                         \
@@ -108,15 +109,15 @@ namespace DataHelpers
 		template <>
 		struct DataConverter<FString>
 		{
-			static inline void Append(ROSData &OutMessage, const char *Key, const FString &Value)
+			static inline void Append(ROSData& OutMessage, const char* Key, const FString& Value)
 			{
-				Internal::Append<const char *>(OutMessage, Key, TCHAR_TO_UTF8(*Value));
+				Internal::Append<const char*>(OutMessage, Key, TCHAR_TO_UTF8(*Value));
 			}
 
-			static inline bool Extract(const ROSData &Message, const char *Key, FString &OutValue)
+			static inline bool Extract(const ROSData& Message, const char* Key, FString& OutValue)
 			{
-				const char *CString;
-				if (Internal::Extract<const char *>(Message, Key, CString))
+				const char* CString;
+				if (Internal::Extract<const char*>(Message, Key, CString))
 				{
 					OutValue = UTF8_TO_TCHAR(CString);
 					return true;
@@ -132,14 +133,14 @@ namespace DataHelpers
 		template <typename T>
 		struct DataConverter<T*, typename TEnableIf<std::is_base_of<UROSMessageBase, T>::value>::Type>
 		{
-			static inline void Append(ROSData &OutMessage, const char *Key, const T* Message)
+			static inline void Append(ROSData& OutMessage, const char* Key, const T* Message)
 			{
 				ROSData Data;
 				Message->ToData(Data);
 				DataHelpers::Append<ROSData>(OutMessage, Key, Data);
 			}
 
-			static inline bool Extract(const ROSData &Message, const char *Key, T*& OutMessageInstance)
+			static inline bool Extract(const ROSData& Message, const char* Key, T*& OutMessageInstance)
 			{
 				if (OutMessageInstance == nullptr)
 				{
@@ -200,21 +201,21 @@ namespace DataHelpers
 			}
 		};
 
-	} // namespace Internal
+	}	 // namespace Internal
 
 	template <typename T>
-	inline void Append(ROSData &OutMessage, const char *Key, const T &Value)
+	inline void Append(ROSData& OutMessage, const char* Key, const T& Value)
 	{
 		Internal::DataConverter<T>::Append(OutMessage, Key, Value);
 	}
 
 	template <typename T>
-	inline bool Extract(const ROSData &Message, const char *Key, T &OutValue)
+	inline bool Extract(const ROSData& Message, const char* Key, T& OutValue)
 	{
 		return Internal::DataConverter<T>::Extract(Message, Key, OutValue);
 	}
 
-	static bool ExtractBinary(const ROSData &Message, const char *Key, TArray<uint8> &OutData)
+	static bool ExtractBinary(const ROSData& Message, const char* Key, TArray<uint8>& OutData)
 	{
 		if (Key[0] == '/')
 		{
@@ -229,9 +230,10 @@ namespace DataHelpers
 		return false;
 	}
 
-	static void AppendBinary(ROSData &Message, const char *Key, const uint8 *InData, const uint32 DataLength)
+	static void AppendBinary(ROSData& Message, const char* Key, const uint8* InData, const uint32 DataLength)
 	{
-		const ROSData Data = ROSData(jsoncons::byte_string_arg, std::vector<uint8_t>(InData, InData + DataLength), jsoncons::semantic_tag::base64);
+		const ROSData Data =
+			ROSData(jsoncons::byte_string_arg, std::vector<uint8_t>(InData, InData + DataLength), jsoncons::semantic_tag::base64);
 
 		if (Key[0] == '/')
 		{
@@ -242,4 +244,4 @@ namespace DataHelpers
 			Message.insert_or_assign(Key, Data);
 		}
 	}
-}
+}	 // namespace DataHelpers

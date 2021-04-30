@@ -64,10 +64,11 @@ void UROSMsgTwist::ToData(ROSData& OutMessage) const
 
 bool UROSMsgTwist::FromData(const ROSData& Message)
 {
-	return DataHelpers::Extract<double>(Message, "/linear/x", LinearX)
-	&& DataHelpers::Extract<double>(Message, "/linear/y", LinearY)
-	&& DataHelpers::Extract<double>(Message, "/linear/z", LinearZ)
-	&& DataHelpers::Extract<double>(Message, "/angular/x", AngularX)
-	&& DataHelpers::Extract<double>(Message, "/angular/y", AngularY)
-	&& DataHelpers::Extract<double>(Message, "/angular/z", AngularZ);
+	return
+		DataHelpers::Extract<double>(Message, "/linear/x", LinearX) &&
+		DataHelpers::Extract<double>(Message, "/linear/y", LinearY) &&
+		DataHelpers::Extract<double>(Message, "/linear/z", LinearZ) &&
+		DataHelpers::Extract<double>(Message, "/angular/x", AngularX) &&
+		DataHelpers::Extract<double>(Message, "/angular/y", AngularY) &&
+		DataHelpers::Extract<double>(Message, "/angular/z", AngularZ);
 }

@@ -18,6 +18,7 @@ void UROSMsgClock::ToData(ROSData& OutMessage) const
 
 bool UROSMsgClock::FromData(const ROSData& Message)
 {
-	return DataHelpers::Extract<int32>(Message, "/clock/secs", Seconds)
-	&& DataHelpers::Extract<int32>(Message, "/clock/nsecs", NanoSeconds);
+	return
+		DataHelpers::Extract<int32>(Message, "/clock/secs", Seconds) &&
+		DataHelpers::Extract<int32>(Message, "/clock/nsecs", NanoSeconds);
 }

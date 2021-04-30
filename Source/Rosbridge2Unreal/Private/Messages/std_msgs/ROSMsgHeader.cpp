@@ -37,8 +37,9 @@ void UROSMsgHeader::ToData(ROSData& OutMessage) const
 
 bool UROSMsgHeader::FromData(const ROSData& Message)
 {
-	return DataHelpers::Extract<int64>(Message, "seq", SequenceID)
-	&& DataHelpers::Extract<FString>(Message, "frame_id", FrameID)
-	&& DataHelpers::Extract<int32>(Message, "/stamp/secs", Seconds)
-	&& DataHelpers::Extract<int32>(Message, "/stamp/nsecs", NanoSeconds);
+	return
+		DataHelpers::Extract<int64>(Message, "seq", SequenceID) &&
+		DataHelpers::Extract<FString>(Message, "frame_id", FrameID) &&
+		DataHelpers::Extract<int32>(Message, "/stamp/secs", Seconds) &&
+		DataHelpers::Extract<int32>(Message, "/stamp/nsecs", NanoSeconds);
 }

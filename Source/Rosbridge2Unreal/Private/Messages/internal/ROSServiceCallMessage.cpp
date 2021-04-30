@@ -14,6 +14,6 @@ bool UROSServiceCallMessage::FromData(const ROSData& Message)
 	//optional
 	DataHelpers::Extract<FString>(Message, "id", ID);
 	DataHelpers::Extract<ROSData>(Message, "args", Data);
-	
+
 	return DataHelpers::Extract<FString>(Message, "service", ServiceName);
 }

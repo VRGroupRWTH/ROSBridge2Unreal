@@ -11,7 +11,7 @@ void UROSService::Initialize(const FString& ServiceName, TSubclassOf<UROSService
 
 bool UROSService::Advertise(TFunction<void (UROSServiceBase*)> RequestResponseCallback, UROSServiceBase* InReusableRequest)
 {
-	if(bAdvertised) return true; //Already done
+	if (bAdvertised) return true; //Already done
 
 	RequestCallback = RequestResponseCallback;
 	ReusableRequest = InReusableRequest;
@@ -27,7 +27,7 @@ bool UROSService::Advertise(TFunction<void (UROSServiceBase*)> RequestResponseCa
 
 bool UROSService::Unadvertise()
 {
-	if(!bAdvertised) return true; //No need to unadvertise
+	if (!bAdvertised) return true; //No need to unadvertise
 	
 	UROSServiceUnadvertiseMessage* ServiceUnadvertisement = NewObject<UROSServiceUnadvertiseMessage>();
 	ServiceUnadvertisement->ServiceName = StoredServiceName;
@@ -39,7 +39,7 @@ bool UROSService::Unadvertise()
 
 bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (const UROSServiceBase*)> Callback, UROSServiceBase* InReusableResponse)
 {
-	if(bAdvertised) return false; //Can't call ourselfes
+	if (bAdvertised) return false; //Can't call ourselfes
 
 	UROSServiceCallMessage* ServiceRequest = NewObject<UROSServiceCallMessage>();
 	ServiceRequest->ServiceName = StoredServiceName;
@@ -49,7 +49,7 @@ bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (co
 	ResponseCallbacks.Add(ServiceRequest->ID, [this, Callback, InReusableResponse](const UROSServiceResponseMessage& Message)
 	{
 		UROSServiceBase* ParsedResponse = InReusableResponse; //either reusable or null
-		if(!ParsedResponse) ParsedResponse = NewObject<UROSServiceBase>(this, *StoredServiceClass);
+		if (!ParsedResponse) ParsedResponse = NewObject<UROSServiceBase>(this, *StoredServiceClass);
 		ParsedResponse->ResponseFromData(Message.Data);
 
 		Callback(ParsedResponse);
@@ -60,7 +60,8 @@ bool UROSService::CallService(const UROSServiceBase* Request, TFunction<void (co
 
 void UROSService::IncomingResponse(const UROSServiceResponseMessage& Message)
 {
-	if(!ResponseCallbacks.Contains(Message.ID)){
+	if (!ResponseCallbacks.Contains(Message.ID))
+	{
 		return; //we have not called
 	}
 	const TFunction<void(const UROSServiceResponseMessage&)> Callback = ResponseCallbacks.FindAndRemoveChecked(Message.ID);
@@ -74,7 +75,7 @@ void UROSService::IncomingRequest(UROSServiceCallMessage& Message)
 	Response->ServiceName = Message.ServiceName;
 	
 	UROSServiceBase* ParsedRequest = ReusableRequest; //either reusable or null
-	if(!ParsedRequest) ParsedRequest = NewObject<UROSServiceBase>(this, *StoredServiceClass);
+	if (!ParsedRequest) ParsedRequest = NewObject<UROSServiceBase>(this, *StoredServiceClass);
 	ParsedRequest->RequestFromData(Message.Data);
 
 	RequestCallback(ParsedRequest);

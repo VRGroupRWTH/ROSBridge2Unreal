@@ -4,7 +4,7 @@
 
 void UROSTopicHandle::Initialize(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass)
 {
-	if(!MessageClass)
+	if (!MessageClass)
 	{
 		UE_LOG(LogROSBridge, Error, TEXT("No class given for initialization of ROSTopicHandle for topic %s."), *TopicName);
 		return;
@@ -14,7 +14,8 @@ void UROSTopicHandle::Initialize(const FString& TopicName, TSubclassOf<UROSMessa
 
 void UROSTopicHandle::Subscribe(TFunction<void(const UROSMessageBase*)> Callback, UROSMessageBase* ReusableMessage) const
 {
-	if(!TopicHandle){
+	if (!TopicHandle)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSTopicHandle before you Subscribe to it."));
 		return;
 	}
@@ -33,7 +34,8 @@ void UROSTopicHandle::SubscribeWithReusableMessage(UROSMessageBase* ReusableMess
 
 void UROSTopicHandle::Publish(const UROSMessageBase* Message) const
 {
-	if(!TopicHandle){
+	if (!TopicHandle)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSTopicHandle before you Publish on it."));
 		return;
 	}
@@ -42,7 +44,8 @@ void UROSTopicHandle::Publish(const UROSMessageBase* Message) const
 
 void UROSTopicHandle::Unsubscribe() const
 {
-	if(!TopicHandle){
+	if (!TopicHandle)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSTopicHandle before you Unsubscribe from it."));
 		return;
 	}
@@ -51,7 +54,8 @@ void UROSTopicHandle::Unsubscribe() const
 
 void UROSTopicHandle::Unadvertise() const
 {
-	if(!TopicHandle){
+	if (!TopicHandle)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSTopicHandle before you Unadvertise it."));
 		return;
 	}

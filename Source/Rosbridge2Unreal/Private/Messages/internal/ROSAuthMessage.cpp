@@ -44,7 +44,7 @@ FString UROSAuthMessage::EncodeSHA512(const FString Input)
 	EVP_MD_CTX_destroy(Context);
 
 	FString Result = "";
-	for(uint8 i = 0; i < HashLength; i++)
+	for (uint8 i = 0; i < HashLength; i++)
 	{
 		Result += FString::Printf(TEXT("%02x"), Hash[i]);
 	}

@@ -17,20 +17,6 @@ UROSMsgPoseWithCovarianceStamped* UROSMsgPoseWithCovarianceStamped::CreateEmpty(
 	return Message;
 }
 
-FVector UROSMsgPoseWithCovarianceStamped::GetPositionInUnrealCoordinateFrame() const
-{
-	if(!Pose->IsValidLowLevelFast() || !Pose->Pose->IsValidLowLevelFast()) return FVector();
-	const FVector& Position = Pose->Pose->PositionAsFVector();
-	return FVector(Position.Y, Position.X, Position.Z) * FVector(100,100,100);
-}
-
-FQuat UROSMsgPoseWithCovarianceStamped::GetRotationInUnrealCoordinateFrame() const
-{
-	if(!Pose->IsValidLowLevelFast() || !Pose->Pose->IsValidLowLevelFast()) return FQuat();
-	const FQuat& Rotation = Pose->Pose->OrientationAsQuad();
-	return FQuat(Rotation.Y, -Rotation.X, Rotation.Z, -Rotation.W);
-}
-
 void UROSMsgPoseWithCovarianceStamped::ToData(ROSData& OutMessage) const
 {
 	DataHelpers::Append<UROSMsgHeader*>(OutMessage, "header", Header);

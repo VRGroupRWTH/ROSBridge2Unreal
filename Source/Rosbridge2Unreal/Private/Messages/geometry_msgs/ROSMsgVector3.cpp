@@ -38,8 +38,9 @@ void UROSMsgVector3::ToData(ROSData& OutMessage) const
 
 bool UROSMsgVector3::FromData(const ROSData& Message)
 {
-	return DataHelpers::Extract<double>(Message, "x", X)
-	&& DataHelpers::Extract<double>(Message, "y", Y)
-	&& DataHelpers::Extract<double>(Message, "z", Z);
+	return
+		DataHelpers::Extract<double>(Message, "x", X) &&
+		DataHelpers::Extract<double>(Message, "y", Y) &&
+		DataHelpers::Extract<double>(Message, "z", Z);
 }
 

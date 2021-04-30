@@ -27,8 +27,9 @@ void UROSSrvAddTwoInts::RequestToData(ROSData& OutMessage) const
 
 bool UROSSrvAddTwoInts::RequestFromData(const ROSData& Message)
 {
-	return	DataHelpers::Extract<int64>(Message, "a", A)
-		&& DataHelpers::Extract<int64>(Message, "b", B);
+	return
+		DataHelpers::Extract<int64>(Message, "a", A) &&
+		DataHelpers::Extract<int64>(Message, "b", B);
 }
 
 void UROSSrvAddTwoInts::ResponseToData(ROSData& OutMessage) const

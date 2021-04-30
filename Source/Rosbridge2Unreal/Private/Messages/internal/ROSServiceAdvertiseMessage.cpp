@@ -12,6 +12,7 @@ void UROSServiceAdvertiseMessage::ToData(ROSData& OutMessage) const
 bool UROSServiceAdvertiseMessage::FromData(const ROSData& Message)
 {
 	DataHelpers::Extract<FString>(Message, "id", ID); //optional
-	return DataHelpers::Extract<FString>(Message, "service", ServiceName)
-	&& DataHelpers::Extract<FString>(Message, "type", ServiceType);
+	return
+		DataHelpers::Extract<FString>(Message, "service", ServiceName) &&
+		DataHelpers::Extract<FString>(Message, "type", ServiceType);
 }

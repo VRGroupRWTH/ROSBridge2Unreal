@@ -7,7 +7,7 @@ UROSMsgPoseWithCovariance* UROSMsgPoseWithCovariance::Create(UROSMsgPose* Pose, 
 	UROSMsgPoseWithCovariance* Message = NewObject<UROSMsgPoseWithCovariance>();
 	Message->Pose = Pose;
 	Message->Covariance = Covariance;
-	if(Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Given Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
+	if (Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Given Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
 	return Message;
 }
 
@@ -16,7 +16,7 @@ UROSMsgPoseWithCovariance* UROSMsgPoseWithCovariance::Create(UROSMsgPose* Pose, 
 	UROSMsgPoseWithCovariance* Message = NewObject<UROSMsgPoseWithCovariance>();
 	Message->Pose = Pose;
 	Message->SetCovarianceFromFloatArray(Covariance);
-	if(Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Given Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
+	if (Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Given Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
 	return Message;
 }
 
@@ -36,9 +36,12 @@ TArray<float> UROSMsgPoseWithCovariance::CovarianceAsFloatArray() const
 	return Result;
 }
 
-void UROSMsgPoseWithCovariance::SetCovarianceFromFloatArray(const TArray<float> InArray)
+void UROSMsgPoseWithCovariance::SetCovarianceFromFloatArray(const TArray<float>& InArray)
 {
-	if(Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Given Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
+	if (InArray.Num() != 36)
+	{
+		UE_LOG(LogROSBridge, Warning, TEXT("Given Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
+	}
 
 	Covariance.Empty();
 	Covariance.Append(InArray);
@@ -46,7 +49,10 @@ void UROSMsgPoseWithCovariance::SetCovarianceFromFloatArray(const TArray<float> 
 
 void UROSMsgPoseWithCovariance::ToData(ROSData& OutMessage) const
 {
-	if (Covariance.Num() != 36) UE_LOG(LogROSBridge, Warning, TEXT("Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
+	if (Covariance.Num() != 36)
+	{
+		UE_LOG(LogROSBridge, Warning, TEXT("Covariance Matrix in UROSMsgPoseWithCovariance does not have 36 values, it has %d"), Covariance.Num());
+	}
 
 	DataHelpers::Append<UROSMsgPose*>(OutMessage, "pose", Pose);
 	DataHelpers::Append<TArray<double>>(OutMessage, "covariance", Covariance);

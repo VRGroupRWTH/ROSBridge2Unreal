@@ -43,30 +43,34 @@ bool UWebSockConnection::SendMessage(const uint8_t *Data, const unsigned int Len
 
 void UWebSockConnection::Receive(const void* Data, SIZE_T Size, SIZE_T BytesRemaining)
 {
-	if(BinaryBuffer.Num() < Size + BytesRemaining) BinaryBuffer.SetNumUninitialized(Size + BytesRemaining, false);
+	if (BinaryBuffer.Num() < Size + BytesRemaining) BinaryBuffer.SetNumUninitialized(Size + BytesRemaining, false);
 
 	FMemory::Memcpy(BinaryBuffer.GetData() + CurrentMessageLength, Data, Size); //Accumulate Message
 	CurrentMessageLength += Size;
 
-	if(BytesRemaining > 0) return; //Wait for next call to complete message
+	if (BytesRemaining > 0) return; //Wait for next call to complete message
 	
 	ROSData ParsedData;
-	if(CurrentTransportMode == ETransportMode::BSON){
-		
-		try{
+	if (CurrentTransportMode == ETransportMode::BSON)
+	{
+		try
+		{
 			ParsedData = jsoncons::bson::decode_bson<ROSData>(BinaryBuffer.GetData(), BinaryBuffer.GetData() + CurrentMessageLength);
 			if (IncomingMessageCallback) IncomingMessageCallback(ParsedData);
-		}catch(jsoncons::ser_error e)
+		}
+		catch(jsoncons::ser_error e)
 		{
 			UE_LOG(LogROSBridge, Error, TEXT("Error while parsing BSON message (Ignoring message)"));
 		}
-		
-	} else if(CurrentTransportMode == ETransportMode::JSON) {
-		
-		try{
+	}
+	else if (CurrentTransportMode == ETransportMode::JSON)
+	{
+		try
+		{
 			ParsedData = jsoncons::ojson::parse(jsoncons::ojson::string_view_type(reinterpret_cast<char*>(BinaryBuffer.GetData()), CurrentMessageLength));
 			if (IncomingMessageCallback) IncomingMessageCallback(ParsedData);
-		}catch(jsoncons::ser_error e)
+		}
+		catch(jsoncons::ser_error e)
 		{
 			UE_LOG(LogROSBridge, Error, TEXT("Error while parsing JSON message (Ignoring message): %hs"), e.what());
 		}

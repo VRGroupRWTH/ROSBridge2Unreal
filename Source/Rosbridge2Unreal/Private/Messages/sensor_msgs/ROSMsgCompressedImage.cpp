@@ -14,7 +14,7 @@ UROSMsgCompressedImage* UROSMsgCompressedImage::CreateEmpty()
 
 UTexture2D* UROSMsgCompressedImage::CreateFittingTexture()
 {
-	if(!ImageWrapper.IsValid()) ReadData();
+	if (!ImageWrapper.IsValid()) ReadData();
 	
 	UTexture2D* Texture = nullptr;
 
@@ -44,14 +44,15 @@ void UROSMsgCompressedImage::CopyToTexture(UTexture2D* Texture)
 	FUpdateTextureRegion2D* TextureRegion = new FUpdateTextureRegion2D(0, 0, 0, 0, ImageWrapper->GetWidth(), ImageWrapper->GetHeight());
 	TArray64<uint8>* Copy = new TArray64<uint8>(); /* Copy due to Async update needed */
 	Copy->Reserve(ImageWrapper->GetHeight()*ImageWrapper->GetWidth()*OutputChannelNumber);
-	if(ImageWrapper->GetRaw(OutputFormat, OutputBitDepth, *Copy))
+	if (ImageWrapper->GetRaw(OutputFormat, OutputBitDepth, *Copy))
 	{
 		Texture->UpdateTextureRegions(0, 1, TextureRegion, ImageWrapper->GetWidth()*OutputChannelNumber, OutputChannelNumber*OutputBitDepth, Copy->GetData(), [](auto InTextureData, auto InRegions)
 		{
 			delete InTextureData;
 			delete InRegions;
 		});
-	}else
+	}
+	else
 	{
 		delete TextureRegion;
 		delete Copy;
@@ -60,19 +61,21 @@ void UROSMsgCompressedImage::CopyToTexture(UTexture2D* Texture)
 
 FVector2D UROSMsgCompressedImage::GetDimensions()
 {
-	if(!ImageWrapper.IsValid())	return FVector2D(-1,-1);
+	if (!ImageWrapper.IsValid())	return FVector2D(-1,-1);
 	return FVector2D(ImageWrapper->GetWidth(), ImageWrapper->GetHeight());
 }
 
 void UROSMsgCompressedImage::ReadData()
 {
-	if(!ImageWrapper.IsValid()){
+	if (!ImageWrapper.IsValid())
+	{
 		IImageWrapperModule& Module = FModuleManager::LoadModuleChecked<IImageWrapperModule>(FName("ImageWrapper"));
 		const EImageFormat DetectedFormat = Module.DetectImageFormat(Data.GetData(), Data.Num());
-		if(DetectedFormat != EImageFormat::Invalid)
+		if (DetectedFormat != EImageFormat::Invalid)
 		{
 			ImageWrapper = Module.CreateImageWrapper(DetectedFormat);
-		}else
+		}
+		else
 		{
 			UE_LOG(LogROSBridge, Warning, TEXT("ROSMsgCompressedImage with unknown format '%s' found."), *Format);
 			return;
@@ -87,7 +90,8 @@ void UROSMsgCompressedImage::ToData(ROSData& OutMessage) const
 	DataHelpers::Append<UROSMsgHeader*>(OutMessage, "header", Header);
 	DataHelpers::Append<FString>(OutMessage, "format", Format);
 
-	if(ImageWrapper.IsValid()){
+	if (ImageWrapper.IsValid())
+	{
 		TArray64<uint8> CompressedData = ImageWrapper->GetCompressed(OutputCompressionQuality);
 		DataHelpers::AppendBinary(OutMessage, "data", CompressedData.GetData(), CompressedData.Num());
 	}
