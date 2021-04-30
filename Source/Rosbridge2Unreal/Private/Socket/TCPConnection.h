@@ -20,6 +20,7 @@ public:
 
 private:
 	FSocket *Socket = nullptr;
+	int32 ReceiveBufferSize = -1;
 
 	FRunnableThread* ReceiverThread = nullptr;
 	uint32 Run() override;
