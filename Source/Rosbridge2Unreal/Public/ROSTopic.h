@@ -5,66 +5,85 @@
 #include "Messages/ROSMessageBase.h"
 
 #include "Messages/internal/ROSTopicPublishMessage.h"
+#include "ROSBridgeConnection.h"
 #include "ROSTopic.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FReceiveSignature, const UROSMessageBase*, Message);
 
 /**
- * Class that is internally used for the communication with the ROS Bridge
- * Users should have a look at the UROSTopicHandle
- * UROSTopicHandles proxy this object such that many components can listen to the same topic
+ * This component can be added to an actor to receive/send message to the ROS Bridge
  */
-UCLASS()
-class UROSTopic : public UObject
+UCLASS( ClassGroup=(ROS), meta=(BlueprintSpawnableComponent), Blueprintable )
+class UROSTopic : public UROSBridgeConnection
 {
 	GENERATED_BODY()
 	
 public:	
 	
 	/**
-	 * Initializes this topic instance
+	 * Initializes this topic
 	 * @param TopicName - Topic name that is used to subscribe/advertize later. Used as an ID internally.
 	 * @param MessageClass - The message class that is used to (de-)serialize
 	 */
-	void Initialize(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass);
+	UFUNCTION(BlueprintCallable) void Initialize(const FString& TopicName, TSubclassOf<UROSMessageBase> MessageClass);
 
 	/**
-	 * Send subscribe message to the ROS Bridge and store a callback that is used for notification in the event of a new message
-	 * @param Callback - The callback that is called in the event of a new message
-	 * @param UniqueId - UniqueId that is stored together with the callback to reidentify it.
-	 * @param InReusableMessage - Message class instance that is used for deserialization (shared between all handles)
-	 * @return Success of subscription
+	 * Subscribe this topic and get notified if a new message arrives (C++ variant)
+	 * @param Callback - Function that is called if a new message arrives
+	 * @param InReusableMessage - Message instance that is reused for deserialization (optional, shared between all handles on the same topic)
 	 */
-	bool Subscribe(TFunction<void(const UROSMessageBase*)>& Callback, uint32 UniqueId, UROSMessageBase* InReusableMessage = nullptr);
+	bool Subscribe(const TFunction<void(const UROSMessageBase*)>& Callback, UROSMessageBase* InReusableMessage = nullptr);
 	
 	/**
-	 * Unsubscribe the callback associated with the given ID
-	 * @param UniqueId - ID that was given on Subscribe call
+	 * Unsubscribe this topic. Automatically called on exit.
 	 */
-	void Unsubscribe(uint32 UniqueId);
-	
-	/**
-	 * Force the sending of an unsubscribe message to the ROS Bridge
-	 * @return Success of sending
-	 */
-	bool ForceUnsubscribeInternal();
+	UFUNCTION(BlueprintCallable) void Unsubscribe();
 
 	/**
-	 * Send an advertise message to the ROS Bridge
+	 * Send an advertise message to the ROS Bridge. Called automatically on publish.
 	 * @return Success of sending
 	 */
-	bool Advertise();
+	UFUNCTION(BlueprintCallable) bool Advertise();
 	
 	/**
 	 * Send an unadverise message to the ROS Bridge
 	 * @return Success of sending
 	 */
-	bool Unadvertise();
+	UFUNCTION(BlueprintCallable) bool Unadvertise();
 	
 	/**
 	 * Publish a message on the topic to the ROS Bridge
 	 * @param Message - The message to send
 	 */
-	void Publish(const UROSMessageBase* Message);
+	UFUNCTION(BlueprintCallable) void Publish(const UROSMessageBase* Message);
+	
+	/**
+	 * @return The topic name specified in the initialize call. Internally used as an ID
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure) FString GetTopicName() const;
+
+
+	/**
+	 * Event that is called if a new message arrives (Blueprint variant)
+	 */
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable) FReceiveSignature OnNewMessage;
+
+	/*
+	 * Unsubscribes and kills connection on Endplay
+	 */
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
+private:
+	/**
+	 * Subscribe this handle to the topic and get notified on the `OnNewMessage` event if a new message arrives (Blueprint variant)
+	 */
+	UFUNCTION(BlueprintCallable) void Subscribe();
+	
+	/**
+	 * Like subscribe, but with a reusable message
+	 * @param ReusableMessage - Message instance that is reused for deserialization
+	 */
+	UFUNCTION(BlueprintCallable) void SubscribeWithReusableMessage(UROSMessageBase* ReusableMessage);
 	
 	/**
 	 * Internally used to process a raw message and distribute to the handles
@@ -72,19 +91,16 @@ public:
 	 */
 	void IncomingMessage(const UROSTopicPublishMessage& Message);
 
-	/**
-	 * @return The topic name specified in the initialize call. Internally used as an ID
+	/*
+	 * Handle all message with OPCode "publish"
 	 */
-	FString GetTopicName() const;
+	bool HandleMessage(const FString& OPCode, const ROSData& Message) override;
 	
-private:
-
 	UPROPERTY() UROSMessageBase* ReusableMessage = nullptr;
 	
 	bool IsSubscribed = false;
 	bool IsAdvertised = false;
-	TMap<uint32,TFunction<void(const UROSMessageBase*)>> StoredCallbacks;
+	TFunction<void(const UROSMessageBase*)> StoredCallback = nullptr;
 	FString StoredTopicName = "";
 	TSubclassOf<UROSMessageBase> StoredMessageClass;
-	void Notify(UROSMessageBase* Message);
 };

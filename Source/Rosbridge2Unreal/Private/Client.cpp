@@ -10,10 +10,10 @@ AClient::AClient()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	ReceiveTopic = CreateDefaultSubobject<UROSTopicHandle>("ReceiveTopic");
-	SendTopic = CreateDefaultSubobject<UROSTopicHandle>("SendTopic");
-	ExternalService = CreateDefaultSubobject<UROSServiceHandle>("ExternalService");
-	OfferedService = CreateDefaultSubobject<UROSServiceHandle>("OfferedService");
+	ReceiveTopic = CreateDefaultSubobject<UROSTopic>("ReceiveTopic");
+	SendTopic = CreateDefaultSubobject<UROSTopic>("SendTopic");
+	ExternalService = CreateDefaultSubobject<UROSService>("ExternalService");
+	OfferedService = CreateDefaultSubobject<UROSService>("OfferedService");
 }
 
 // Called when the game starts or when spawned
