@@ -8,7 +8,7 @@
  * Settings class that creates a settings page in the project settings
  */
 UCLASS(config=Game, defaultconfig, meta=(DisplayName="ROS Bridge"))
-class URosbridgeSettings : public UDeveloperSettings
+class ROSBRIDGE2UNREAL_API URosbridgeSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
 
@@ -45,4 +45,10 @@ public:
 
 	UPROPERTY(EditAnywhere, config, Category = "Authentication", meta = (EditCondition = "bShouldAuthenticate"))
 	FString Secret = "";
+
+	UPROPERTY(EditAnywhere, config, Category = "Fragmentation")
+	bool bFragmentMessages = false;
+
+	UPROPERTY(EditAnywhere, config, Category = "Fragmentation", meta = (EditCondition = "bFragmentMessages"))
+	int FragmentSize = 60000;
 };

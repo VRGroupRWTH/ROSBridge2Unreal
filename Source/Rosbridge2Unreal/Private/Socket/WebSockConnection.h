@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "TypeDefinitions.h"
-#include "NetworkConnection.h"
+#include "Socket/NetworkConnection.h"
 #include "WebSocketsModule.h"
 #include "IWebSocket.h"
 

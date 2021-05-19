@@ -2,8 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ROSTopicHandle.h"
-#include "ROSServiceHandle.h"
+#include "ROSTopic.h"
+#include "ROSService.h"
 
 #include "Client.generated.h"
 
@@ -25,9 +25,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY() UROSTopicHandle* ReceiveTopic;
-	UPROPERTY() UROSTopicHandle* SendTopic;
-	UPROPERTY() UROSServiceHandle* ExternalService;
-	UPROPERTY() UROSServiceHandle* OfferedService;
+	UPROPERTY() UROSTopic* ReceiveTopic;
+	UPROPERTY() UROSTopic* SendTopic;
+	UPROPERTY() UROSService* ExternalService;
+	UPROPERTY() UROSService* OfferedService;
 	uint64 Count = 0;
 };
