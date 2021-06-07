@@ -47,13 +47,13 @@ roslaunch rosbridge_server rosbridge_websocket.launch #bson_only_mode:=True
 
 ### Topics:
 
-- Add a `ROSTopic Handle`-component to your actor
+- Add a `ROSTopic`-component to your actor
 
 - **Subscribe** to a Topic like this: [Blueprint](https://blueprintue.com/blueprint/qy2wgm0p/). For this, do the following steps:
   
-  - Call `Initialize` on your topic handle and enter the parameters
+  - Call `Initialize` on your topic component and enter the parameters
   
-  - Call `Subscribe` on the same handle
+  - Call `Subscribe` on the same component
   
   - Receive the `OnNewMessage`-Event by right clicking your topic in the hierarchy browser and `Add Event → OnNewMessage`
   
@@ -69,15 +69,15 @@ roslaunch rosbridge_server rosbridge_websocket.launch #bson_only_mode:=True
 
 ### Services:
 
-- Add a `ROSService Handle`-component to your actor
+- Add a `ROSService`-component to your actor
 
 - **Call** a Service like this: [Blueprint](https://blueprintue.com/blueprint/rl5ysrx0/). For this, do the following steps:
   
-  - Call `Initialize` on your service handle and enter the parameters
+  - Call `Initialize` on your service component and enter the parameters
   
   - Create a service request. Most of the services feature a `Create Request` method
   
-  - Call `Call` on the same handle with your request
+  - Call `Call` on the same component with your request
   
   - Receive the `OnResponse`-Event by right clicking your service in the hierarchy browser and `Add Event → OnResponse`
   
@@ -85,9 +85,9 @@ roslaunch rosbridge_server rosbridge_websocket.launch #bson_only_mode:=True
 
 - **Offer** a Service like this: [Blueprint](https://blueprintue.com/blueprint/g8-1gpg_/). For this, do the following steps:
   
-  - Call `Initialize` on your service handle and enter the parameters
+  - Call `Initialize` on your service component and enter the parameters
   
-  - Call `Advertise` on your service handle
+  - Call `Advertise` on your service component
   
   - Receive the `OnRequest`-Event by right clicking your service in the hierarchy browser and `Add Event → OnRequest`
   
@@ -108,11 +108,11 @@ roslaunch rosbridge_server rosbridge_websocket.launch #bson_only_mode:=True
 
   #include "Engine/Engine.h"
   #include "Messages/std_msgs/ROSMsgString.h"
-  #include "ROSTopicHandle.h"
+  #include "ROSTopic.h"
 
   AClient::AClient()
   {
-      ReceiveTopic = CreateDefaultSubobject<UROSTopicHandle>("ReceiveTopic");
+      ReceiveTopic = CreateDefaultSubobject<UROSTopic>("ReceiveTopic");
   }
 
   // Called when the game starts or when spawned
@@ -136,11 +136,11 @@ roslaunch rosbridge_server rosbridge_websocket.launch #bson_only_mode:=True
 
   #include "Engine/Engine.h"
   #include "Messages/std_msgs/ROSMsgString.h"
-  #include "ROSTopicHandle.h"
+  #include "ROSTopic.h"
 
   AClient::AClient()
   {
-      SendTopic = CreateDefaultSubobject<UROSTopicHandle>("SendTopic");
+      SendTopic = CreateDefaultSubobject<UROSTopic>("SendTopic");
   }
 
   // Called when the game starts or when spawned
@@ -170,12 +170,12 @@ roslaunch rosbridge_server rosbridge_websocket.launch #bson_only_mode:=True
   #include "Client.h"
 
   #include "Engine/Engine.h"
-  #include "ROSServiceHandle.h"
+  #include "ROSService.h"
   #include "Services/rospy_tutorials/ROSSrvAddTwoInts.h"
 
   AClient::AClient()
   {
-      ExternalService = CreateDefaultSubobject<UROSServiceHandle>("ExternalService");
+      ExternalService = CreateDefaultSubobject<UROSService>("ExternalService");
   }
 
   // Called when the game starts or when spawned
@@ -207,12 +207,12 @@ roslaunch rosbridge_server rosbridge_websocket.launch #bson_only_mode:=True
   #include "Client.h"
 
   #include "Engine/Engine.h"
-  #include "ROSServiceHandle.h"
+  #include "ROSService.h"
   #include "Services/rospy_tutorials/ROSSrvAddTwoInts.h"
 
   AClient::AClient()
   {
-      OfferedService = CreateDefaultSubobject<UROSServiceHandle>("OfferedService");
+      OfferedService = CreateDefaultSubobject<UROSService>("OfferedService");
   }
 
   // Called when the game starts or when spawned
@@ -372,4 +372,4 @@ You can help us in the following way:
 
 ### Additional Notes:
 
-This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No. 871260
+:european_union: This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No. 871260 :european_union:
