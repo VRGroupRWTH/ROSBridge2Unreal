@@ -5,7 +5,7 @@
 #include "TypeDefinitions.h"
 #include "HAL/Runnable.h"
 #include "HAL/RunnableThread.h"
-#include "NetworkConnection.h"
+#include "Socket/NetworkConnection.h"
 
 #include "TCPConnection.generated.h"
 

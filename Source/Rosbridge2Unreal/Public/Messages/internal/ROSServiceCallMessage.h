@@ -16,6 +16,7 @@ public:
 	/* Request Data */
 	FString ID;
 	FString ServiceName;
+	int FragmentSize = -1;
 
 	/* Transformation Functions */
 	void ToData(ROSData& OutMessage) const override;
