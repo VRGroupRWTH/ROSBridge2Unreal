@@ -27,7 +27,7 @@ void FRosbridge2UnrealModule::OnSessionEnd(UWorld* World, bool bSessionEnded, bo
 {
 	if (!World->IsGameWorld() || !bSessionEnded) return;
 	
-	if(ClockEmitter)
+	if (ClockEmitter)
 	{
 		ClockEmitter->UninitializeConnection();
 		ClockEmitter->RemoveFromRoot(); /* remove the object from the root set to allow garbage collection */
@@ -43,7 +43,8 @@ void FRosbridge2UnrealModule::OnWorldTickStart(ELevelTick TickType, float DeltaT
 {
 	if (TickType != ELevelTick::LEVELTICK_TimeOnly) return; // Nothing to do here
 
-	if(GetSettings()->bEmitClockEvents){
+	if(GetSettings()->bEmitClockEvents)
+	{
 		if (ClockEmitter == nullptr)
 		{
 			ClockEmitter = NewObject<UROSClockEmitter>();

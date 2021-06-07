@@ -26,7 +26,8 @@ void UROSTopic::Initialize(const FString& TopicName, TSubclassOf<UROSMessageBase
 
 bool UROSTopic::Subscribe(const TFunction<void(const UROSMessageBase*)>& Callback, UROSMessageBase* InReusableMessage)
 {
-	if (!bInitialized) {
+	if (!bInitialized)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSTopic before you Subscribe to it."));
 		return false;
 	}
@@ -34,7 +35,8 @@ bool UROSTopic::Subscribe(const TFunction<void(const UROSMessageBase*)>& Callbac
 	StoredCallback = Callback;
 	ReusableMessage = InReusableMessage;
 
-	if (!IsSubscribed) {
+	if (!IsSubscribed)
+	{
 		UROSTopicSubscribeMessage* SubscribeMessage = NewObject<UROSTopicSubscribeMessage>();
 		SubscribeMessage->ID = FString::Printf(TEXT("subscribe:%s"), *StoredTopicName);
 		SubscribeMessage->TopicName = StoredTopicName;
@@ -102,12 +104,14 @@ bool UROSTopic::HandleMessage(const FString& OPCode, const ROSData& Message)
 
 bool UROSTopic::Advertise()
 {
-	if (!bInitialized) {
+	if (!bInitialized)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSTopic before you Advertise it."));
 		return false;
 	}
 
-	if (!IsAdvertised) {
+	if (!IsAdvertised)
+	{
 		UROSTopicAdvertiseMessage* AdvertiseMessage = NewObject<UROSTopicAdvertiseMessage>();
 		AdvertiseMessage->ID = FString::Printf(TEXT("advertise:%s"), *StoredTopicName);
 		AdvertiseMessage->TopicName = StoredTopicName;
@@ -121,12 +125,14 @@ bool UROSTopic::Advertise()
 
 bool UROSTopic::Unadvertise()
 {
-	if (!bInitialized) {
+	if (!bInitialized)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSTopic before you Unadversize it."));
 		return false;
 	}
 
-	if (IsAdvertised) {
+	if (IsAdvertised)
+	{
 		UROSTopicUnadvertiseMessage* UnadvertiseMessage = NewObject<UROSTopicUnadvertiseMessage>();
 		UnadvertiseMessage->ID = FString::Printf(TEXT("advertise:%s"), *StoredTopicName);
 		UnadvertiseMessage->TopicName = StoredTopicName;
@@ -139,7 +145,8 @@ bool UROSTopic::Unadvertise()
 
 void UROSTopic::Publish(const UROSMessageBase* Message)
 {
-	if (!bInitialized) {
+	if (!bInitialized)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSTopic before you Publish to it."));
 		return;
 	}
