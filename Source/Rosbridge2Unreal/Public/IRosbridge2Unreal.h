@@ -44,4 +44,15 @@ public:
 		static const URosbridgeSettings* Settings = GetDefault<URosbridgeSettings>();
 		return Settings;
 	};
+
+	/**
+	 * Check if a failed connection occured in this play session
+	 * @return true if a failed connection occurred so far
+	 */
+	virtual bool HasFailedConnection() const = 0;
+
+	/**
+	 * Report a failed connection such that other instances can read this report via HasFailedConnection
+	 */
+    virtual void ReportFailedConnection() = 0;
 };

@@ -21,15 +21,9 @@ public:
 	
 	void OnSessionEnd(UWorld* World, bool bSessionEnded, bool);
 
-	/* This Declaration changed over time */
-	#if ENGINE_MINOR_VERSION > 23
-		void OnWorldTickStart(UWorld * World, ELevelTick TickType, float DeltaTime);
-	#else 
-		void OnWorldTickStart(ELevelTick TickType, float DeltaTime);
-	#endif
-	
-private:
+    virtual bool HasFailedConnection() const override { return bConnectionFailed;} 
+    virtual void ReportFailedConnection() override { bConnectionFailed = true; }
 
-	/* Internal Bridge Network */
-	UROSClockEmitter* ClockEmitter = nullptr;
+private:
+	bool bConnectionFailed = false;
 };

@@ -18,6 +18,13 @@ bool UROSBridgeConnection::InitializeConnection()
 		bInitialized = true;
 		return true; //Don't attempt connection
 	}
+
+	if(IRosbridge2Unreal::Get().HasFailedConnection())
+	{
+		UE_LOG(LogROSBridge, Warning, TEXT("Detected that a failed connection occured earlier. Not attempting reconnection."));
+	    return false;
+	}
+
 	switch(Settings->SocketMode) {
 		case ESocketMode::TCP:
 			Connection = NewObject<UTCPConnection>(this);
@@ -33,11 +40,14 @@ bool UROSBridgeConnection::InitializeConnection()
 		});
 	});
 	
-	const bool ConnectionInitialized = Connection->Initialize(Settings->IP, Settings->Port, Settings->TransportationMode);
-	
-	bInitialized = true;
+	bInitialized = Connection->Initialize(Settings->IP, Settings->Port, Settings->TransportationMode);
 
-	if(Settings->bShouldAuthenticate && ConnectionInitialized)
+	if(!bInitialized)
+	{
+	    IRosbridge2Unreal::Get().ReportFailedConnection();
+	}
+
+	if(Settings->bShouldAuthenticate && bInitialized)
 	{
 		UROSAuthMessage* AuthMsg = NewObject<UROSAuthMessage>(this);
 		AuthMsg->Client = FString::Printf(TEXT("UnrealClient:%s"),FApp::GetProjectName());
@@ -46,7 +56,7 @@ bool UROSBridgeConnection::InitializeConnection()
 		SendMessage(*AuthMsg);
 	}
 	
-	return ConnectionInitialized;
+	return bInitialized;
 }
 
 void UROSBridgeConnection::UninitializeConnection()
@@ -67,7 +77,7 @@ long UROSBridgeConnection::GetNextID()
 bool UROSBridgeConnection::SendMessage(const UROSBridgeMessage& Message) const
 {
 	if(IRosbridge2Unreal::Get().GetSettings()->bSimulateConnection) return true;
-	if(!bInitialized) return true; /* return true, since this is no error */
+	if(!bInitialized) return false;
 	
 	ROSData Data;
 	Message.ToData(Data);

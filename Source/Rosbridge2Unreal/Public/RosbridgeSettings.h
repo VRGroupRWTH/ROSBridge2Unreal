@@ -28,18 +28,6 @@ public:
 	UPROPERTY(EditAnywhere, config, Category = "Connection", meta = (DisplayName = "Transportation Mode"))
 	ETransportMode TransportationMode = ETransportMode::JSON;
 
-	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Emit Clock Events from Unreal"))
-	bool bEmitClockEvents = false;
-
-	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Use Wall Clock Time, else uses the Gameplay Time", EditCondition = "bEmitClockEvents"))
-	bool bUseWallClockTime = true;
-
-	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "Use Fixed Update Interval", EditCondition = "bEmitClockEvents"))
-	bool bUseFixedUpdateInterval = false;
-
-	UPROPERTY(EditAnywhere, config, Category = "Time", meta = (DisplayName = "The Used Update Interval", ClampMin="0", EditCondition = "bEmitClockEvents && bUseFixedUpdateInterval"))
-	double FixedUpdateInterval = 0.1;
-
 	UPROPERTY(EditAnywhere, config, Category = "Authentication")
 	bool bShouldAuthenticate = false;
 

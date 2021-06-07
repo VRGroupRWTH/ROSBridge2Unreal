@@ -12,8 +12,6 @@ DEFINE_LOG_CATEGORY(LogROSBridge);
 void FRosbridge2UnrealModule::StartupModule()
 {	
 	FWorldDelegates::OnWorldCleanup.AddRaw(this, &FRosbridge2UnrealModule::OnSessionEnd);
-
-	FWorldDelegates::OnWorldTickStart.AddRaw(this, &FRosbridge2UnrealModule::OnWorldTickStart);
 }
 
 void FRosbridge2UnrealModule::ShutdownModule()
@@ -27,30 +25,7 @@ void FRosbridge2UnrealModule::OnSessionEnd(UWorld* World, bool bSessionEnded, bo
 {
 	if (!World->IsGameWorld() || !bSessionEnded) return;
 	
-	if(ClockEmitter)
-	{
-		ClockEmitter->UninitializeConnection();
-		ClockEmitter->RemoveFromRoot(); /* remove the object from the root set to allow garbage collection */
-		ClockEmitter = nullptr;
-	}
-}
-
-#if ENGINE_MINOR_VERSION > 23
-void FRosbridge2UnrealModule::OnWorldTickStart(UWorld*, ELevelTick TickType, float DeltaTime)
-#else 
-void FRosbridge2UnrealModule::OnWorldTickStart(ELevelTick TickType, float DeltaTime)
-#endif
-{
-	if (TickType != ELevelTick::LEVELTICK_TimeOnly) return; // Nothing to do here
-
-	if(GetSettings()->bEmitClockEvents){
-		if (ClockEmitter == nullptr)
-		{
-			ClockEmitter = NewObject<UROSClockEmitter>();
-			ClockEmitter->AddToRoot();
-		}
-		ClockEmitter->TickEvent(DeltaTime);
-	}
+	bConnectionFailed = false; //Allow new attempt
 }
 
 #undef LOCTEXT_NAMESPACE

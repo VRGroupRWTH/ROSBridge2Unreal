@@ -1,37 +1,45 @@
 #include "ROSClockEmitter.h"
 
-
 #include "Misc/App.h"
-#include "Async/Async.h"
-#include "Messages/internal/ROSBridgeMessage.h"
-#include "DataHelpers.h"
 #include "IRosbridge2Unreal.h"
+#include "Kismet/GameplayStatics.h"
 #include "LogCategory.h"
-#include "Messages/internal/ROSAuthMessage.h"
-#include "Socket/WebSockConnection.h"
-#include "jsoncons_unreal_wrapper.h"
 
-void UROSClockEmitter::TickEvent(float DeltaTime)
-{	
-	if(!ClockTopic)
+AROSClockEmitter::AROSClockEmitter()
+{
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	ClockTopic = CreateDefaultSubobject<UROSTopic>("ClockTopic");
+}
+
+void AROSClockEmitter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	/* Check for multiple instances of this class in the level */
+	TArray<AActor*> AllEmitters;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), StaticClass(), AllEmitters);
+	if(AllEmitters.Num() > 1 && AllEmitters[0] == this)
 	{
-		ClockTopic = NewObject<UROSTopic>(this);
-		ClockTopic->Initialize("/clock", UROSMsgClock::StaticClass());
-		ClockTopic->Advertise();
+	    UE_LOG(LogROSBridge, Warning, TEXT("There are two ClockEmitters present in the Level. This can cause problems later on."));
 	}
 
-	if(!ClockMessage){
-		ClockMessage = NewObject<UROSMsgClock>(this);
-	}
+	/* Setup Topic */
+	ClockTopic->Initialize("/clock", UROSMsgClock::StaticClass());
+	ClockTopic->Advertise();
 
-	if(!bSetUpdateIntervalSettings)
-	{
-		FApp::SetFixedDeltaTime(IRosbridge2Unreal::Get().GetSettings()->FixedUpdateInterval);
-		FApp::SetUseFixedTimeStep(IRosbridge2Unreal::Get().GetSettings()->bUseFixedUpdateInterval);
-		bSetUpdateIntervalSettings = true;
-	}
-	
-	if(IRosbridge2Unreal::Get().GetSettings()->bUseWallClockTime)
+	/* Create Reuseable Message */
+	ClockMessage = NewObject<UROSMsgClock>(this);
+}
+
+void AROSClockEmitter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if(!bEmitClockEvents) return;
+
+	if(bUseWallClockTime)
 	{
 		const FTimespan WallClockTime = FDateTime::UtcNow() - FDateTime::FromUnixTimestamp(0);
 		ClockMessage->Seconds = static_cast<int32>(WallClockTime.GetTotalSeconds()); //Implicit floor
@@ -49,10 +57,4 @@ void UROSClockEmitter::TickEvent(float DeltaTime)
 		}
 		ClockTopic->Publish(ClockMessage);
 	}
-}
-
-bool UROSClockEmitter::HandleMessage(const FString& OPCode, const ROSData& Message)
-{
-	UE_LOG(LogROSBridge, Warning, TEXT("Clock Emitter received a message. This should not happen."));
-	return false;
 }
