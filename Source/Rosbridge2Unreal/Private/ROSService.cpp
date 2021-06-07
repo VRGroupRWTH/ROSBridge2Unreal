@@ -20,7 +20,8 @@ void UROSService::Initialize(const FString& ServiceName, TSubclassOf<UROSService
 
 bool UROSService::Advertise(TFunction<void (UROSServiceBase*)> RequestResponseCallback, UROSServiceBase* InReusableRequest)
 {
-	if(!bInitialized){
+	if(!bInitialized)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSServiceHandle before you Advertise to it."));
 		return false;
 	}
@@ -53,7 +54,8 @@ bool UROSService::Unadvertise()
 
 bool UROSService::Call(const UROSServiceBase* Request, TFunction<void (const UROSServiceBase*)> Callback, UROSServiceBase* InReusableResponse)
 {
-	if(!bInitialized){
+	if(!bInitialized)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSServiceHandle before you can Call it."));
 		return false;
 	}
@@ -174,7 +176,8 @@ void UROSService::AdvertiseWithReusableRequest(UROSServiceBase* InReusableReques
 
 void UROSService::Call(const UROSServiceBase* Request)
 {
-	if(!RecurrentResponseCallback){
+	if(!RecurrentResponseCallback)
+	{
 		RegisterResponseCallback([this](const UROSServiceBase* Message){OnResponse.Broadcast(Message);});
 	}
 	CallRecurrent(Request);
@@ -195,7 +198,8 @@ void UROSService::RegisterResponseCallback(TFunction<void (const UROSServiceBase
 
 void UROSService::CallRecurrent(const UROSServiceBase* Request, UROSServiceBase* InReusableResponse)
 {
-	if(!bInitialized){
+	if(!bInitialized)
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("You first have to initialize your ROSServiceHandle before you can Call it."));
 		return;
 	}
