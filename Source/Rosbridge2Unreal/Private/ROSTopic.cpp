@@ -116,7 +116,7 @@ bool UROSTopic::Advertise()
 		IsAdvertised = SendMessage(*AdvertiseMessage);
 	}
 
-	return !IsAdvertised;
+	return IsAdvertised;
 }
 
 bool UROSTopic::Unadvertise()
