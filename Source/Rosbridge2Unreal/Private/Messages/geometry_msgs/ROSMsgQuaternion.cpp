@@ -28,17 +28,18 @@ void UROSMsgQuaternion::SetFromFQuat(const FQuat& InQuat)
 
 void UROSMsgQuaternion::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendDouble(OutMessage, "x", X);
-	DataHelpers::AppendDouble(OutMessage, "y", Y);
-	DataHelpers::AppendDouble(OutMessage, "z", Z);
-	DataHelpers::AppendDouble(OutMessage, "z", W);
+	DataHelpers::Append<double>(OutMessage, "x", X);
+	DataHelpers::Append<double>(OutMessage, "y", Y);
+	DataHelpers::Append<double>(OutMessage, "z", Z);
+	DataHelpers::Append<double>(OutMessage, "z", W);
 }
 
 bool UROSMsgQuaternion::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractDouble(Message, "x", X)
-	&& DataHelpers::ExtractDouble(Message, "y", Y)
-	&& DataHelpers::ExtractDouble(Message, "z", Z)
-	&& DataHelpers::ExtractDouble(Message, "w", W);
+	return
+		DataHelpers::Extract<double>(Message, "x", X) &&
+		DataHelpers::Extract<double>(Message, "y", Y) &&
+		DataHelpers::Extract<double>(Message, "z", Z) &&
+		DataHelpers::Extract<double>(Message, "w", W);
 }
 

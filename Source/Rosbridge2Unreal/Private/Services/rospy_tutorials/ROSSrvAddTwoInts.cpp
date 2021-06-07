@@ -21,22 +21,23 @@ int UROSSrvAddTwoInts::SumAsInt() const
 
 void UROSSrvAddTwoInts::RequestToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendInt64(OutMessage, "a", A);
-	DataHelpers::AppendInt64(OutMessage, "b", B);
+	DataHelpers::Append<int64>(OutMessage, "a", A);
+	DataHelpers::Append<int64>(OutMessage, "b", B);
 }
 
 bool UROSSrvAddTwoInts::RequestFromData(const ROSData& Message)
 {
-	return	DataHelpers::ExtractInt64(Message, "a", A)
-		&& DataHelpers::ExtractInt64(Message, "b", B);
+	return
+		DataHelpers::Extract<int64>(Message, "a", A) &&
+		DataHelpers::Extract<int64>(Message, "b", B);
 }
 
 void UROSSrvAddTwoInts::ResponseToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendInt64(OutMessage, "sum", Sum);
+	DataHelpers::Append<int64>(OutMessage, "sum", Sum);
 }
 
 bool UROSSrvAddTwoInts::ResponseFromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractInt64(Message, "sum", Sum);
+	return DataHelpers::Extract<int64>(Message, "sum", Sum);
 }

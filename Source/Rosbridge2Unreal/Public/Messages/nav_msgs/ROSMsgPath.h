@@ -20,7 +20,6 @@ public:
 	/* Data */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UROSMsgHeader* Header;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<UROSMsgPoseStamped*> Poses;
-	UFUNCTION(BlueprintCallable) void AddPoseInUnrealCoordinateFrame(const FTransform& Transform, UROSMsgHeader* HeaderIn);
 
 	/* Transformation Functions */
 	void ToData(ROSData& OutMessage) const override;

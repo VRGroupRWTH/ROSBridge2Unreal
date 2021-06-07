@@ -16,18 +16,13 @@ UROSMsgMultiArrayLayout* UROSMsgMultiArrayLayout::Create(const TArray<UROSMsgMul
 
 void UROSMsgMultiArrayLayout::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendTArray<UROSMsgMultiArrayDimension*>(OutMessage, "dim", Dimensions, [](ROSData& Array, const char* Key, UROSMsgMultiArrayDimension* const& TArrayValue)
-	{
-		DataHelpers::AppendSubMessage(Array, Key, TArrayValue);
-	});
-	DataHelpers::AppendUInt32(OutMessage, "data_offset", DataOffset);
+	DataHelpers::Append<TArray<UROSMsgMultiArrayDimension*>>(OutMessage, "dim", Dimensions);
+	DataHelpers::Append<uint32>(OutMessage, "data_offset", DataOffset);
 }
 
 bool UROSMsgMultiArrayLayout::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractTArrayOfUObjects<UROSMsgMultiArrayDimension>(Message, "dim", Dimensions, this, [](const ROSData& Array, const char* Key, UROSMsgMultiArrayDimension*& Result)
-	{
-		return DataHelpers::ExtractSubMessage(Array, Key, Result);
-	})
-	&& DataHelpers::ExtractInt64(Message, "data_offset", DataOffset);
+	return
+		DataHelpers::Extract<TArray<UROSMsgMultiArrayDimension*>>(Message, "dim", Dimensions) &&
+		DataHelpers::Extract<int64>(Message, "data_offset", DataOffset);
 }

@@ -24,7 +24,7 @@ void FRosbridge2UnrealModule::OnSessionEnd(UWorld* World, bool bSessionEnded, bo
 {
 	if (!World->IsGameWorld() || !bSessionEnded) return;
 	
-	if(RosBridge)
+	if (RosBridge)
 	{
 		RosBridge->Uninitialize();
 		RosBridge->RemoveFromRoot(); /* remove the object from the root set to allow garbage collection */
@@ -38,9 +38,9 @@ void FRosbridge2UnrealModule::OnWorldTickStart(UWorld*, ELevelTick TickType, flo
 void FRosbridge2UnrealModule::OnWorldTickStart(ELevelTick TickType, float DeltaTime)
 #endif
 {
-	if(TickType != ELevelTick::LEVELTICK_TimeOnly) return; // Nothing to do here
+	if (TickType != ELevelTick::LEVELTICK_TimeOnly) return; // Nothing to do here
 
-	if(RosBridge) RosBridge->TickEvent(DeltaTime);
+	if (RosBridge) RosBridge->TickEvent(DeltaTime);
 }
 
 bool FRosbridge2UnrealModule::InitializeConnection()
@@ -71,7 +71,7 @@ UROSBridge* FRosbridge2UnrealModule::GetBridge()
 
 bool FRosbridge2UnrealModule::IsBSONMode()
 {
-	if(!RosBridge) return false;
+	if (!RosBridge) return false;
 	return RosBridge->IsBSONMode();
 }
 

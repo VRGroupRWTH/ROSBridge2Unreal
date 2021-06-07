@@ -19,18 +19,13 @@ UROSMsgFloat32MultiArray* UROSMsgFloat32MultiArray::CreateWithEmptyLayout(const 
 
 void UROSMsgFloat32MultiArray::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendTArray<float>(OutMessage, "data", Data, [](ROSData& Array, const char* Key, const float& TArrayValue)
-	{
-		DataHelpers::AppendFloat(Array, Key, TArrayValue);
-	});
-	DataHelpers::AppendSubMessage(OutMessage,"layout", Layout);
+	DataHelpers::Append<TArray<float>>(OutMessage, "data", Data);
+	DataHelpers::Append<UROSMsgMultiArrayLayout*>(OutMessage, "layout", Layout);
 }
 
 bool UROSMsgFloat32MultiArray::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractTArray<float>(Message, "data", Data, [](const ROSData& Array, const char* Key, float& Result)
-	{
-		return DataHelpers::ExtractFloat(Array, Key, Result);
-	})
-	&& DataHelpers::ExtractSubMessage(Message, "layout", Layout);
+	return
+		DataHelpers::Extract<TArray<float>>(Message, "data", Data) &&
+		DataHelpers::Extract<UROSMsgMultiArrayLayout*>(Message, "layout", Layout);
 }

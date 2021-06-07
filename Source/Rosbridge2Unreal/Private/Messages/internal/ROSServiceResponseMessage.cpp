@@ -3,18 +3,18 @@
 
 void UROSServiceResponseMessage::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendString(OutMessage, "op", "service_response");
-	DataHelpers::AppendString(OutMessage, "id", ID);
-	DataHelpers::AppendString(OutMessage, "service", ServiceName);
-	DataHelpers::AppendBool(OutMessage, "result", false); /* I got no clue what it does, but it has to be there and false */
-	DataHelpers::AppendSubDocument(OutMessage, "values", Data);
+	DataHelpers::Append<FString>(OutMessage, "op", "service_response");
+	DataHelpers::Append<FString>(OutMessage, "id", ID);
+	DataHelpers::Append<FString>(OutMessage, "service", ServiceName);
+	DataHelpers::Append<bool>(OutMessage, "result", false); /* I got no clue what it does, but it has to be there and false */
+	DataHelpers::Append<ROSData>(OutMessage, "values", Data);
 }
 
 bool UROSServiceResponseMessage::FromData(const ROSData& Message)
 {
 	//optional
-	DataHelpers::ExtractString(Message, "id", ID);
-	DataHelpers::ExtractSubDocument(Message, "values", Data);
+	DataHelpers::Extract<FString>(Message, "id", ID);
+	DataHelpers::Extract<ROSData>(Message, "values", Data);
 	
-	return DataHelpers::ExtractString(Message, "service", ServiceName);
+	return DataHelpers::Extract<FString>(Message, "service", ServiceName);
 }

@@ -65,24 +65,25 @@ void UROSMsgTransform::SetFromTransform(const FTransform InTransform)
 
 void UROSMsgTransform::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendSubDocument(OutMessage, "translation", ROSData());
-	DataHelpers::AppendDouble(OutMessage, "/translation/x", Tx);
-	DataHelpers::AppendDouble(OutMessage, "/translation/y", Ty);
-	DataHelpers::AppendDouble(OutMessage, "/translation/z", Tz);
-	DataHelpers::AppendSubDocument(OutMessage, "rotation", ROSData());
-	DataHelpers::AppendDouble(OutMessage, "/rotation/x", Rx);
-	DataHelpers::AppendDouble(OutMessage, "/rotation/y", Ry);
-	DataHelpers::AppendDouble(OutMessage, "/rotation/z", Rz);
-	DataHelpers::AppendDouble(OutMessage, "/rotation/w", Rw);
+	DataHelpers::Append<ROSData>(OutMessage, "translation", ROSData());
+	DataHelpers::Append<double>(OutMessage, "/translation/x", Tx);
+	DataHelpers::Append<double>(OutMessage, "/translation/y", Ty);
+	DataHelpers::Append<double>(OutMessage, "/translation/z", Tz);
+	DataHelpers::Append<ROSData>(OutMessage, "rotation", ROSData());
+	DataHelpers::Append<double>(OutMessage, "/rotation/x", Rx);
+	DataHelpers::Append<double>(OutMessage, "/rotation/y", Ry);
+	DataHelpers::Append<double>(OutMessage, "/rotation/z", Rz);
+	DataHelpers::Append<double>(OutMessage, "/rotation/w", Rw);
 }
 
 bool UROSMsgTransform::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractDouble(Message, "/translation/x", Tx)
-	&& DataHelpers::ExtractDouble(Message, "/translation/y", Ty)
-	&& DataHelpers::ExtractDouble(Message, "/translation/z", Tz)
-	&& DataHelpers::ExtractDouble(Message, "/rotation/x", Rx)
-	&& DataHelpers::ExtractDouble(Message, "/rotation/y", Ry)
-	&& DataHelpers::ExtractDouble(Message, "/rotation/z", Rz)
-	&& DataHelpers::ExtractDouble(Message, "/rotation/w", Rw);
+	return
+		DataHelpers::Extract<double>(Message, "/translation/x", Tx) &&
+		DataHelpers::Extract<double>(Message, "/translation/y", Ty) &&
+		DataHelpers::Extract<double>(Message, "/translation/z", Tz) &&
+		DataHelpers::Extract<double>(Message, "/rotation/x", Rx) &&
+		DataHelpers::Extract<double>(Message, "/rotation/y", Ry) &&
+		DataHelpers::Extract<double>(Message, "/rotation/z", Rz) &&
+		DataHelpers::Extract<double>(Message, "/rotation/w", Rw);
 }

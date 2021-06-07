@@ -10,10 +10,10 @@ UROSMsgFloat32* UROSMsgFloat32::Create(const float Data)
 
 void UROSMsgFloat32::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendFloat(OutMessage, "data", Data);
+	DataHelpers::Append<float>(OutMessage, "data", Data);
 }
 
 bool UROSMsgFloat32::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractFloat(Message, "data", Data);
+	return DataHelpers::Extract<float>(Message, "data", Data);
 }

@@ -11,13 +11,14 @@ UROSMsgClock* UROSMsgClock::Create(int32 InSeconds, int32 InNanoSeconds)
 
 void UROSMsgClock::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendSubDocument(OutMessage, "clock", ROSData());
-	DataHelpers::AppendInt32(OutMessage, "/clock/secs", Seconds);
-	DataHelpers::AppendInt32(OutMessage, "/clock/nsecs", NanoSeconds);
+	DataHelpers::Append<ROSData>(OutMessage, "clock", ROSData());
+	DataHelpers::Append<int32>(OutMessage, "/clock/secs", Seconds);
+	DataHelpers::Append<int32>(OutMessage, "/clock/nsecs", NanoSeconds);
 }
 
 bool UROSMsgClock::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractInt32(Message, "/clock/secs", Seconds)
-	&& DataHelpers::ExtractInt32(Message, "/clock/nsecs", NanoSeconds);
+	return
+		DataHelpers::Extract<int32>(Message, "/clock/secs", Seconds) &&
+		DataHelpers::Extract<int32>(Message, "/clock/nsecs", NanoSeconds);
 }

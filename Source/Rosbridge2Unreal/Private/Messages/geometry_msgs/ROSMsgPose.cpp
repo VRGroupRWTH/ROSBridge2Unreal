@@ -50,25 +50,26 @@ void UROSMsgPose::SetOrientationFromQuad(const FQuat& InOrientation)
 
 void UROSMsgPose::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendSubDocument(OutMessage, "position", ROSData());
-	DataHelpers::AppendDouble(OutMessage, "/position/x", Px);
-	DataHelpers::AppendDouble(OutMessage, "/position/y", Py);
-	DataHelpers::AppendDouble(OutMessage, "/position/z", Pz);
-	DataHelpers::AppendSubDocument(OutMessage, "orientation", ROSData());
-	DataHelpers::AppendDouble(OutMessage, "/orientation/x", Qx);
-	DataHelpers::AppendDouble(OutMessage, "/orientation/y", Qy);
-	DataHelpers::AppendDouble(OutMessage, "/orientation/z", Qz);
-	DataHelpers::AppendDouble(OutMessage, "/orientation/w", Qw);
+	DataHelpers::Append<ROSData>(OutMessage, "position", ROSData());
+	DataHelpers::Append<double>(OutMessage, "/position/x", Px);
+	DataHelpers::Append<double>(OutMessage, "/position/y", Py);
+	DataHelpers::Append<double>(OutMessage, "/position/z", Pz);
+	DataHelpers::Append<ROSData>(OutMessage, "orientation", ROSData());
+	DataHelpers::Append<double>(OutMessage, "/orientation/x", Qx);
+	DataHelpers::Append<double>(OutMessage, "/orientation/y", Qy);
+	DataHelpers::Append<double>(OutMessage, "/orientation/z", Qz);
+	DataHelpers::Append<double>(OutMessage, "/orientation/w", Qw);
 }
 
 bool UROSMsgPose::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractDouble(Message, "/position/x", Px)
-	&& DataHelpers::ExtractDouble(Message, "/position/y", Py)
-	&& DataHelpers::ExtractDouble(Message, "/position/z", Pz)
-	&& DataHelpers::ExtractDouble(Message, "/orientation/x", Qx)
-	&& DataHelpers::ExtractDouble(Message, "/orientation/y", Qy)
-	&& DataHelpers::ExtractDouble(Message, "/orientation/z", Qz)
-	&& DataHelpers::ExtractDouble(Message, "/orientation/w", Qw);
+	return
+		DataHelpers::Extract<double>(Message, "/position/x", Px) &&
+		DataHelpers::Extract<double>(Message, "/position/y", Py) &&
+		DataHelpers::Extract<double>(Message, "/position/z", Pz) &&
+		DataHelpers::Extract<double>(Message, "/orientation/x", Qx) &&
+		DataHelpers::Extract<double>(Message, "/orientation/y", Qy) &&
+		DataHelpers::Extract<double>(Message, "/orientation/z", Qz) &&
+		DataHelpers::Extract<double>(Message, "/orientation/w", Qw);
 }
 

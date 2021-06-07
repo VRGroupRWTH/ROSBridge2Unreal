@@ -31,14 +31,15 @@ void UROSMsgPoint::SetFromFVector(const FVector& InVector)
 
 void UROSMsgPoint::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendDouble(OutMessage, "x", X);
-	DataHelpers::AppendDouble(OutMessage, "y", Y);
-	DataHelpers::AppendDouble(OutMessage, "z", Z);
+	DataHelpers::Append<double>(OutMessage, "x", X);
+	DataHelpers::Append<double>(OutMessage, "y", Y);
+	DataHelpers::Append<double>(OutMessage, "z", Z);
 }
 
 bool UROSMsgPoint::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractDouble(Message, "x", X)
-	&& DataHelpers::ExtractDouble(Message, "y", Y)
-	&& DataHelpers::ExtractDouble(Message, "z", Z);
+	return
+		DataHelpers::Extract<double>(Message, "x", X) &&
+		DataHelpers::Extract<double>(Message, "y", Y) &&
+		DataHelpers::Extract<double>(Message, "z", Z);
 }

@@ -16,12 +16,13 @@ bool UROSBridge::Initialize()
 	Settings = GetDefault<URosbridgeSettings>();
 	bSettingsRead = true;
 	
-	if(Settings->bSimulateConnection)
+	if (Settings->bSimulateConnection)
 	{
 		bInitialized = true;
 		return true; //Don't attempt connection
 	}
-	switch(Settings->SocketMode) {
+	switch(Settings->SocketMode)
+	{
 		case ESocketMode::TCP:
 			Connection = NewObject<UTCPConnection>(this);
 			break;
@@ -42,7 +43,7 @@ bool UROSBridge::Initialize()
 
 	bInitialized = true;
 
-	if(Settings->bShouldAuthenticate && ConnectionInitialized)
+	if (Settings->bShouldAuthenticate && ConnectionInitialized)
 	{
 		UROSAuthMessage* AuthMsg = NewObject<UROSAuthMessage>(this);
 		AuthMsg->Client = FString::Printf(TEXT("UnrealClient:%s"),FApp::GetProjectName());
@@ -60,23 +61,24 @@ void UROSBridge::Uninitialize()
 	
 	//Unsubscribe/Unadvertise from everything
 	
-	for(UROSTopic*& Topic : Topics)
+	for (UROSTopic*& Topic : Topics)
 	{
 		Topic->ForceUnsubscribeInternal();
 	}
 	Topics.Empty();
 
-	for(UROSService*& Service : Services)
+	for (UROSService*& Service : Services)
 	{
 		Service->Unadvertise();
 	}
 	Services.Empty();
 	
 	KeepSenderThreadRunning = false;
-	if (SenderThread) {
+	if (SenderThread)
+	{
 		SenderThread->WaitForCompletion();
 	}
-	if(Connection)
+	if (Connection)
 	{
 		Connection->Uninitialize();
 	}
@@ -84,8 +86,8 @@ void UROSBridge::Uninitialize()
 
 bool UROSBridge::SendMessage(const FString& Data) const
 {
-	if(bSettingsRead && Settings->bSimulateConnection) return true;
-	if(!bInitialized) return true; /* return true, since this is no error */
+	if (bSettingsRead && Settings->bSimulateConnection) return true;
+	if (!bInitialized) return true; /* return true, since this is no error */
 	return Connection->SendMessage(Data);
 }
 
@@ -101,12 +103,12 @@ bool UROSBridge::IsBSONMode() const
 
 bool UROSBridge::SendMessage(const UROSBridgeMessage& Message) const
 {
-	if(bSettingsRead && Settings->bSimulateConnection) return true;
-	if(!bInitialized) return true; /* return true, since this is no error */
+	if (bSettingsRead && Settings->bSimulateConnection) return true;
+	if (!bInitialized) return true; /* return true, since this is no error */
 	
 	ROSData Data;
 	Message.ToData(Data);
-	if(Connection->SendMessage(Data))
+	if (Connection->SendMessage(Data))
 	{
 		UE_LOG(LogROSBridge, VeryVerbose, TEXT("Sent ROSBridge message: %s"), *DataHelpers::Internal::DataToString(Data));
 		return true;
@@ -126,7 +128,7 @@ UROSTopic* UROSBridge::GetTopic(const FString& TopicName, TSubclassOf<UROSMessag
 		return Topic->GetTopicName() == TopicName;
 	});
 
-	if(FoundTopic) return *FoundTopic;
+	if (FoundTopic) return *FoundTopic;
 
 	UROSTopic* NewTopic = NewObject<UROSTopic>(this);
 	NewTopic->Initialize(TopicName, MessageClass);
@@ -142,7 +144,7 @@ UROSService* UROSBridge::GetService(const FString& ServiceName, TSubclassOf<UROS
 		return Service->GetServiceName() == ServiceName;
 	});
 
-	if(FoundService) return *FoundService;
+	if (FoundService) return *FoundService;
 
 	UROSService* NewService = NewObject<UROSService>(this);
 	NewService->Initialize(ServiceName, ServiceClass);
@@ -153,26 +155,31 @@ UROSService* UROSBridge::GetService(const FString& ServiceName, TSubclassOf<UROS
 
 void UROSBridge::TickEvent(float DeltaTime)
 {
-	if(!bSettingsRead || !Settings->bEmitClockEvents || !bInitialized) return; //Nothing to do here
+	if (!bSettingsRead || !Settings->bEmitClockEvents || !bInitialized)
+	{
+		//Nothing to do here
+		return;
+	}
 	
-	if(!ClockTopic)
+	if (!ClockTopic)
 	{
 		ClockTopic = GetTopic("/clock", UROSMsgClock::StaticClass());
 		ClockTopic->Advertise();
 	}
 
-	if(!ClockMessage){
+	if (!ClockMessage)
+	{
 		ClockMessage = NewObject<UROSMsgClock>(this);
 	}
 
-	if(!bSetUpdateIntervalSettings)
+	if (!bSetUpdateIntervalSettings)
 	{
 		FApp::SetFixedDeltaTime(Settings->FixedUpdateInterval);
 		FApp::SetUseFixedTimeStep(Settings->bUseFixedUpdateInterval);
 		bSetUpdateIntervalSettings = true;
 	}
 	
-	if(Settings->bUseWallClockTime)
+	if (Settings->bUseWallClockTime)
 	{
 		const FTimespan WallClockTime = FDateTime::UtcNow() - FDateTime::FromUnixTimestamp(0);
 		ClockMessage->Seconds = static_cast<int32>(WallClockTime.GetTotalSeconds()); //Implicit floor
@@ -184,7 +191,8 @@ void UROSBridge::TickEvent(float DeltaTime)
 		const float Fraction = DeltaTime - FMath::FloorToInt(DeltaTime);
 		ClockMessage->Seconds += FMath::FloorToInt(DeltaTime);
 		ClockMessage->NanoSeconds += Fraction * 1000000000ul;
-		if(ClockMessage->NanoSeconds > 1000000000ul){
+		if (ClockMessage->NanoSeconds > 1000000000ul)
+		{
 			ClockMessage->Seconds += 1;
 			ClockMessage->NanoSeconds -= 1000000000ul;
 		}
@@ -194,7 +202,7 @@ void UROSBridge::TickEvent(float DeltaTime)
 
 void UROSBridge::QueueMessage(UROSBridgeMessage* Message)
 {
-	if(!bInitialized) return; //Ignore message that came after closing
+	if (!bInitialized) return; //Ignore message that came after closing
 	
 	MutexMessageQueue.Lock();
 	
@@ -205,9 +213,10 @@ void UROSBridge::QueueMessage(UROSBridgeMessage* Message)
 
 uint32 UROSBridge::Run()
 {
-	while(KeepSenderThreadRunning)
+	while (KeepSenderThreadRunning)
 	{
-		if(QueuedMessages.Num() <= 0){
+		if (QueuedMessages.Num() <= 0)
+		{
 			FPlatformProcess::Sleep(0.01); //Not poll to fast
 			continue;
 		}
@@ -224,23 +233,28 @@ uint32 UROSBridge::Run()
 
 void UROSBridge::IncomingMessage(const ROSData& Message)
 {
-	if(!bInitialized) return; //Ignore message that came after closing
+	if (!bInitialized)
+	{
+		//Ignore message that came after closing
+		return;
+	}
 	
 	FString OPCode;
 
-	if(!DataHelpers::ExtractString(Message, "op", OPCode)){
+	if (!DataHelpers::Extract<FString>(Message, "op", OPCode))
+	{
 		UE_LOG(LogROSBridge, Warning, TEXT("Received message without op code."));	
 		return;
 	}
 
-	if(OPCode == "publish") //Message for Topic
+	if (OPCode == "publish") //Message for Topic
 	{
 		UROSTopicPublishMessage* TopicMessage = NewObject<UROSTopicPublishMessage>();
-		if(!TopicMessage->FromData(Message)) return;
+		if (!TopicMessage->FromData(Message)) return;
 		
-		for(UROSTopic* Topic : Topics)
+		for (UROSTopic* Topic : Topics)
 		{
-			if(Topic->GetTopicName() == TopicMessage->TopicName)
+			if (Topic->GetTopicName() == TopicMessage->TopicName)
 			{
 				Topic->IncomingMessage(*TopicMessage);
 				return;
@@ -251,19 +265,19 @@ void UROSBridge::IncomingMessage(const ROSData& Message)
 		return;
 	}
 
-	if(OPCode == "service_response") //Response from service
+	if (OPCode == "service_response") //Response from service
 	{
 		UROSServiceResponseMessage* ServiceMessage = NewObject<UROSServiceResponseMessage>();
-		if(!ServiceMessage->FromData(Message)) return;
+		if (!ServiceMessage->FromData(Message)) return;
 
-		for(UROSService* Service : Services)
+		for (UROSService* Service : Services)
 		{
-			if(Service->GetServiceName() == ServiceMessage->ServiceName)
+			if (Service->GetServiceName() == ServiceMessage->ServiceName)
 			{
-				if(Service->IsAdvertised())
+				if (Service->IsAdvertised())
 				{
 					FString Error;
-					DataHelpers::ExtractString(Message, "values", Error);
+					DataHelpers::Extract<FString>(Message, "values", Error);
 					UE_LOG(LogROSBridge, Warning, 
 						TEXT("We received a response to a known service that we have not called. This can be the result of an error in responding to a request. The response is: %s"),
 						*Error
@@ -280,14 +294,14 @@ void UROSBridge::IncomingMessage(const ROSData& Message)
 		return;
 	}
 
-	if(OPCode == "call_service") //call to a service from us
+	if (OPCode == "call_service") //call to a service from us
 	{
 		UROSServiceCallMessage* ServiceMessage = NewObject<UROSServiceCallMessage>();
-		if(!ServiceMessage->FromData(Message)) return;
+		if (!ServiceMessage->FromData(Message)) return;
 		
-		for(UROSService* Service : Services)
+		for (UROSService* Service : Services)
 		{
-			if(Service->GetServiceName() == ServiceMessage->ServiceName)
+			if (Service->GetServiceName() == ServiceMessage->ServiceName)
 			{
 				Service->IncomingRequest(*ServiceMessage);
 				return;

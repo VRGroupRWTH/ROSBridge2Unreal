@@ -52,22 +52,23 @@ void UROSMsgTwist::SetAngularFromFVector(const FVector& InVector)
 
 void UROSMsgTwist::ToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendSubDocument(OutMessage, "linear", ROSData());
-	DataHelpers::AppendDouble(OutMessage, "/linear/x", LinearX);
-	DataHelpers::AppendDouble(OutMessage, "/linear/y", LinearY);
-	DataHelpers::AppendDouble(OutMessage, "/linear/z", LinearZ);
-	DataHelpers::AppendSubDocument(OutMessage, "angular", ROSData());
-	DataHelpers::AppendDouble(OutMessage, "/angular/x", AngularX);
-	DataHelpers::AppendDouble(OutMessage, "/angular/y", AngularY);
-	DataHelpers::AppendDouble(OutMessage, "/angular/z", AngularZ);
+	DataHelpers::Append<ROSData>(OutMessage, "linear", ROSData());
+	DataHelpers::Append<double>(OutMessage, "/linear/x", LinearX);
+	DataHelpers::Append<double>(OutMessage, "/linear/y", LinearY);
+	DataHelpers::Append<double>(OutMessage, "/linear/z", LinearZ);
+	DataHelpers::Append<ROSData>(OutMessage, "angular", ROSData());
+	DataHelpers::Append<double>(OutMessage, "/angular/x", AngularX);
+	DataHelpers::Append<double>(OutMessage, "/angular/y", AngularY);
+	DataHelpers::Append<double>(OutMessage, "/angular/z", AngularZ);
 }
 
 bool UROSMsgTwist::FromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractDouble(Message, "/linear/x", LinearX)
-	&& DataHelpers::ExtractDouble(Message, "/linear/y", LinearY)
-	&& DataHelpers::ExtractDouble(Message, "/linear/z", LinearZ)
-	&& DataHelpers::ExtractDouble(Message, "/angular/x", AngularX)
-	&& DataHelpers::ExtractDouble(Message, "/angular/y", AngularY)
-	&& DataHelpers::ExtractDouble(Message, "/angular/z", AngularZ);
+	return
+		DataHelpers::Extract<double>(Message, "/linear/x", LinearX) &&
+		DataHelpers::Extract<double>(Message, "/linear/y", LinearY) &&
+		DataHelpers::Extract<double>(Message, "/linear/z", LinearZ) &&
+		DataHelpers::Extract<double>(Message, "/angular/x", AngularX) &&
+		DataHelpers::Extract<double>(Message, "/angular/y", AngularY) &&
+		DataHelpers::Extract<double>(Message, "/angular/z", AngularZ);
 }

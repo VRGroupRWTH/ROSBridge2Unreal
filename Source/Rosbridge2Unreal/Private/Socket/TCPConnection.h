@@ -12,14 +12,14 @@
 UCLASS()
 class ROSBRIDGE2UNREAL_API UTCPConnection : public UNetworkConnection, public FRunnable {
 	GENERATED_BODY()
-	
+
 public:
 	bool Initialize(FString IPAddress, int Port, ETransportMode Mode) override;
 	void Uninitialize() override;
-	bool SendMessage(const uint8_t *Data, unsigned int Length) const override;
+	bool SendMessage(const uint8_t* Data, unsigned int Length) const override;
 
 private:
-	FSocket *Socket = nullptr;
+	FSocket* Socket = nullptr;
 	int32 ReceiveBufferSize = -1;
 
 	FRunnableThread* ReceiverThread = nullptr;

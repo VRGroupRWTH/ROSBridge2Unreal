@@ -15,16 +15,10 @@ bool UROSSrvTopics::RequestFromData(const ROSData& Message) {return true;}
 
 void UROSSrvTopics::ResponseToData(ROSData& OutMessage) const
 {
-	DataHelpers::AppendTArray<FString>(OutMessage, "topics", Topics, [](ROSData& Message, const char* Key, const FString& Value)
-	{
-		DataHelpers::AppendString(Message, Key, Value);
-	});
+	DataHelpers::Append<TArray<FString>>(OutMessage, "topics", Topics);
 }
 
 bool UROSSrvTopics::ResponseFromData(const ROSData& Message)
 {
-	return DataHelpers::ExtractTArray<FString>(Message, "topics", Topics, [](const ROSData& Message, const char* Key, FString& Value)
-	{
-		return DataHelpers::ExtractString(Message, Key, Value);
-	});
+	return DataHelpers::Extract<TArray<FString>>(Message, "topics", Topics);
 }

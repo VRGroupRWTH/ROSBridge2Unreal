@@ -20,7 +20,7 @@ public:
 
 	/* Blueprint functions. Ease of use. Lowers the precision */
 	UFUNCTION(BlueprintCallable) TArray<float> CovarianceAsFloatArray() const;
-	UFUNCTION(BlueprintCallable) void SetCovarianceFromFloatArray(const TArray<float> InArray);
+	UFUNCTION(BlueprintCallable) void SetCovarianceFromFloatArray(const TArray<float>& InArray);
 	
 	/* Data */
 	/*

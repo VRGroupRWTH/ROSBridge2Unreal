@@ -19,13 +19,15 @@ public:
 	virtual void Uninitialize() PURE_VIRTUAL(UNetworkConnection::Uninitialize, return;);
 	virtual bool SendMessage(const uint8_t *Data, unsigned int Length) const PURE_VIRTUAL(UNetworkConnection::SendMessage, return true;);
 	
-	bool SendMessage(const ROSData& Data) const {
-		if(CurrentTransportMode == ETransportMode::BSON)
+	bool SendMessage(const ROSData& Data) const
+	{
+		if (CurrentTransportMode == ETransportMode::BSON)
 		{
 			std::vector<uint8> EncodedData;
 			jsoncons::bson::encode_bson(Data,EncodedData);
 			return SendMessage(EncodedData.data(), EncodedData.size());
-		}else if(CurrentTransportMode == ETransportMode::JSON)
+		}
+		else if (CurrentTransportMode == ETransportMode::JSON)
 		{
 			std::string EncodedData;
 			Data.dump(EncodedData, jsoncons::indenting::no_indent);
@@ -34,15 +36,18 @@ public:
 		return false;
 	};
 	
-	bool SendMessage(const FString Data) const {
+	bool SendMessage(const FString Data) const
+	{
 		return SendMessage(reinterpret_cast<const uint8*>(TCHAR_TO_UTF8(*Data)), Data.Len());
 	}
 
-	void RegisterIncomingMessageCallback(TFunction<void(ROSData)> CallbackFunction){
+	void RegisterIncomingMessageCallback(TFunction<void(ROSData)> CallbackFunction)
+	{
 		IncomingMessageCallback = CallbackFunction;
 	}
 	
-	void ReportError(ETransportError Error) const {
+	void ReportError(ETransportError Error) const
+	{
 		switch(Error)
 		{
 		case ETransportError::SocketError:
@@ -54,11 +59,13 @@ public:
 		};
 	};
 
-	void SetTransportMode(ETransportMode Mode){
+	void SetTransportMode(ETransportMode Mode)
+	{
 		CurrentTransportMode = Mode;
 	}
 
-	ETransportMode GetTransportMode() const {
+	ETransportMode GetTransportMode() const
+	{
 		return CurrentTransportMode;
 	};
 };
