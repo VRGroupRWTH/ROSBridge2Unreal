@@ -44,7 +44,8 @@ namespace DataHelpers
 			return false;
 		}
 
-		static bool DecodeBinary(const ROSData& Message, TArray<uint8>& OutData)
+		template<typename Allocator>
+		static bool DecodeBinary(const ROSData& Message, TArray<uint8, Allocator>& OutData)
 		{
 			if (Message.is_byte_string_view()) /* Real byte string in BSON */
 			{
@@ -162,10 +163,10 @@ namespace DataHelpers
 			}
 		};
 
-		template <typename T>
-		struct DataConverter<TArray<T>>
+		template <typename T, typename Allocator>
+		struct DataConverter<TArray<T, Allocator>>
 		{
-			static inline void Append(ROSData& OutMessage, const char* Key, const TArray<T>& Array)
+			static inline void Append(ROSData& OutMessage, const char* Key, const TArray<T, Allocator>& Array)
 			{
 				ROSData ArrayData = ROSData(jsoncons::json_array_arg);
 				ArrayData.reserve(Array.Num());
@@ -179,8 +180,8 @@ namespace DataHelpers
 				DataHelpers::Append<ROSData>(OutMessage, Key, ArrayData);
 			}
 
-			template <typename T>
-			static inline bool Extract(const ROSData& Message, const char* Key, TArray<T>& Array)
+			template <typename T, typename Allocator>
+			static inline bool Extract(const ROSData& Message, const char* Key, TArray<T, Allocator>& Array)
 			{
 				ROSData ArrayData;
 				if (!DataHelpers::Extract<ROSData>(Message, Key, ArrayData) || !ArrayData.is_array())
@@ -215,7 +216,8 @@ namespace DataHelpers
 		return Internal::DataConverter<T>::Extract(Message, Key, OutValue);
 	}
 
-	static bool ExtractBinary(const ROSData& Message, const char* Key, TArray<uint8>& OutData)
+	template<typename Allocator>
+	static bool ExtractBinary(const ROSData& Message, const char* Key, TArray<uint8, Allocator>& OutData)
 	{
 		if (Key[0] == '/')
 		{
@@ -225,15 +227,20 @@ namespace DataHelpers
 		if (Message.contains(Key))
 		{
 			return Internal::DecodeBinary(Message[Key], OutData);
-			;
 		}
 		return false;
+	}
+
+	template<typename Allocator>
+	static void AppendBinary(ROSData& Message, const char* Key, const TArray<uint8, Allocator> InData)
+	{
+		AppendBinary(Message, Key, InData.GetData(), InData.Num());
 	}
 
 	static void AppendBinary(ROSData& Message, const char* Key, const uint8* InData, const uint32 DataLength)
 	{
 		const ROSData Data =
-			ROSData(jsoncons::byte_string_arg, std::vector<uint8_t>(InData, InData + DataLength), jsoncons::semantic_tag::base64);
+			ROSData(jsoncons::byte_string_arg, std::vector<uint8_t>(InData, InData + DataLength));
 
 		if (Key[0] == '/')
 		{
