@@ -23,6 +23,7 @@ public class Rosbridge2Unreal : ModuleRules
 				"Networking",
 				"Engine",
 				"WebSockets",
+				"ProceduralMeshComponent",
 				"jsoncons"
 			}
 			);
