@@ -3,6 +3,7 @@
 #include "LogCategory.h"
 #include "SocketSubsystem.h"
 #include "IPAddress.h"
+#include <fstream>
 #include "jsoncons_unreal_wrapper.h"
 
 
@@ -157,7 +158,7 @@ uint32 UTCPConnection::Run()
 				{
 					Parser.parse_some(Decoder);
 
-					if (Parser.done())
+					if (Parser.done() || Parser.state() == jsoncons::json_parse_state::before_done)
 					{
 						ROSData Data = Decoder.get_result();
 						if (IncomingMessageCallback && !bTerminateReceiverThread) IncomingMessageCallback(Data);
