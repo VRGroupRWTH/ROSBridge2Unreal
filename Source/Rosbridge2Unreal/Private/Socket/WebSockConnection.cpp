@@ -1,7 +1,5 @@
 #include "WebSockConnection.h"
 
-
-#include "HttpModule.h"
 #include "LogCategory.h"
 #include "SocketSubsystem.h"
 #include "IPAddress.h"
@@ -11,7 +9,8 @@
 
 bool UWebSockConnection::Initialize(FString IPAddress, int Port, ETransportMode Mode)
 {
-	Socket = FWebSocketsModule::Get().CreateWebSocket(FString::Printf(TEXT("ws://%s:%d/"), *IPAddress, Port), TEXT("ws"));
+	FWebSocketsModule WebSocketModule = FModuleManager::Get().LoadModuleChecked<FWebSocketsModule>("WebSockets");
+	Socket = WebSocketModule.CreateWebSocket(FString::Printf(TEXT("ws://%s:%d/"), *IPAddress, Port), TEXT("ws"));
 
 	Socket->OnConnectionError().AddLambda([this](const FString & Error) -> void {
 	    ReportError(ETransportError::SocketError);
