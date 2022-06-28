@@ -6,17 +6,18 @@ void UROSMsgMeshGeometry::CreateProceduralMeshSection(UProceduralMeshComponent* 
 	TArray<FVector> MeshVertices;
 	MeshVertices.SetNum(Vertices.Num());
 	for (int i = 0; i < Vertices.Num(); ++i) {
-		MeshVertices[i].X = Vertices[i]->X;
-		MeshVertices[i].Y = Vertices[i]->Y;
-		MeshVertices[i].Z = Vertices[i]->Z;
+		// MeshVertices[i] = UROSTransform::ConvertFromROSToUnrealCoordinateSystem(FTransform{ .Translation = { Vertices[i]->X, Vertices[i]->Y, Vertices[i]->Z });
+		MeshVertices[i].X = Vertices[i]->X * 100;
+		MeshVertices[i].Y = -Vertices[i]->Y * 100;
+		MeshVertices[i].Z = Vertices[i]->Z * 100;
 	}
 
 	TArray<int32> MeshTriangleIndices;
 	MeshTriangleIndices.SetNum(Faces.Num() * 3);
 	for (int i = 0; i < Faces.Num(); ++i) {
-		MeshTriangleIndices[i * 3 + 0] = Faces[i]->VertexIndices[2];
+		MeshTriangleIndices[i * 3 + 0] = Faces[i]->VertexIndices[0];
 		MeshTriangleIndices[i * 3 + 1] = Faces[i]->VertexIndices[1];
-		MeshTriangleIndices[i * 3 + 2] = Faces[i]->VertexIndices[0];
+		MeshTriangleIndices[i * 3 + 2] = Faces[i]->VertexIndices[2];
 	}
 
 	TArray<FVector> MeshNormals;
