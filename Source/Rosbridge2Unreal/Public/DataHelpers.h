@@ -138,7 +138,7 @@ namespace DataHelpers
 			{
 				ROSData Data;
 				Message->ToData(Data);
-				DataHelpers::Append<ROSData>(OutMessage, Key, Data);
+				Internal::DataConverter<ROSData>::Append(OutMessage, Key, Data);
 			}
 
 			static inline bool Extract(const ROSData& Message, const char* Key, T*& OutMessageInstance)
@@ -174,17 +174,16 @@ namespace DataHelpers
 				for (const auto& Value : Array)
 				{
 					const std::string Path = "/" + std::to_string(ArrayData.size());
-					DataHelpers::Append(ArrayData, Path.c_str(), Value);
+					Internal::DataConverter<T>::Append(ArrayData, Path.c_str(), Value);
 				}
 
-				DataHelpers::Append<ROSData>(OutMessage, Key, ArrayData);
+				Internal::DataConverter<ROSData>::Append(OutMessage, Key, ArrayData);
 			}
 
-			template <typename T, typename Allocator>
 			static inline bool Extract(const ROSData& Message, const char* Key, TArray<T, Allocator>& Array)
 			{
 				ROSData ArrayData;
-				if (!DataHelpers::Extract<ROSData>(Message, Key, ArrayData) || !ArrayData.is_array())
+				if (!Internal::DataConverter<ROSData>::Extract(Message, Key, ArrayData) || !ArrayData.is_array())
 				{
 					return false;
 				}
@@ -193,7 +192,7 @@ namespace DataHelpers
 				for (uint64 i = 0; i < ArrayData.size(); i++)
 				{
 					const std::string Path = "/" + std::to_string(i);
-					if (!DataHelpers::Extract(ArrayData, Path.c_str(), Array[i]))
+					if (!Internal::DataConverter<T>::Extract(ArrayData, Path.c_str(), Array[i]))
 					{
 						return false;
 					}

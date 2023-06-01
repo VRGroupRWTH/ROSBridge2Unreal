@@ -10,6 +10,8 @@ public class Rosbridge2Unreal : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
+		bEnableExceptions = true;
+
 		PublicDefinitions.AddRange(
 			new string[]{}
 			);
