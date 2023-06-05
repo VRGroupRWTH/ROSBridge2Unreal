@@ -3390,7 +3390,6 @@ public:
               indenting line_indent,
               std::error_code& ec) const
     {
-        using string_type = std::basic_string<char_type,char_traits_type,SAllocator>;
         if (line_indent == indenting::indent)
         {
             basic_json_encoder<char_type,jsoncons::string_sink<string_type>> encoder(s, options);
@@ -3408,7 +3407,6 @@ public:
               indenting line_indent,
               std::error_code& ec) const
     {
-        using string_type = std::basic_string<char_type,char_traits_type,SAllocator>;
         if (line_indent == indenting::indent)
         {
             basic_json_encoder<char_type,jsoncons::string_sink<string_type>> encoder(s);
@@ -3902,8 +3900,6 @@ public:
     template <class SAllocator=std::allocator<char_type>>
     std::basic_string<char_type,char_traits_type,SAllocator> as_string(const SAllocator& alloc) const 
     {
-        using string_type = std::basic_string<char_type,char_traits_type,SAllocator>;
-
         converter<string_type> convert(alloc);
         std::error_code ec;
         switch (var_.storage())
@@ -4686,7 +4682,6 @@ public:
 
     std::basic_string<char_type> to_string() const noexcept
     {
-        using string_type = std::basic_string<char_type>;
         string_type s;
         basic_compact_json_encoder<char_type, jsoncons::string_sink<string_type>> encoder(s);
         dump(encoder);
@@ -4700,7 +4695,6 @@ public:
     std::basic_string<char_type, char_traits_type, SAllocator> to_string(const basic_json_encode_options<char_type>& options,
         const SAllocator& alloc = SAllocator()) const
     {
-        using string_type = std::basic_string<char_type, char_traits_type, SAllocator>;
         string_type s(alloc);
         basic_compact_json_encoder<char_type, jsoncons::string_sink<string_type>> encoder(s, options);
         dump(encoder);
