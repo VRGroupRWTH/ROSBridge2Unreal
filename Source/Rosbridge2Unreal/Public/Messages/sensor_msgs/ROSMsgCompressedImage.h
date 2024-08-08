@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "IImageWrapper.h"
+#include "IImageWrapperModule.h"
 #include "Messages/ROSMessageBase.h"
 #include "Messages/std_msgs/ROSMsgHeader.h"
 #include "ROSMsgCompressedImage.generated.h"
